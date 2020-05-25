@@ -29,4 +29,5 @@ public interface KItemDAO {
     })
     public List<KItem> queryKItemsbyStockId(@Param("stockId") String stockId);
 
+
 }
