@@ -9,7 +9,6 @@ import com.cgs.vo.KItemVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,13 +23,14 @@ public class StockDataController {
 
     @RequestMapping(value = UrlConstant.K_ITEM, method = RequestMethod.GET)
     @ResponseBody
-    public Response queryStockKItemByStockId( @ApiParam @Param("stockId") String stockId){
+    public Response queryStockKItemByStockId( @ApiParam(name="stockId",value="股票id",required=true) String stockId){
         Response response = new Response();
         try {
             KItemVO vo = stockDataService.queryKItemByStockId(stockId);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
         }catch (Exception e){
             log.error("queryStockKItemByStockId exception :{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
         }
         return response;
     }

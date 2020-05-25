@@ -16,7 +16,7 @@ public class StockStaticsController {
 
     @RequestMapping(value = UrlConstant.FINANCE_INFO, method = RequestMethod.GET)
     @ResponseBody
-    public Response queryFinanceInfoByStockId(@ApiParam @Param("stockId") String stockId){
+    public Response queryFinanceInfoByStockId(@ApiParam String stockId){
         return new Response();
     }
 }
