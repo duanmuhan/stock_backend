@@ -9,7 +9,13 @@ import java.util.List;
 @Service
 public class StockStaticsService {
 
-    public List<FinanceInfo> queryFinanceInfo(String stockId){
+    public List<FinanceInfo> queryCurrentFinanceInfo(String stockId){
         return new ArrayList<>();
+    }
+
+    public List<String> queryBestFinanceInfoCompany(Integer limit, Integer season){
+        List<String> result = new ArrayList<>();
+
+        return result;
     }
 }
