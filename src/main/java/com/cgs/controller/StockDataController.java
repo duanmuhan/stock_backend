@@ -10,6 +10,7 @@ import com.cgs.vo.StockPlateVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 public class StockDataController {
 
+    @Autowired
     public StockDataService stockDataService;
 
     @RequestMapping(value = UrlConstant.K_ITEM, method = RequestMethod.GET)
@@ -50,4 +52,5 @@ public class StockDataController {
         }
         return response;
     }
+
 }
