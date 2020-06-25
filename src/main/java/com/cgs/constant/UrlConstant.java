@@ -6,7 +6,8 @@ public interface UrlConstant {
     String STOCK_INFO_LIST ="/stockList";
     String PLATE_INFO_BY_STOCK_ID = "/queryPlateInfoByStockId";
 
-    //财务基本面最好的股票
-    String TOP_VALUE_STOCK = "/top";
+    //财务基本面查询接口
+    String TOP_VALUE_STOCK = "/basic";
+    String TOP_PLATE_VALUE_STOCK = "/plateBasicStock";
 
 }

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @Api(tags = "股票信息接口")
 @Slf4j
@@ -50,6 +52,13 @@ public class StockDataController {
             log.error("queryPlateInfoByStockId exception:{}",e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
         }
+        return response;
+    }
+
+    @RequestMapping(value = UrlConstant.TOP_VALUE_STOCK, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockByBasicInfo(HttpServletRequest httpServletRequest){
+        Response response = new Response();
         return response;
     }
 
