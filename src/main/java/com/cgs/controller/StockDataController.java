@@ -62,7 +62,7 @@ public class StockDataController {
     public Response queryStockByBasicInfo(HttpServletRequest httpServletRequest){
         Response response = new Response();
         try {
-            List<StockBasicVO> list = stockDataService.queryStockBasicInfo();
+            List<StockBasicVO> list = stockDataService.queryValuableStockBasicInfo();
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK,list);
         }catch (Exception e){
             log.error("queryPlateInfoByStockId exception:{}",e);

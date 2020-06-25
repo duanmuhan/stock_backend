@@ -56,7 +56,7 @@ public class StockDataService {
         return vo;
     }
 
-    public List<StockBasicVO> queryStockBasicInfo(){
+    public List<StockBasicVO> queryValuableStockBasicInfo(){
         List<StockBasicVO> list = new ArrayList<>();
         List<FinanceInfo> financeInfos = financeInfoDAO.queryFinanceInfo();
         if (CollectionUtils.isEmpty(financeInfos)){
@@ -75,4 +75,6 @@ public class StockDataService {
         List<String> stockIdList = financeInfoList.stream().map(e->e.getStockId()).collect(Collectors.toList());
         return list;
     }
+
+
 }
