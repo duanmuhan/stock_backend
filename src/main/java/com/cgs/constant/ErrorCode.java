@@ -1,7 +1,5 @@
 package com.cgs.constant;
 
-import lombok.Data;
-
 public enum ErrorCode {
 
     OK(200,"ok"),
