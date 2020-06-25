@@ -6,6 +6,7 @@ import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockDataService;
 import com.cgs.vo.KItemVO;
+import com.cgs.vo.StockBasicVO;
 import com.cgs.vo.StockPlateVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @Api(tags = "股票信息接口")
@@ -59,6 +61,13 @@ public class StockDataController {
     @ResponseBody
     public Response queryStockByBasicInfo(HttpServletRequest httpServletRequest){
         Response response = new Response();
+        try {
+            List<StockBasicVO> list = stockDataService.queryStockBasicInfo();
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,list);
+        }catch (Exception e){
+            log.error("queryPlateInfoByStockId exception:{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
+        }
         return response;
     }
 
