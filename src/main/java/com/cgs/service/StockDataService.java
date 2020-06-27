@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -73,19 +74,27 @@ public class StockDataService {
         financeInfoList.stream().forEach(e->{
             StockBasicVO vo = new StockBasicVO();
             vo.setStockId(e.getStockId());
-            vo.setBasicEarningsPerCommonShare(e.getBasicEarningsPerCommonShare());
+            vo.setBasicEarningsPerCommonShare(StringUtils.isEmpty(e.getBasicEarningsPerCommonShare()) || "--".equals(e.getBasicEarningsPerCommonShare())? 0 : Double.valueOf(e.getBasicEarningsPerCommonShare()));
             voList.add(vo);
         });
         return voList;
     }
 
-    public List<StockBasicVO> queryValuableStockBasicInfoPerPrice(){
+    public List<StockBasicVO> queryTopValueStockPerPrice(){
         List<StockBasicVO> list = queryValuableStockBasicInfo();
         List<KItem> valueList = kItemDAO.queryLatestValue();
+        Map<String,KItem> valueMap = valueList.stream().collect(Collectors.toMap(KItem::getStockId,Function.identity()));
+        List<StockBasicVO> resultList = new ArrayList<>();
         list.forEach(e->{
-
+            StockBasicVO stockBasicVO = new StockBasicVO();
+            if (valueMap.containsKey(e.getStockId())){
+                stockBasicVO.setStockId(e.getStockId());
+                stockBasicVO.setBasicEarningsPerCommonShare(e.getBasicEarningsPerCommonShare()/valueMap.get(e.getStockId()).getClosePrice());
+                resultList.add(stockBasicVO);
+            }
         });
-        return list;
+        resultList.stream().sorted(Comparator.comparing(StockBasicVO::getBasicEarningsPerCommonShare).reversed()).collect(Collectors.toList());
+        return resultList;
     }
 
 

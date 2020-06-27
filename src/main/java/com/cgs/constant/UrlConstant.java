@@ -8,6 +8,7 @@ public interface UrlConstant {
 
     //财务基本面查询接口
     String TOP_VALUE_STOCK = "/basic";
+    String TOP_VALUE_STOCK_PER_PRICE = "/topValuePerPrice";
     String TOP_PLATE_VALUE_STOCK = "/plateBasicStock";
 
 }

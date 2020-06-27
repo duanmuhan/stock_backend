@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class StockBasicVO {
     private String stockId;
-    private String basicEarningsPerCommonShare;
+    private Double basicEarningsPerCommonShare;
 }

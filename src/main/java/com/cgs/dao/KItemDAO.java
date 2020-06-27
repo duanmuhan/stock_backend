@@ -26,7 +26,7 @@ public interface KItemDAO {
     })
     public List<KItem> queryKItemsbyStockId(@Param("stockId") String stockId);
 
-    @Select("select * from " + TABLE_NAME + " group by stock_id order by date limit 0,1 " )
+    @Select("select * from k_item INNER JOIN (select MAX(date) as max_date, stock_id as stockId from k_item GROUP BY stock_id) A ON stock_id = A.stockId AND date = A.max_date" )
     @ResultMap(value = "resultMap")
     public List<KItem> queryLatestValue();
 }
