@@ -1,9 +1,6 @@
 package com.cgs.service;
 
-import com.cgs.dao.AverageDAO;
-import com.cgs.dao.FinanceInfoDAO;
-import com.cgs.dao.KItemDAO;
-import com.cgs.dao.StockPlateInfoMappingDAO;
+import com.cgs.dao.*;
 import com.cgs.entity.*;
 import com.cgs.vo.AverageVO;
 import com.cgs.vo.KItemVO;
@@ -18,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,10 +55,9 @@ public class StockDataService {
     }
 
     public List<StockBasicVO> queryValuableStockBasicInfo(){
-        List<StockBasicVO> list = new ArrayList<>();
         List<FinanceInfo> financeInfos = financeInfoDAO.queryFinanceInfo();
         if (CollectionUtils.isEmpty(financeInfos)){
-            return list;
+            return null;
         }
         Map<String,List<FinanceInfo>> financeMap = financeInfos.stream().collect(Collectors.groupingBy(e->e.getStockId()));
         List<FinanceInfo> financeInfoList = new ArrayList<>();
@@ -71,8 +68,23 @@ public class StockDataService {
             FinanceInfo financeInfo = financeMap.get(key).stream().sorted(Comparator.comparing(FinanceInfo::getReleaseDate).reversed()).limit(1).findFirst().get();
             financeInfoList.add(financeInfo);
         }
-        financeInfoList = financeInfoList.stream().sorted(Comparator.comparing(FinanceInfo::getBasicEarningsPerCommonShare)).collect(Collectors.toList());
-        List<String> stockIdList = financeInfoList.stream().map(e->e.getStockId()).collect(Collectors.toList());
+        financeInfoList = financeInfoList.stream().sorted(Comparator.comparing(FinanceInfo::getBasicEarningsPerCommonShare).reversed()).collect(Collectors.toList());
+        List<StockBasicVO> voList = new ArrayList<>();
+        financeInfoList.stream().forEach(e->{
+            StockBasicVO vo = new StockBasicVO();
+            vo.setStockId(e.getStockId());
+            vo.setBasicEarningsPerCommonShare(e.getBasicEarningsPerCommonShare());
+            voList.add(vo);
+        });
+        return voList;
+    }
+
+    public List<StockBasicVO> queryValuableStockBasicInfoPerPrice(){
+        List<StockBasicVO> list = queryValuableStockBasicInfo();
+        List<KItem> valueList = kItemDAO.queryLatestValue();
+        list.forEach(e->{
+
+        });
         return list;
     }
 

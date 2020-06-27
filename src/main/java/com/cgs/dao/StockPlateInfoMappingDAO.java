@@ -1,10 +1,7 @@
 package com.cgs.dao;
 
 import com.cgs.entity.StockPlateInfoMapping;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,8 +9,7 @@ import java.util.List;
 @Repository
 public interface StockPlateInfoMappingDAO {
 
-    String TABLE_NAME = "plate_stock_mapping";
-    String COLUMNS = " stock_id, stock_name, plate_id, plate_name, date ";
+    String TABLE_NAME = " plate_stock_mapping ";
 
     @Results(id="stockPlateInfoMapping", value = {
             @Result(column = "id", property = "id", javaType = Long.class),
@@ -28,4 +24,13 @@ public interface StockPlateInfoMappingDAO {
 
     @Select(" select * from " + TABLE_NAME + " where plate_id = #{plateId} ")
     public List<StockPlateInfoMapping> queryPlateInfoByPlateId(@Param("plateId") String plateId);
+
+    @Select("<script>" +
+            "select * from " + TABLE_NAME + "where stock_id in " +
+            "<foreach collection ='stockList' index='index' item='item' open='(' close=')' separator=','>" +
+            "#{item} " +
+            "</foreach>" +
+            "</script>")
+    @ResultMap(value = "stockPlateInfoMapping")
+    public List<StockPlateInfoMapping> queryPlateInfoByStockIds(@Param("stockList") List<String> stockList);
 }

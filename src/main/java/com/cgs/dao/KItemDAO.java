@@ -1,10 +1,7 @@
 package com.cgs.dao;
 
 import com.cgs.entity.KItem;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,5 +26,7 @@ public interface KItemDAO {
     })
     public List<KItem> queryKItemsbyStockId(@Param("stockId") String stockId);
 
-
+    @Select("select * from " + TABLE_NAME + " group by stock_id order by date limit 0,1 " )
+    @ResultMap(value = "resultMap")
+    public List<KItem> queryLatestValue();
 }

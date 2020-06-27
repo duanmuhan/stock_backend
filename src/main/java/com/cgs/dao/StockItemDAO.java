@@ -31,7 +31,7 @@ public interface StockItemDAO {
 
     @Select("<script>" +
             "select stock_id as stockId, listing_date as listingDate, exchange_id as exchangeId, name as name  from " + TABLE_NAME + "where stock_id in" +
-            "<foreach collections ='list' item='item' open='(' close=')' separator=','>" +
+            "<foreach collections ='stockIdList' index='index' item='item' open='(' close=')' separator=','>" +
             "#{item} " +
             "</foreach>" +
             "</script>")

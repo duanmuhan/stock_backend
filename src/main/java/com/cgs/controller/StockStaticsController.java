@@ -19,11 +19,4 @@ public class StockStaticsController {
     public Response queryFinanceInfoByStockId(@ApiParam(name="stockId",value="股票id",required=true) String stockId){
         return new Response();
     }
-
-    @RequestMapping(value = UrlConstant.TOP_VALUE_STOCK,method = RequestMethod.GET)
-    @ResponseBody
-    public Response queryTopBestFinanceInfoCompany(@ApiParam(name = "companyCount", value = "公司数量",required = true) Integer companyCount){
-
-        return new Response();
-    }
 }
