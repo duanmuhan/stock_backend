@@ -18,4 +18,9 @@ public class StockDataServiceTest {
     public void testQueryKItemByStockId(){
         KItemVO vo = stockDataService.queryKItemByStockId("300064");
     }
+
+    @Test
+    public void  testQueryValuableStockBasicInfoPerPrice(){
+        stockDataService.queryTopValueStockPerPrice();
+    }
 }
