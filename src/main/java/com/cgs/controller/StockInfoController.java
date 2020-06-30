@@ -26,7 +26,7 @@ public class StockInfoController {
     @Autowired
     private StockInfoService stockInfoService;
 
-    @RequestMapping(value = UrlConstant.TOP_VALUE_STOCK_PER_PRICE, method = RequestMethod.GET)
+    @RequestMapping(value = UrlConstant.STOCK_INFO_LIST, method = RequestMethod.GET)
     @ResponseBody
     public Response queryStockItemsByIdAndName(@RequestParam(value="stockId",required = false) String stockId,
                                                @RequestParam(value = "stockName", required = false) String stockName){
