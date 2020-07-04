@@ -10,5 +10,6 @@ public interface UrlConstant {
     String TOP_VALUE_STOCK = "/basic";
     String TOP_VALUE_STOCK_PER_PRICE = "/topValuePerPrice";
     String TOP_PLATE_VALUE_STOCK = "/plateBasicStock";
+    String OVER_VIEW = "/stock/overview";
 
 }

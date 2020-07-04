@@ -21,7 +21,7 @@ public class StockInfoService {
         if (StringUtils.isEmpty(stockId) && StringUtils.isEmpty(stockName)){
             list = stockItemDAO.queryAllStockList();
         }else if (!StringUtils.isEmpty(stockName) && StringUtils.isEmpty(stockId)){
-            list = stockItemDAO.queryStockItemsByStockId(stockId);
+            list = stockItemDAO.queryStockItemsByStockName(stockName);
         }else if (!StringUtils.isEmpty(stockId)){
             list = stockItemDAO.queryStockItemsByStockId(stockId);
         }

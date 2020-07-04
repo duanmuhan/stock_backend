@@ -85,4 +85,10 @@ public class StockDataController {
         return response;
     }
 
+    @RequestMapping(value = UrlConstant.OVER_VIEW, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockOverViewByStockId(String stockId){
+        return new Response();
+    }
+
 }

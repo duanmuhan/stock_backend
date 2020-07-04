@@ -34,6 +34,7 @@ public class StockDataService {
     public KItemVO queryKItemByStockId(String stockId){
         KItemVO vo = new KItemVO();
         List<KItem> items = kItemDAO.queryKItemsbyStockId(stockId);
+
         vo.setStockId(stockId);
         vo.setKItemList(items);
         return vo;

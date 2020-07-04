@@ -13,7 +13,7 @@ public interface KItemDAO {
 
     String COLUMNS = " stock_id, open_price, close_price, high, low, deal_amount, date ";
 
-    @Select("select * from" + TABLE_NAME + "where stock_id = #{stockId}")
+    @Select("select * from" + TABLE_NAME + "where stock_id = #{stockId} order by date desc limit 90")
     @Results( id = "resultMap",value = {
             @Result(property = "stockId",column = "stock_id"),
             @Result(property = "openPrice",column = "open_price"),
