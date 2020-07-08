@@ -2,20 +2,15 @@ package com.cgs.service;
 
 import com.cgs.dao.*;
 import com.cgs.entity.*;
-import com.cgs.vo.AverageVO;
-import com.cgs.vo.KItemVO;
-import com.cgs.vo.StockBasicVO;
-import com.cgs.vo.StockPlateVO;
+import com.cgs.vo.*;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -34,7 +29,9 @@ public class StockDataService {
     public KItemVO queryKItemByStockId(String stockId){
         KItemVO vo = new KItemVO();
         List<KItem> items = kItemDAO.queryKItemsbyStockId(stockId);
-
+        if (!CollectionUtils.isEmpty(items)){
+            Collections.reverse(items);
+        }
         vo.setStockId(stockId);
         vo.setKItemList(items);
         return vo;
@@ -98,5 +95,16 @@ public class StockDataService {
         return resultList;
     }
 
-
+    public StockOverViewVO queryTodayStockOverViewByStockId(String stockId){
+        StockOverViewVO viewVO = new StockOverViewVO();
+        KItem kItem = kItemDAO.queryLatestValueByStockId(stockId);
+        if (ObjectUtils.isEmpty(kItem)){
+            return viewVO;
+        }
+        viewVO.setPrice(kItem.getClosePrice());
+        viewVO.setDealAmount(kItem.getDealAmount());
+        viewVO.setStockId(stockId);
+        viewVO.setDealCash(kItem.getDealCash());
+        return viewVO;
+    }
 }

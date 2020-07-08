@@ -29,4 +29,6 @@ public interface KItemDAO {
     @Select("select * from k_item INNER JOIN (select MAX(date) as max_date, stock_id as stockId from k_item GROUP BY stock_id) A ON stock_id = A.stockId AND date = A.max_date" )
     @ResultMap(value = "resultMap")
     public List<KItem> queryLatestValue();
+
+    public KItem queryLatestValueByStockId(@Param("stockId") String stockId);
 }

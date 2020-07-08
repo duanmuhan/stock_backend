@@ -7,6 +7,7 @@ import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockDataService;
 import com.cgs.vo.KItemVO;
 import com.cgs.vo.StockBasicVO;
+import com.cgs.vo.StockOverViewVO;
 import com.cgs.vo.StockPlateVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -87,8 +88,16 @@ public class StockDataController {
 
     @RequestMapping(value = UrlConstant.OVER_VIEW, method = RequestMethod.GET)
     @ResponseBody
-    public Response queryStockOverViewByStockId(String stockId){
-        return new Response();
+    public Response queryStockOverViewByStockId(@ApiParam(value = "股票id") @RequestParam(name = "stockId") String stockId){
+        Response response = new Response();
+        try {
+            StockOverViewVO vo = stockDataService.queryTodayStockOverViewByStockId(stockId);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
+        }catch (Exception e){
+            log.error("queryStockOverViewByStockId exception:{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
+        }
+        return response;
     }
 
 }
