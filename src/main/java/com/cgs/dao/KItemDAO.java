@@ -30,7 +30,7 @@ public interface KItemDAO {
     @ResultMap(value = "resultMap")
     public List<KItem> queryLatestValue();
 
-    @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId} order by date desc limit 1")
+    @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId} order by date desc limit 2")
     @ResultMap(value = "resultMap")
     public List<KItem> queryLatestValueByStockId(@Param("stockId") String stockId);
 }
