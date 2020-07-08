@@ -8,4 +8,7 @@ public class StockOverViewVO {
     private Double price;
     private Long dealAmount;
     private Double dealCash;
+    private String priceRate;
+    private String amountRate;
+    private String dealCashRate;
 }
