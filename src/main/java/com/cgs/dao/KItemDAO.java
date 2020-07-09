@@ -2,6 +2,7 @@ package com.cgs.dao;
 
 import com.cgs.entity.KItem;
 import org.apache.ibatis.annotations.*;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,6 +13,8 @@ public interface KItemDAO {
     String TABLE_NAME = " k_item ";
 
     String COLUMNS = " stock_id, open_price, close_price, high, low, deal_amount, date ";
+
+    String cachePrefix = "KITEM:";
 
     @Select("select * from" + TABLE_NAME + "where stock_id = #{stockId} order by date desc limit 90")
     @Results( id = "resultMap",value = {
