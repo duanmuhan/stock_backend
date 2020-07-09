@@ -58,34 +58,6 @@ public class StockDataController {
         return response;
     }
 
-    @RequestMapping(value = UrlConstant.TOP_VALUE_STOCK, method = RequestMethod.GET)
-    @ResponseBody
-    public Response queryStockByBasicInfo(HttpServletRequest httpServletRequest){
-        Response response = new Response();
-        try {
-            List<StockBasicVO> list = stockDataService.queryValuableStockBasicInfo();
-            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,list);
-        }catch (Exception e){
-            log.error("queryPlateInfoByStockId exception:{}",e);
-            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
-        }
-        return response;
-    }
-
-    @RequestMapping(value = UrlConstant.TOP_VALUE_STOCK_PER_PRICE, method = RequestMethod.GET)
-    @ResponseBody
-    public Response queryTopValueStockPerPrice(HttpServletRequest httpServletRequest){
-        Response response = new Response();
-        try {
-            List<StockBasicVO> list = stockDataService.queryTopValueStockPerPrice();
-            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,list);
-        }catch (Exception e){
-            log.error("queryTopValueStockPerPrice exception:{}",e);
-            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
-        }
-        return response;
-    }
-
     @RequestMapping(value = UrlConstant.OVER_VIEW, method = RequestMethod.GET)
     @ResponseBody
     public Response queryStockOverViewByStockId(@ApiParam(value = "股票id") @RequestParam(name = "stockId") String stockId){
