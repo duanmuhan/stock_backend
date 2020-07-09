@@ -55,7 +55,7 @@ public class StockStaticsController {
     public Response queryTopValueStockPerPrice(HttpServletRequest httpServletRequest){
         Response response = new Response();
         try {
-            List<StockPriceAndEarningVO> list = stockStaticsService.queryTopValueStockPerPrice();
+            List<StockPriceAndEarningVO> list = stockStaticsService.queryValueStockPerPrice();
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK,list);
         }catch (Exception e){
             log.error("queryTopValueStockPerPrice exception:{}",e);

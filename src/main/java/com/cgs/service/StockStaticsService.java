@@ -51,7 +51,7 @@ public class StockStaticsService {
         return voList;
     }
 
-    public List<StockPriceAndEarningVO> queryTopValueStockPerPrice(){
+    public List<StockPriceAndEarningVO> queryValueStockPerPrice(){
         List<StockBasicVO> list = queryValuableStockBasicInfo();
         List<KItem> valueList = kItemDAO.queryLatestValue();
         Map<String,KItem> valueMap = valueList.stream().collect(Collectors.toMap(KItem::getStockId, Function.identity()));
