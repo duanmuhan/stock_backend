@@ -21,6 +21,5 @@ public class StockDataServiceTest {
 
     @Test
     public void  testQueryValuableStockBasicInfoPerPrice(){
-        stockDataService.queryTopValueStockPerPrice();
     }
 }

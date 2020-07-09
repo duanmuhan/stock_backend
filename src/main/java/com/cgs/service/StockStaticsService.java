@@ -58,7 +58,7 @@ public class StockStaticsService {
         List<StockPriceAndEarningVO> resultList = new ArrayList<>();
         list.forEach(e->{
             StockPriceAndEarningVO stockPriceAndEarningVO = new StockPriceAndEarningVO();
-            if (valueMap.containsKey(e.getStockId())){
+            if (valueMap.containsKey(e.getStockId()) && e.getBasicEarningsPerCommonShare()>0){
                 stockPriceAndEarningVO.setStockId(e.getStockId());
                 stockPriceAndEarningVO.setBasicEarningsPerCommonShare(e.getBasicEarningsPerCommonShare());
                 stockPriceAndEarningVO.setPrice(valueMap.get(e.getStockId()).getClosePrice());
@@ -67,4 +67,6 @@ public class StockStaticsService {
         });
         return resultList;
     }
+
+
 }
