@@ -16,10 +16,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 public class StockStaticsService {
+
+    private static String REGEX_CHINESE = "[\u4e00-\u9fa5]";// 中文正则
 
     @Autowired
     private FinanceInfoDAO financeInfoDAO;
@@ -68,5 +72,86 @@ public class StockStaticsService {
         return resultList;
     }
 
+    public List<String> queryTestStock(){
+        List<FinanceInfo> financeInfoList = financeInfoDAO.queryFinanceInfo();
+        if (CollectionUtils.isEmpty(financeInfoList)){
+            return new ArrayList<>();
+        }
+        List<String> resultList  = new ArrayList<>();
+        Map<String,List<FinanceInfo>> financeMap = financeInfoList.stream().collect(Collectors.groupingBy(e->e.getStockId()));
+        for (String stockId:financeMap.keySet()){
+            List<FinanceInfo> tmpList = financeMap.get(stockId).stream().sorted(Comparator.comparing(FinanceInfo::getReleaseDate).reversed()).collect(Collectors.toList());
+            if (IsItemsReceivedInAdvance(tmpList) ){
+                resultList.add(stockId);
+            }
+        }
+        return resultList;
+    }
+
+    private boolean isRateOfMarginIncrease(List<FinanceInfo> tmpList){
+        int startIndex=0;
+        while (startIndex < tmpList.size()-1){
+            int endIndex=startIndex + 1;
+            if (!(removeMardrinCharacter(tmpList.get(startIndex).getRateOfMargin()) > removeMardrinCharacter(tmpList.get(endIndex).getRateOfMargin()))){
+                return false;
+            }
+            startIndex ++;
+        }
+        return true;
+    }
+
+    private boolean isDaysInInventoryDecrease(List<FinanceInfo> tmpList){
+        int startIndex=0;
+        while (startIndex < tmpList.size()-1){
+            int endIndex=startIndex + 1;
+            if (!(removeMardrinCharacter(tmpList.get(startIndex).getDaysInInventory()) < removeMardrinCharacter(tmpList.get(endIndex).getDaysInInventory()))){
+                return false;
+            }
+            startIndex ++;
+        }
+        return true;
+    }
+
+    private boolean IsItemsReceivedInAdvance(List<FinanceInfo> tmpList){
+        int startIndex=0;
+        while (startIndex < tmpList.size()-1){
+            int endIndex=startIndex + 1;
+            if (!(removeMardrinCharacter(tmpList.get(startIndex).getItemsReceivedInAdvance()) > removeMardrinCharacter(tmpList.get(endIndex).getItemsReceivedInAdvance()))){
+                return false;
+            }
+            startIndex ++;
+        }
+        return true;
+    }
+
+    private boolean isGrossRevenueIncrease(List<FinanceInfo> tmpList){
+        int startIndex=0;
+        while (startIndex < tmpList.size()-1){
+            int endIndex=startIndex + 1;
+            if (!(removeMardrinCharacter(tmpList.get(startIndex).getGrossRevenue()) > removeMardrinCharacter(tmpList.get(endIndex).getGrossProfit()))){
+                return false;
+            }
+            startIndex ++;
+        }
+        return true;
+    }
+
+    private boolean isAttributableNetProfitNagative(FinanceInfo tmp){
+        Double result = removeMardrinCharacter(tmp.getAttributableNetProfit());
+        if (result<0){
+            return true;
+        }
+        return false;
+    }
+
+    private Double removeMardrinCharacter(String input){
+        if (StringUtils.isEmpty(input) || "--".equals(input)){
+            return new Double(0);
+        }
+        Pattern pat = Pattern.compile(REGEX_CHINESE);
+        Matcher mat = pat.matcher(input);
+        String result = mat.replaceAll("");
+        return Double.valueOf(result);
+    }
 
 }
