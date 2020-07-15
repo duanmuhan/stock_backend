@@ -1,7 +1,6 @@
 package com.cgs.dao;
 
 import com.cgs.entity.StockHolder;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -17,7 +16,7 @@ public interface StockHolderDAO {
     String COLUMNS = " stock_id, number_of_share_holder, per_capita_tradable_shares, last_change," +
             " stock_convergence_rate, price, per_capita_holding_amount, top_ten_stock_holder, top_ten_stock_flow_holder, release_date ";
 
-    @Select("select * from" + TABLE_NAME + "where stock_id = #{stockId} order by date desc limit 90")
+    @Select("select * from stock_holder INNER JOIN (select MAX(date) as max_date, stock_id as stockId from k_item GROUP BY stock_id) A ON stock_id = A.stockId AND date = A.max_date")
     @Results( id = "resultMap",value = {
             @Result(property = "stockId",column = "stock_id"),
             @Result(property = "numberOfShareholders",column = "number_of_share_holder"),
