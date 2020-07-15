@@ -12,4 +12,7 @@ public interface UrlConstant {
     String TOP_PLATE_VALUE_STOCK = "/plateBasicStock";
     String OVER_VIEW = "/stock/overview";
 
+    String STOCK_HOLDER_LIST_BY_STOCK_ID = "/stockholder/stockId";
+
+    String STOCK_HOLDER_MARKET_VALUE_PAIR = "/stockholder/marketValue";
 }
