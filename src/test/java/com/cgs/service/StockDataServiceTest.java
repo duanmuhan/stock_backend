@@ -13,6 +13,8 @@ public class StockDataServiceTest {
 
     @Autowired
     private StockDataService stockDataService;
+    @Autowired
+    private StockStaticsService stockStaticsService;
 
     @Test
     public void testQueryKItemByStockId(){
@@ -21,5 +23,6 @@ public class StockDataServiceTest {
 
     @Test
     public void  testQueryValuableStockBasicInfoPerPrice(){
+        System.out.println(stockStaticsService.queryTestStock());
     }
 }
