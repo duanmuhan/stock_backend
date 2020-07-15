@@ -16,7 +16,7 @@ public interface StockHolderDAO {
     String COLUMNS = " stock_id, number_of_share_holder, per_capita_tradable_shares, last_change," +
             " stock_convergence_rate, price, per_capita_holding_amount, top_ten_stock_holder, top_ten_stock_flow_holder, release_date ";
 
-    @Select("select * from stock_holder INNER JOIN (select MAX(date) as max_date, stock_id as stockId from k_item GROUP BY stock_id) A ON stock_id = A.stockId AND date = A.max_date")
+    @Select("select * from stock_holder INNER JOIN (select MAX(release_date) as max_date, stock_id as stockId from stock_holder GROUP BY stock_id) A ON stock_id = A.stockId AND release_date = A.max_date")
     @Results( id = "resultMap",value = {
             @Result(property = "stockId",column = "stock_id"),
             @Result(property = "numberOfShareholders",column = "number_of_share_holder"),
