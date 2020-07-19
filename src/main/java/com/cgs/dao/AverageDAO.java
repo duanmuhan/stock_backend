@@ -16,12 +16,12 @@ public interface AverageDAO {
 
     String COLUMNS = " stock_id, price, type, date ";
 
-    @Select("select * from " + TABLE_NAME + " where stock_id = #{stockId} and type = #{type}")
+    @Select("select * from " + TABLE_NAME + " where stock_id = #{stockId}")
     @Results( id = "resultMap",value = {
             @Result(property = "stockId",column = "stock_id"),
             @Result(property = "price",column = "price"),
             @Result(property = "type",column = "type"),
             @Result(property = "date",column = "date"),
     })
-    public List<AverageItem> queryAverageItemListByStockId( @Param("stockId") String stockId,@Param("type") Integer type);
+    public List<AverageItem> queryAverageItemListByStockId( @Param("stockId") String stockId);
 }

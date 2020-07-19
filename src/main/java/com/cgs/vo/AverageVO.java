@@ -8,5 +8,6 @@ import java.util.List;
 @Data
 public class AverageVO {
     private String stockId;
-    private List<AverageItem> list;
+    private List<AverageItem> fiveDayList;
+    private List<AverageItem> tenDayList;
 }
