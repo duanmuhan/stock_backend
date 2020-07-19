@@ -72,7 +72,7 @@ public class StockDataController {
     @RequestMapping(value = UrlConstant.AVERAGE_ITEM, method = RequestMethod.GET)
     @ResponseBody
     public Response queryStockAverageItemByStockId(@ApiParam(value = "股票id") @RequestParam(name = "stockId") String stockId,
-                                                    @ApiParam(value = "股票id") @RequestParam(name = "stockId") Integer type){
+                                                    @ApiParam(value = "股票id") @RequestParam(name = "type") Integer type){
         Response response = new Response();
         try {
             AverageVO vo = stockDataService.queryAverageItemByStockId(stockId,type);
