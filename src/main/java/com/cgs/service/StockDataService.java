@@ -37,9 +37,9 @@ public class StockDataService {
         return vo;
     }
 
-    public AverageVO queryAverageItemByStockId(String stockId){
+    public AverageVO queryAverageItemByStockId(String stockId,Integer type){
         AverageVO vo = new AverageVO();
-        List<AverageItem> list = averageDAO.queryAverageItemListByStockId(stockId);
+        List<AverageItem> list = averageDAO.queryAverageItemListByStockId(stockId,type);
         vo.setStockId(stockId);
         vo.setList(list);
         return vo;

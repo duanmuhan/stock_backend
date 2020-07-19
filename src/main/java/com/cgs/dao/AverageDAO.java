@@ -14,6 +14,6 @@ public interface AverageDAO {
 
     String COLUMNS = " stock_id, price, type, date ";
 
-    @Select("select * from " + TABLE_NAME + " where stock_id = #{stockId}")
-    public List<AverageItem> queryAverageItemListByStockId( @Param("stockId") String stockId);
+    @Select("select * from " + TABLE_NAME + " where stock_id = #{stockId} and type = #{type}")
+    public List<AverageItem> queryAverageItemListByStockId( @Param("stockId") String stockId,@Param("type") Integer type);
 }

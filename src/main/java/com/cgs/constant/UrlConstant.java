@@ -2,6 +2,7 @@ package com.cgs.constant;
 
 public interface UrlConstant {
     String K_ITEM = "/kitem";
+    String AVERAGE_ITEM = "/average";
     String FINANCE_INFO = "/financeInfo";
     String STOCK_INFO_LIST ="/stockList";
     String PLATE_INFO_BY_STOCK_ID = "/queryPlateInfoByStockId";

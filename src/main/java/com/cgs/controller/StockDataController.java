@@ -5,10 +5,7 @@ import com.cgs.constant.ErrorCode;
 import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockDataService;
-import com.cgs.vo.KItemVO;
-import com.cgs.vo.StockBasicVO;
-import com.cgs.vo.StockOverViewVO;
-import com.cgs.vo.StockPlateVO;
+import com.cgs.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +61,21 @@ public class StockDataController {
         Response response = new Response();
         try {
             StockOverViewVO vo = stockDataService.queryTodayStockOverViewByStockId(stockId);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
+        }catch (Exception e){
+            log.error("queryStockOverViewByStockId exception:{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
+        }
+        return response;
+    }
+
+    @RequestMapping(value = UrlConstant.AVERAGE_ITEM, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockAverageItemByStockId(@ApiParam(value = "股票id") @RequestParam(name = "stockId") String stockId,
+                                                    @ApiParam(value = "股票id") @RequestParam(name = "stockId") Integer type){
+        Response response = new Response();
+        try {
+            AverageVO vo = stockDataService.queryAverageItemByStockId(stockId,type);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
         }catch (Exception e){
             log.error("queryStockOverViewByStockId exception:{}",e);
