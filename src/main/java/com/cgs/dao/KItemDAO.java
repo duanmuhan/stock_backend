@@ -16,7 +16,7 @@ public interface KItemDAO {
 
     String cachePrefix = "KITEM:";
 
-    @Select("select * from" + TABLE_NAME + "where stock_id = #{stockId} order by date desc limit 90")
+    @Select("select * from" + TABLE_NAME + "where stock_id = #{stockId} order by date desc limit 100")
     @Results( id = "resultMap",value = {
             @Result(property = "stockId",column = "stock_id"),
             @Result(property = "openPrice",column = "open_price"),
@@ -33,7 +33,7 @@ public interface KItemDAO {
     @ResultMap(value = "resultMap")
     public List<KItem> queryLatestValue();
 
-    @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId} order by date desc limit 2")
+    @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId} order by date desc limit 1")
     @ResultMap(value = "resultMap")
-    public List<KItem> queryLatestValueByStockId(@Param("stockId") String stockId);
+    public KItem queryLatestValueByStockId(@Param("stockId") String stockId);
 }

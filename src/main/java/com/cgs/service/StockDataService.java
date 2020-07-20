@@ -57,20 +57,18 @@ public class StockDataService {
 
     public StockOverViewVO queryTodayStockOverViewByStockId(String stockId){
         StockOverViewVO viewVO = new StockOverViewVO();
-        List<KItem> kItemList = kItemDAO.queryLatestValueByStockId(stockId);
-        if (ObjectUtils.isEmpty(kItemList)){
+        KItem kItem = kItemDAO.queryLatestValueByStockId(stockId);
+        if (ObjectUtils.isEmpty(kItem)){
             return viewVO;
         }
-        StockItem item = stockItemDAO.queryStockItemsByStockId(stockId);
-        KItem todayKItem = kItemList.get(0);
-        KItem yesterdayKItem = kItemList.get(1);
-        viewVO.setPrice(todayKItem.getClosePrice());
-        viewVO.setDealAmount(todayKItem.getDealAmount());
+        StockItem item = stockItemDAO.queryStockItemByStockId(stockId);
+        viewVO.setPrice(kItem.getClosePrice());
+        viewVO.setDealAmount(kItem.getDealAmount());
         viewVO.setStockId(stockId);
         viewVO.setStockName(item.getName());
-        viewVO.setDealCash(todayKItem.getDealCash());
-        viewVO.setPriceRate(String.valueOf((todayKItem.getClosePrice()-todayKItem.getOpenPrice())/todayKItem.getOpenPrice() * 100));
-        viewVO.setAmountRate(String.valueOf((todayKItem.getDealAmount() - yesterdayKItem.getDealAmount())/yesterdayKItem.getDealAmount() * 100));
+        viewVO.setDealCash(kItem.getDealCash());
+        viewVO.setPriceRate(String.valueOf((kItem.getClosePrice()-kItem.getOpenPrice())/kItem.getOpenPrice() * 100));
+        viewVO.setAmountRate(String.valueOf((kItem.getDealAmount() - kItem.getDealAmount())/kItem.getDealAmount() * 100));
         return viewVO;
     }
 }
