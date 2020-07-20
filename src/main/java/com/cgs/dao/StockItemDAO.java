@@ -4,6 +4,7 @@ import com.cgs.entity.StockItem;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,12 +28,14 @@ public interface StockItemDAO {
     public void insertStockItem(@Param("item") StockItem item);
 
     @Select("select stock_id as stockId, listing_date as listingDate, exchange_id as exchangeId, name as name  from " + TABLE_NAME)
+    @Cacheable(value = "kitem:stockitem")
     public List<StockItem> queryAllStockList();
 
     @Select("select stock_id as stockId, listing_date as listingDate, exchange_id as exchangeId, name as name  from " + TABLE_NAME + "where stock_id like '${stockId}%'")
     public List<StockItem> queryStockItemsByStockId(@Param("stockId") String stockId);
 
     @Select("select stock_id as stockId, listing_date as listingDate, exchange_id as exchangeId, name as name  from " + TABLE_NAME + "where stock_id = #{stockId}")
+    @Cacheable(value = "kitem:stockitem",key = "#stockId")
     public StockItem queryStockItemByStockId(@Param("stockId") String stockId);
 
     @Select("select stock_id as stockId, listing_date as listingDate, exchange_id as exchangeId, name as name  from " + TABLE_NAME + "where name like '${stockName}%'")
