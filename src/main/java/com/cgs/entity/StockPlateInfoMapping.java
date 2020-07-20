@@ -2,8 +2,10 @@ package com.cgs.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class StockPlateInfoMapping {
+public class StockPlateInfoMapping implements Serializable {
     private Long id;
     private String stockId;
     private String stockName;

@@ -4,6 +4,7 @@ import com.cgs.entity.FinanceInfo;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -59,5 +60,6 @@ public interface FinanceInfoDAO {
     })
 
     @Select("select * from " + TABLE_NAME)
+    @Cacheable(value = "stock::finance")
     public List<FinanceInfo> queryFinanceInfo();
 }

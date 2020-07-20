@@ -2,8 +2,10 @@ package com.cgs.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class KItem {
+public class KItem implements Serializable {
     private String stockId;
     private Double openPrice;
     private Double closePrice;

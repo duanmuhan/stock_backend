@@ -5,7 +5,9 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
+import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ public interface AverageDAO {
 
     String COLUMNS = " stock_id, price, type, date ";
 
+    String REDIS_PREFIX="stock::average";
+
     @Select("select * from " + TABLE_NAME + " where stock_id = #{stockId} order by date desc limit 100")
     @Results( id = "resultMap",value = {
             @Result(property = "stockId",column = "stock_id"),
@@ -23,5 +27,6 @@ public interface AverageDAO {
             @Result(property = "type",column = "type"),
             @Result(property = "date",column = "date"),
     })
+    @Cacheable(value = REDIS_PREFIX,key = "#stockId")
     public List<AverageItem> queryAverageItemListByStockId( @Param("stockId") String stockId);
 }

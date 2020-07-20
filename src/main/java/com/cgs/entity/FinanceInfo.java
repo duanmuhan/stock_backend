@@ -2,8 +2,10 @@ package com.cgs.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class FinanceInfo {
+public class FinanceInfo implements Serializable {
     //股票id
     private String stockId;
     //基本每股收益

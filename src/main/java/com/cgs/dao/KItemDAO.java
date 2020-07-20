@@ -14,8 +14,6 @@ public interface KItemDAO {
 
     String COLUMNS = " stock_id, open_price, close_price, high, low, deal_amount, date ";
 
-    String cachePrefix = "KITEM:";
-
     @Select("select * from" + TABLE_NAME + "where stock_id = #{stockId} order by date desc limit 100")
     @Results( id = "resultMap",value = {
             @Result(property = "stockId",column = "stock_id"),
@@ -27,6 +25,7 @@ public interface KItemDAO {
             @Result(property = "dealCash",column = "deal_cash"),
             @Result(property = "date",column = "date")
     })
+    @Cacheable(value = "kitem",key = "#stockId")
     public List<KItem> queryKItemsbyStockId(@Param("stockId") String stockId);
 
     @Select("select * from k_item INNER JOIN (select MAX(date) as max_date, stock_id as stockId from k_item GROUP BY stock_id) A ON stock_id = A.stockId AND date = A.max_date" )
@@ -35,5 +34,6 @@ public interface KItemDAO {
 
     @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId} order by date desc limit 1")
     @ResultMap(value = "resultMap")
+    @Cacheable(value = "kitem:latest",key = "#stockId")
     public KItem queryLatestValueByStockId(@Param("stockId") String stockId);
 }

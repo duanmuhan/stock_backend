@@ -2,8 +2,10 @@ package com.cgs.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class StockHolderTopTen {
+public class StockHolderTopTen implements Serializable {
 
     private String stockId;
     //股东名称

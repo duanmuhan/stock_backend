@@ -4,6 +4,7 @@ import com.cgs.entity.StockHolder;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,5 +30,6 @@ public interface StockHolderDAO {
             @Result(property = "topTenStockFlowHolder",column = "top_ten_stock_flow_holder"),
             @Result(property = "releaseDate",column = "release_date")
     })
+    @Cacheable(value = "stock::holder")
     public List<StockHolder> queryNewestStockHolder();
 }
