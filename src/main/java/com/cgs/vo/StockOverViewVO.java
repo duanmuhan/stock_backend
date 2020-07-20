@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class StockOverViewVO {
     private String stockId;
+    private String stockName;
     private Double price;
     private Long dealAmount;
     private Double dealCash;

@@ -30,7 +30,7 @@ public interface StockItemDAO {
     public List<StockItem> queryAllStockList();
 
     @Select("select stock_id as stockId, listing_date as listingDate, exchange_id as exchangeId, name as name  from " + TABLE_NAME + "where stock_id like '${stockId}%'")
-    public List<StockItem> queryStockItemsByStockId(@Param("stockId") String stockId);
+    public StockItem queryStockItemsByStockId(@Param("stockId") String stockId);
 
     @Select("select stock_id as stockId, listing_date as listingDate, exchange_id as exchangeId, name as name  from " + TABLE_NAME + "where name like '${stockName}%'")
     public List<StockItem> queryStockItemsByStockName(@Param("stockName") String stockName);

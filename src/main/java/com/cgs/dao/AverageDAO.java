@@ -16,7 +16,7 @@ public interface AverageDAO {
 
     String COLUMNS = " stock_id, price, type, date ";
 
-    @Select("select * from " + TABLE_NAME + " where stock_id = #{stockId}")
+    @Select("select * from " + TABLE_NAME + " where stock_id = #{stockId} order by date desc limit 90")
     @Results( id = "resultMap",value = {
             @Result(property = "stockId",column = "stock_id"),
             @Result(property = "price",column = "price"),
