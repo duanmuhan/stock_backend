@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface StockInfoDAO {
 
@@ -14,6 +16,10 @@ public interface StockInfoDAO {
             "total_market_value, flow_market_value, pe_ratio, average_turnover_rate, date ";
 
     @Select("select count(*) " + TABLE_NAME + " where total_market_value = #{value} and date= #{date}")
-    @Cacheable(value = "stockInfo:",key = " #value + '-' + #date")
+    @Cacheable(value = "stockInfo::value",key = " #value + '-' + #date")
     public Integer queryStockInfoCountByValue(@Param("value") Integer value, @Param("date") String date);
+
+    @Select("select stock_id " + TABLE_NAME + " where total_market_value = #{value} and date= #{date}")
+    @Cacheable(value = "stockInfo::stockId",key = " #value + '-' + #date")
+    public List<String> queryStockIdByValueAndDate(@Param("value") Integer value, @Param("date") String date);
 }
