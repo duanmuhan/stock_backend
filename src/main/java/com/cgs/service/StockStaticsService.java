@@ -2,15 +2,18 @@ package com.cgs.service;
 
 import com.cgs.dao.FinanceInfoDAO;
 import com.cgs.dao.KItemDAO;
+import com.cgs.dao.StockInfoDAO;
 import com.cgs.entity.FinanceInfo;
 import com.cgs.entity.KItem;
 import com.cgs.vo.StockBasicVO;
 import com.cgs.vo.StockPriceAndEarningVO;
+import com.cgs.vo.StockValueStaticsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -26,6 +29,8 @@ public class StockStaticsService {
     private FinanceInfoDAO financeInfoDAO;
     @Autowired
     private KItemDAO kItemDAO;
+    @Autowired
+    private StockInfoDAO stockInfoDAO;
 
     public List<StockBasicVO> queryValuableStockBasicInfo(){
         List<FinanceInfo> financeInfos = financeInfoDAO.queryFinanceInfo();
@@ -67,6 +72,11 @@ public class StockStaticsService {
             }
         });
         return resultList;
+    }
+
+    public StockValueStaticsVO queryStockItemValue(HttpServletRequest httpServletRequest){
+        StockValueStaticsVO vo  = new StockValueStaticsVO();
+        return vo;
     }
 
     public List<String> queryTestStock(){

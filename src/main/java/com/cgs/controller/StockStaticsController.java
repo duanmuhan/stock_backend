@@ -63,4 +63,18 @@ public class StockStaticsController {
         }
         return response;
     }
+
+    @RequestMapping(value = UrlConstant.STOCK_ITEM_VALUE, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryValueStock(HttpServletRequest httpServletRequest){
+        Response response = new Response();
+        try {
+            List<StockPriceAndEarningVO> list = stockStaticsService.queryValueStockPerPrice();
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,list);
+        }catch (Exception e){
+            log.error("queryTopValueStockPerPrice exception:{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
+        }
+        return response;
+    }
 }

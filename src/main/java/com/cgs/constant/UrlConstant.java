@@ -15,6 +15,8 @@ public interface UrlConstant {
 
     String STOCK_HOLDER_LIST_BY_STOCK_ID = "/stockholder/stockId";
 
-    String STOCK_HOLDER_MARKET_VALUE_PAIR = "/stockholder/marketValue";
+    String STOCK_HOLDER_MARKET_VALUE = "/stockholder/marketValue";
     String STOCK_HOLDER_ORDER = "/stockholder/order";
+
+    String STOCK_ITEM_VALUE = "/stock/value";
 }

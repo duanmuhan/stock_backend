@@ -26,7 +26,7 @@ public class StockHolderController {
     @Autowired
     private StockHolderService stockHolderService;
 
-    @RequestMapping(value = UrlConstant.STOCK_HOLDER_MARKET_VALUE_PAIR, method = RequestMethod.GET)
+    @RequestMapping(value = UrlConstant.STOCK_HOLDER_MARKET_VALUE, method = RequestMethod.GET)
     @ResponseBody
     public Response queryStockHolderMarketPair(HttpServletRequest httpServletRequest){
         stockHolderService.queryStockHolderMarket(httpServletRequest);
