@@ -5,15 +5,15 @@ import com.cgs.dao.KItemDAO;
 import com.cgs.dao.StockInfoDAO;
 import com.cgs.entity.FinanceInfo;
 import com.cgs.entity.KItem;
-import com.cgs.vo.StockBasicVO;
-import com.cgs.vo.StockPriceAndEarningVO;
-import com.cgs.vo.StockValueStaticsVO;
+import com.cgs.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -29,8 +29,6 @@ public class StockStaticsService {
     private FinanceInfoDAO financeInfoDAO;
     @Autowired
     private KItemDAO kItemDAO;
-    @Autowired
-    private StockInfoDAO stockInfoDAO;
 
     public List<StockBasicVO> queryValuableStockBasicInfo(){
         List<FinanceInfo> financeInfos = financeInfoDAO.queryFinanceInfo();
@@ -74,87 +72,47 @@ public class StockStaticsService {
         return resultList;
     }
 
-
-    public List<String> queryTestStock(){
-        List<FinanceInfo> financeInfoList = financeInfoDAO.queryFinanceInfo();
-        if (CollectionUtils.isEmpty(financeInfoList)){
-            return new ArrayList<>();
+    public StockChangeOverViewVO queryStockChange(String date){
+        StockChangeOverViewVO stockChangeOverViewVO = new StockChangeOverViewVO();
+        Map<String,Integer> stockChangeMap = new HashMap<>();
+        List<KItem> kItems = new ArrayList<>();
+        if (StringUtils.isEmpty(date)){
+            kItems = kItemDAO.queryLatestValue();
+        }else {
+            kItems = kItemDAO.queryKItemsByDate(date);
         }
-        List<String> resultList  = new ArrayList<>();
-        Map<String,List<FinanceInfo>> financeMap = financeInfoList.stream().collect(Collectors.groupingBy(e->e.getStockId()));
-        for (String stockId:financeMap.keySet()){
-            List<FinanceInfo> tmpList = financeMap.get(stockId).stream().sorted(Comparator.comparing(FinanceInfo::getReleaseDate).reversed()).collect(Collectors.toList());
-            if (IsItemsReceivedInAdvance(tmpList) ){
-                resultList.add(stockId);
+        if (CollectionUtils.isEmpty(kItems)){
+            return stockChangeOverViewVO;
+        }
+        DecimalFormat df = new DecimalFormat("#0.00");
+        for (KItem kItem : kItems){
+            if (ObjectUtils.isEmpty(kItem.getClosePrice()) || ObjectUtils.isEmpty(kItem.getOpenPrice())){
+                continue;
+            }
+            Double rate = (kItem.getClosePrice() - kItem.getOpenPrice())/kItem.getOpenPrice();
+            String rateStr = df.format(rate);
+            if (stockChangeMap.containsKey(rateStr)){
+                int value = stockChangeMap.get(rateStr) + 1;
+                stockChangeMap.put(rateStr,value);
+            }else {
+                int value = 1;
+                stockChangeMap.put(rateStr,value);
             }
         }
-        return resultList;
-    }
-
-    private boolean isRateOfMarginIncrease(List<FinanceInfo> tmpList){
-        int startIndex=0;
-        while (startIndex < tmpList.size()-1){
-            int endIndex=startIndex + 1;
-            if (!(removeMardrinCharacter(tmpList.get(startIndex).getRateOfMargin()) > removeMardrinCharacter(tmpList.get(endIndex).getRateOfMargin()))){
-                return false;
-            }
-            startIndex ++;
+        List<StockChangeVO> list = new ArrayList<>();
+        for (Map.Entry<String,Integer> entry : stockChangeMap.entrySet()){
+            StockChangeVO stockChangeVO = new StockChangeVO();
+            stockChangeVO.setChangeRate(Double.valueOf(entry.getKey()) * 100 + "%" );
+            stockChangeVO.setChangeNum(entry.getValue());
+            list.add(stockChangeVO);
         }
-        return true;
-    }
-
-    private boolean isDaysInInventoryDecrease(List<FinanceInfo> tmpList){
-        int startIndex=0;
-        while (startIndex < tmpList.size()-1){
-            int endIndex=startIndex + 1;
-            if (!(removeMardrinCharacter(tmpList.get(startIndex).getDaysInInventory()) < removeMardrinCharacter(tmpList.get(endIndex).getDaysInInventory()))){
-                return false;
-            }
-            startIndex ++;
+        if (!StringUtils.isEmpty(date)){
+            stockChangeOverViewVO.setDate(date);
+        }else {
+            stockChangeOverViewVO.setDate(kItems.get(0).getDate());
         }
-        return true;
-    }
-
-    private boolean IsItemsReceivedInAdvance(List<FinanceInfo> tmpList){
-        int startIndex=0;
-        while (startIndex < tmpList.size()-1){
-            int endIndex=startIndex + 1;
-            if (!(removeMardrinCharacter(tmpList.get(startIndex).getItemsReceivedInAdvance()) > removeMardrinCharacter(tmpList.get(endIndex).getItemsReceivedInAdvance()))){
-                return false;
-            }
-            startIndex ++;
-        }
-        return true;
-    }
-
-    private boolean isGrossRevenueIncrease(List<FinanceInfo> tmpList){
-        int startIndex=0;
-        while (startIndex < tmpList.size()-1){
-            int endIndex=startIndex + 1;
-            if (!(removeMardrinCharacter(tmpList.get(startIndex).getGrossRevenue()) > removeMardrinCharacter(tmpList.get(endIndex).getGrossProfit()))){
-                return false;
-            }
-            startIndex ++;
-        }
-        return true;
-    }
-
-    private boolean isAttributableNetProfitNagative(FinanceInfo tmp){
-        Double result = removeMardrinCharacter(tmp.getAttributableNetProfit());
-        if (result<0){
-            return true;
-        }
-        return false;
-    }
-
-    private Double removeMardrinCharacter(String input){
-        if (StringUtils.isEmpty(input) || "--".equals(input)){
-            return new Double(0);
-        }
-        Pattern pat = Pattern.compile(REGEX_CHINESE);
-        Matcher mat = pat.matcher(input);
-        String result = mat.replaceAll("");
-        return Double.valueOf(result);
+        stockChangeOverViewVO.setList(list);
+        return stockChangeOverViewVO;
     }
 
 }

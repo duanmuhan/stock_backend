@@ -20,4 +20,5 @@ public interface UrlConstant {
 
     String STOCK_ITEM_VALUE = "/stock/value";
     String STOCK_MARKET_VALUE = "/stock/market";
+    String STOCK_CHANGE = "/stock/change";
 }

@@ -6,6 +6,8 @@ import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockStaticsService;
 import com.cgs.vo.StockBasicVO;
+import com.cgs.vo.StockChangeOverViewVO;
+import com.cgs.vo.StockChangeVO;
 import com.cgs.vo.StockPriceAndEarningVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,6 +74,20 @@ public class StockStaticsController {
         try {
             List<StockPriceAndEarningVO> list = stockStaticsService.queryValueStockPerPrice();
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK,list);
+        }catch (Exception e){
+            log.error("queryTopValueStockPerPrice exception:{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
+        }
+        return response;
+    }
+
+    @RequestMapping(value = UrlConstant.STOCK_CHANGE, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockChange(@RequestParam(name = "date",required = false) String date){
+        Response response = new Response();
+        try {
+            StockChangeOverViewVO vo = stockStaticsService.queryStockChange(date);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
         }catch (Exception e){
             log.error("queryTopValueStockPerPrice exception:{}",e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
