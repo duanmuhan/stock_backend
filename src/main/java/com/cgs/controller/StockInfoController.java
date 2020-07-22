@@ -7,6 +7,7 @@ import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockInfoService;
 import com.cgs.vo.StockInfoVO;
 import com.cgs.vo.StockPlateVO;
+import com.cgs.vo.StockValueStaticsVO;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -34,6 +36,20 @@ public class StockInfoController {
         try {
             List<StockInfoVO> list = stockInfoService.queryStockInfoByStockIdAndStockName(stockId,stockName);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK,list);
+        }catch (Exception e){
+            log.error("queryPlateInfoByStockId exception:{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
+        }
+        return response;
+    }
+
+    @RequestMapping(value = UrlConstant.STOCK_MARKET_VALUE, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockMarketValueCount(HttpServletRequest httpServletRequest){
+        Response response = new Response();
+        try {
+            StockValueStaticsVO vo = stockInfoService.queryStockItemValue(httpServletRequest);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
         }catch (Exception e){
             log.error("queryPlateInfoByStockId exception:{}",e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);

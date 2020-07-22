@@ -74,10 +74,6 @@ public class StockStaticsService {
         return resultList;
     }
 
-    public StockValueStaticsVO queryStockItemValue(HttpServletRequest httpServletRequest){
-        StockValueStaticsVO vo  = new StockValueStaticsVO();
-        return vo;
-    }
 
     public List<String> queryTestStock(){
         List<FinanceInfo> financeInfoList = financeInfoDAO.queryFinanceInfo();
