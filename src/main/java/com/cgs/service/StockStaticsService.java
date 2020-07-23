@@ -132,51 +132,58 @@ public class StockStaticsService {
         Long twoCount = kItems.stream().filter(e->{
             return e.getClosePrice() <= StockPriceConstant.TWO;
         }).count();
-        resultList.add(new Pair<String,Long>("股价小于2元",twoCount));
+        resultList.add(new Pair<>("<2元", twoCount));
         Long fiveCount = kItems.stream().filter(e->{
             return  e.getClosePrice() > StockPriceConstant.TWO && e.getClosePrice() <= StockPriceConstant.FIVE;
         }).count();
-        resultList.add(new Pair<String,Long>("股价在2元5元之间",fiveCount));
+        resultList.add(new Pair<>("2-5元", fiveCount));
         Long tenCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.FIVE && e.getClosePrice() <= StockPriceConstant.TEN;
         }).count();
-        resultList.add(new Pair<String,Long>("股价在5元10元之间",tenCount));
+        resultList.add(new Pair<>("5-10元", tenCount));
         Long twentyCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.TEN && e.getClosePrice() <= StockPriceConstant.TWENTY;
         }).count();
-        resultList.add(new Pair<String,Long>("股价在10元20元之间",twentyCount));
+        resultList.add(new Pair<>("10-20元", twentyCount));
         Long thirtyCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.TWENTY && e.getClosePrice() <= StockPriceConstant.THIRTY;
         }).count();
-        resultList.add(new Pair<String,Long>("股价在20元30元之间",thirtyCount));
+        resultList.add(new Pair<>("20-30元", thirtyCount));
         Long fourtyCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.THIRTY && e.getClosePrice() <= StockPriceConstant.FORTY;
         }).count();
-        resultList.add(new Pair<String,Long>("股价在30元40元之间",fourtyCount));
+        resultList.add(new Pair<>("30-40元", fourtyCount));
         Long fiftyCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.FORTY && e.getClosePrice() <= StockPriceConstant.FIFTY;
         }).count();
-        resultList.add(new Pair<String,Long>("股价在40元50元之间",fiftyCount));
+        resultList.add(new Pair<>("40-50元", fiftyCount));
         Long oneHundredCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.FIFTY && e.getClosePrice() <= StockPriceConstant.ONE_HUNDRED;
         }).count();
-        resultList.add(new Pair<String,Long>("股价在50元100元之间",oneHundredCount));
+        resultList.add(new Pair<>("50-1百元", oneHundredCount));
         Long twoHundredCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.ONE_HUNDRED && e.getClosePrice() <= StockPriceConstant.TWO_HUNDRED;
         }).count();
-        resultList.add(new Pair<String,Long>("股价在100元200元之间",twoHundredCount));
+        resultList.add(new Pair<>("1-2百元", twoHundredCount));
         Long fiveHundredCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.TWO_HUNDRED && e.getClosePrice() <= StockPriceConstant.FIVE_HUNDRED;
         }).count();
-        resultList.add(new Pair<String,Long>("股价在200元500元之间",fiveHundredCount));
+        resultList.add(new Pair<>("2-5百元", fiveHundredCount));
         Long oneThousandCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.FIVE_HUNDRED && e.getClosePrice() <= StockPriceConstant.ONE_THOUSAND;
         }).count();
-        resultList.add(new Pair<String,Long>("股价在500元1000元之间",oneThousandCount));
+        resultList.add(new Pair<>("5百-1千元", oneThousandCount));
         Long largerThanOneThousandCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.ONE_THOUSAND;
         }).count();
-        resultList.add(new Pair<String,Long>("股价在1000元以上",largerThanOneThousandCount));
+        resultList.add(new Pair<>("1千元以上", largerThanOneThousandCount));
+        if (!StringUtils.isEmpty(date)){
+            vo.setDate(date);
+        }else {
+            vo.setDate(kItems.get(0).getDate());
+        }
+        vo.setList(resultList);
+
         return vo;
     }
 

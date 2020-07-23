@@ -105,4 +105,5 @@ public class StockStaticsController {
         }
         return response;
     }
+
 }

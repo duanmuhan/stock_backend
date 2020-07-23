@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 public class StockPriceHistVO {
     private String date;
-    List<Pair<String,Integer>> list;
+    List<Pair<String,Long>> list;
 }
