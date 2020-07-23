@@ -1,10 +1,12 @@
 package com.cgs.service;
 
+import com.cgs.constant.StockHolderRateConstant;
 import com.cgs.dao.StockHolderDAO;
 import com.cgs.entity.StockHolder;
 import com.cgs.vo.StockHolderCoverRateVO;
 import com.cgs.vo.StockHolderMarketVO;
 import com.cgs.vo.StockHolderRateVO;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -58,8 +60,24 @@ public class StockHolderService {
         }
         StockHolderRateVO vo = new StockHolderRateVO();
         List<StockHolder> nonEmptyList = list.stream().filter(e->{
-            return !StringUtils.isEmpty(e.getTopTenStockHolder());
+            return !StringUtils.isEmpty(e.getTopTenStockHolder()) && !"--".equals(e.getTopTenStockFlowHolder());
         }).collect(Collectors.toList());
+        List<Pair<String,Long>> pairList = new ArrayList<>();
+
         return vo;
+    }
+
+    private List<Pair<String,Long>> buildResultPairList(List<StockHolder> list){
+        if (CollectionUtils.isEmpty(list)){
+            return null;
+        }
+        List<Pair<String,Long>> pairList = new ArrayList<>();
+        Long five = list.stream().filter(e->{
+            return Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.FIVE;
+        }).count();
+        Long ten = list.stream().filter(e->{
+            return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FIVE && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.TEN;
+        }).count();
+        return pairList;
     }
 }

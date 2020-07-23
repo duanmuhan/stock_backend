@@ -6,6 +6,7 @@ import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockHolderService;
 import com.cgs.vo.StockHolderCoverRateVO;
+import com.cgs.vo.StockHolderRateVO;
 import com.cgs.vo.StockInfoVO;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +54,13 @@ public class StockHolderController {
     @ResponseBody
     public Response queryStockHolderRateHist(@RequestParam(name = "date",required=false) String date){
         Response response = new Response();
-
+        try {
+            StockHolderRateVO vo =  stockHolderService.queryStockHolderRateHist(date);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
+        }catch (Exception e){
+            log.error("queryPlateInfoByStockId exception:{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,e.getMessage());
+        }
         return response;
     }
 }
