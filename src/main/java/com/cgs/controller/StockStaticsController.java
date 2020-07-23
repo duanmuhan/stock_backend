@@ -5,10 +5,7 @@ import com.cgs.constant.ErrorCode;
 import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockStaticsService;
-import com.cgs.vo.StockBasicVO;
-import com.cgs.vo.StockChangeOverViewVO;
-import com.cgs.vo.StockChangeVO;
-import com.cgs.vo.StockPriceAndEarningVO;
+import com.cgs.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.log4j.Log4j;
@@ -87,6 +84,20 @@ public class StockStaticsController {
         Response response = new Response();
         try {
             StockChangeOverViewVO vo = stockStaticsService.queryStockChange(date);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
+        }catch (Exception e){
+            log.error("queryTopValueStockPerPrice exception:{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
+        }
+        return response;
+    }
+
+    @RequestMapping(value = UrlConstant.STOCK_PRICE_HIST, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockPriceHist(@RequestParam(name = "date",required = false) String date){
+        Response response = new Response();
+        try {
+            StockPriceHistVO vo = stockStaticsService.queryStockPriceHist(date);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
         }catch (Exception e){
             log.error("queryTopValueStockPerPrice exception:{}",e);
