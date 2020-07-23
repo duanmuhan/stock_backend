@@ -17,9 +17,11 @@ public interface UrlConstant {
 
     String STOCK_HOLDER_MARKET_VALUE = "/stockholder/marketValue";
     String STOCK_HOLDER_ORDER = "/stockholder/order";
+    String STOCK_HOLDER_RATE_HIST = "/stockholder/rate/hist";
 
     String STOCK_ITEM_VALUE = "/stock/value";
     String STOCK_MARKET_VALUE = "/stock/market/hist";
     String STOCK_CHANGE = "/stock/change/pie";
     String STOCK_PRICE_HIST = "/stock/price/hist";
+
 }
