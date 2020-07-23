@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +46,14 @@ public class StockHolderController {
             log.error("queryPlateInfoByStockId exception:{}",e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
         }
+        return response;
+    }
+
+    @RequestMapping(value = UrlConstant.STOCK_HOLDER_RATE_HIST, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockHolderRateHist(@RequestParam(name = "date",required=false) String date){
+        Response response = new Response();
+
         return response;
     }
 }

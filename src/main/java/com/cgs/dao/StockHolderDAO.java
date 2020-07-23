@@ -1,9 +1,7 @@
 package com.cgs.dao;
 
 import com.cgs.entity.StockHolder;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
@@ -32,4 +30,9 @@ public interface StockHolderDAO {
     })
     @Cacheable(value = "stock::holder")
     public List<StockHolder> queryNewestStockHolder();
+
+    @Select("select * from stock_holder where release_date = #{date}")
+    @ResultMap(value = "resultMap")
+    @Cacheable(value = "stock::holder", key="#date")
+    public List<StockHolder> queryStockHolderByDate(@Param("date") String date);
 }

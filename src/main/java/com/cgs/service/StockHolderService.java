@@ -4,6 +4,7 @@ import com.cgs.dao.StockHolderDAO;
 import com.cgs.entity.StockHolder;
 import com.cgs.vo.StockHolderCoverRateVO;
 import com.cgs.vo.StockHolderMarketVO;
+import com.cgs.vo.StockHolderRateVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -43,5 +44,22 @@ public class StockHolderService {
         }).collect(Collectors.toList());
         coverList = coverList.stream().sorted(Comparator.comparing(StockHolderCoverRateVO::getTopTenStockHolder).reversed()).collect(Collectors.toList());
         return coverList;
+    }
+
+    public StockHolderRateVO queryStockHolderRateHist(String date){
+        List<StockHolder> list = new ArrayList<>();
+        if (StringUtils.isEmpty(date)){
+            list = stockHolderDAO.queryNewestStockHolder();
+        }else {
+            list = stockHolderDAO.queryStockHolderByDate(date);
+        }
+        if (CollectionUtils.isEmpty(list)){
+            return null;
+        }
+        StockHolderRateVO vo = new StockHolderRateVO();
+        List<StockHolder> nonEmptyList = list.stream().filter(e->{
+            return !StringUtils.isEmpty(e.getTopTenStockHolder());
+        }).collect(Collectors.toList());
+        return vo;
     }
 }

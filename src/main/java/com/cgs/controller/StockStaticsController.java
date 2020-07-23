@@ -106,10 +106,4 @@ public class StockStaticsController {
         return response;
     }
 
-    @RequestMapping(value = UrlConstant.STOCK_HOLDER_RATE_HIST, method = RequestMethod.GET)
-    @ResponseBody
-    public Response queryStockHolderRateHist(@RequestParam(name = "date",required=false) String date){
-        Response response = new Response();
-        return response;
-    }
 }
