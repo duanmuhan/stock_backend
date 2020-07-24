@@ -62,8 +62,13 @@ public class StockHolderService {
         List<StockHolder> nonEmptyList = list.stream().filter(e->{
             return !StringUtils.isEmpty(e.getTopTenStockHolder()) && !"--".equals(e.getTopTenStockFlowHolder());
         }).collect(Collectors.toList());
-        List<Pair<String,Long>> pairList = new ArrayList<>();
-
+        List<Pair<String,Long>> pairList = buildResultPairList(nonEmptyList);
+        if (!StringUtils.isEmpty(date)){
+            vo.setDate(date);
+        }else {
+            vo.setDate(list.get(0).getReleaseDate());
+        }
+        vo.setList(pairList);
         return vo;
     }
 
@@ -75,9 +80,47 @@ public class StockHolderService {
         Long five = list.stream().filter(e->{
             return Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.FIVE;
         }).count();
+        pairList.add(new Pair<>("5%",five));
         Long ten = list.stream().filter(e->{
             return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FIVE && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.TEN;
         }).count();
+        pairList.add(new Pair<>("5%-10%",ten));
+        Long twenty = list.stream().filter(e->{
+            return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.TEN && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.TWENTY;
+        }).count();
+        pairList.add(new Pair<>("10%-20%",twenty));
+        Long thirty = list.stream().filter(e->{
+            return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.TWENTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.THIRTY;
+        }).count();
+        pairList.add(new Pair<>("20%-30%",thirty));
+        Long forty = list.stream().filter(e->{
+            return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.THIRTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.FORTY;
+        }).count();
+        pairList.add(new Pair<>("30%-40%",forty));
+        Long fifty = list.stream().filter(e->{
+            return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FORTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.FIFTY;
+        }).count();
+        pairList.add(new Pair<>("40%-50%",fifty));
+        Long sixty = list.stream().filter(e->{
+            return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FIFTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.SIXTY;
+        }).count();
+        pairList.add(new Pair<>("50%-60%",sixty));
+        Long seventies = list.stream().filter(e->{
+            return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.SIXTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.SEVENTIES;
+        }).count();
+        pairList.add(new Pair<>("60%-70%",seventies));
+        Long eighties = list.stream().filter(e->{
+            return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.SEVENTIES && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.EIGHTIES;
+        }).count();
+        pairList.add(new Pair<>("70%-80%",eighties));
+        Long ninties = list.stream().filter(e->{
+            return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.EIGHTIES && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.NINTIES;
+        }).count();
+        pairList.add(new Pair<>("80%-90%",ninties));
+        Long hundred = list.stream().filter(e->{
+            return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.NINTIES && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.NINTIES;
+        }).count();
+        pairList.add(new Pair<>("90%-100%",ninties));
         return pairList;
     }
 }
