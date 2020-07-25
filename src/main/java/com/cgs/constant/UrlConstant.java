@@ -10,6 +10,7 @@ public interface UrlConstant {
     //财务基本面查询接口
     String TOP_VALUE_STOCK = "/basic";
     String TOP_VALUE_STOCK_PER_PRICE = "/topValuePerPrice";
+    String TOP_VALUE_STOCK_PER_PRICE_FORM = "/topValuePerPrice/form";
     String TOP_PLATE_VALUE_STOCK = "/plateBasicStock";
     String OVER_VIEW = "/stock/overview";
 
@@ -23,5 +24,6 @@ public interface UrlConstant {
     String STOCK_MARKET_VALUE = "/stock/market/hist";
     String STOCK_CHANGE = "/stock/change/pie";
     String STOCK_PRICE_HIST = "/stock/price/hist";
+
 
 }
