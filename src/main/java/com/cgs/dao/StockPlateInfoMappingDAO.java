@@ -2,6 +2,7 @@ package com.cgs.dao;
 
 import com.cgs.entity.StockPlateInfoMapping;
 import org.apache.ibatis.annotations.*;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,9 +21,11 @@ public interface StockPlateInfoMappingDAO {
             @Result(column = "date", property = "date", javaType = String.class)
     })
     @Select(" select * from " + TABLE_NAME + " where stock_id = #{stockId}")
+    @Cacheable(value = "stock:plate", key = "#stockId")
     public List<StockPlateInfoMapping> queryPlateInfoByStockId(@Param("stockId") String stockId);
 
     @Select(" select * from " + TABLE_NAME + " where plate_id = #{plateId} ")
+    @Cacheable(value = "stock:plate", key = "#plateId")
     public List<StockPlateInfoMapping> queryPlateInfoByPlateId(@Param("plateId") String plateId);
 
     @Select("<script>" +
