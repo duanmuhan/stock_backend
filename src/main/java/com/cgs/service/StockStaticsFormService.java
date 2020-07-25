@@ -12,7 +12,9 @@ import com.cgs.vo.StockEarningPerPriceVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -57,15 +59,21 @@ public class StockStaticsFormService {
             if (!CollectionUtils.isEmpty(stockPlateInfoMappings)){
                 StringBuilder sb = new StringBuilder();
                 stockPlateInfoMappings.forEach(e->{
-                    sb.append(e.getPlateName());
+                    sb.append(e.getPlateName()).append(";");
                 });
-                vo.setEarningsPerPrice("--".equals(financeInfo.getBasicEarningsPerCommonShare()) ? 0 : Double.valueOf(financeInfo.getBasicEarningsPerCommonShare())/kItemMap.get(financeInfo.getStockId()).getClosePrice());
+                if (ObjectUtils.isEmpty(kItemMap.get(financeInfo.getStockId()))){
+                    continue;
+                }
+                DecimalFormat df = new DecimalFormat("#.00");
+                vo.setEarningsPerPrice("--".equals(financeInfo.getBasicEarningsPerCommonShare()) ? 0 : Double.valueOf(df.format(Double.valueOf(financeInfo.getBasicEarningsPerCommonShare())/kItemMap.get(financeInfo.getStockId()).getClosePrice())));
                 vo.setPrice(kItemMap.get(financeInfo.getStockId()).getClosePrice());
                 vo.setPlate(sb.toString());
                 vo.setDate(kItemMap.get(financeInfo.getStockId()).getDate());
                 vo.setStockName(stringStockItemMap.get(financeInfo.getStockId()).getName());
+                list.add(vo);
             }
         }
-        return list;
+        List<StockEarningPerPriceVO> resultList = list.stream().sorted(Comparator.comparing(StockEarningPerPriceVO::getEarningsPerPrice).reversed()).collect(Collectors.toList());
+        return resultList;
     }
 }
