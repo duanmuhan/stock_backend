@@ -65,7 +65,7 @@ public class StockStaticsFormService {
                     continue;
                 }
                 DecimalFormat df = new DecimalFormat("#.00");
-                vo.setEarningsPerPrice("--".equals(financeInfo.getBasicEarningsPerCommonShare()) ? 0 : Double.valueOf(df.format(Double.valueOf(financeInfo.getBasicEarningsPerCommonShare())/kItemMap.get(financeInfo.getStockId()).getClosePrice())));
+                vo.setEarningsPerPrice("--".equals(financeInfo.getUDPPS()) ? 0 : Double.valueOf(df.format(Double.valueOf(financeInfo.getUDPPS())/kItemMap.get(financeInfo.getStockId()).getClosePrice())));
                 vo.setPrice(kItemMap.get(financeInfo.getStockId()).getClosePrice());
                 vo.setPlate(sb.toString());
                 vo.setDate(kItemMap.get(financeInfo.getStockId()).getDate());
