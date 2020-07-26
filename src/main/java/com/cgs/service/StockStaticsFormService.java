@@ -33,7 +33,6 @@ public class StockStaticsFormService {
     @Autowired
     private StockPlateInfoMappingDAO stockPlateInfoMappingDAO;
 
-    @Cacheable(value = "stock::earningPerPrice",key = "#pageNo" + "#pageSize" + "#date")
     public StockEarningPriceVO queryStockEarningPerPrice(String date, Integer pageNo, Integer pageSize){
 
         StockEarningPriceVO stockEarningPriceVO = new StockEarningPriceVO();

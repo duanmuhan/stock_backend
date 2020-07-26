@@ -43,4 +43,17 @@ public class StockStaticsFormController {
         }
         return response;
     }
+
+    @RequestMapping(value = UrlConstant.STOCK_INCREASE_RANK,method = RequestMethod.GET)
+    public Response queryStockIncreaseRank(@RequestParam(name = "date",required = false) String date,
+                                           @RequestParam(name = "pageNo") Integer pageNo,
+                                           @RequestParam(name = "pageSize") Integer pageSize){
+
+        Response response = new Response();
+        try {
+
+        }catch (Exception e){
+
+        }
+    }
 }

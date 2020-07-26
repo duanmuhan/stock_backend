@@ -25,5 +25,7 @@ public interface UrlConstant {
     String STOCK_CHANGE = "/stock/change/pie";
     String STOCK_PRICE_HIST = "/stock/price/hist";
 
+    String STOCK_INCREASE_RANK="/stock/increase/rank";
+
 
 }
