@@ -11,6 +11,7 @@ import com.cgs.entity.StockPlateInfoMapping;
 import com.cgs.vo.StockEarningPerPriceVO;
 import com.cgs.vo.StockEarningPriceVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -32,6 +33,7 @@ public class StockStaticsFormService {
     @Autowired
     private StockPlateInfoMappingDAO stockPlateInfoMappingDAO;
 
+    @Cacheable(value = "stock::earningPerPrice",key = "#pageNo" + "#pageSize" + "#date")
     public StockEarningPriceVO queryStockEarningPerPrice(String date, Integer pageNo, Integer pageSize){
 
         StockEarningPriceVO stockEarningPriceVO = new StockEarningPriceVO();
@@ -79,11 +81,11 @@ public class StockStaticsFormService {
         List<StockEarningPerPriceVO> finalResult = list.stream().sorted(Comparator.comparing(StockEarningPerPriceVO::getEarningsPerPrice).reversed()).collect(Collectors.toList());
 
         List<StockEarningPerPriceVO> resultList = new ArrayList<>();
-        if ((pageNo+1) * pageSize > finalResult.size()){
-            resultList = finalResult.subList(pageNo*pageSize,list.size()-1);
+        if ((pageNo) * pageSize > finalResult.size()){
+            resultList = finalResult.subList((pageNo-1)*pageSize,list.size()-1);
         }
-        if ((pageNo+1) * pageSize < list.size()){
-            resultList = finalResult.subList(pageNo*pageSize,(pageNo+1)*pageSize);
+        if ((pageNo) * pageSize < list.size()){
+            resultList = finalResult.subList((pageNo-1)*pageSize,(pageNo)*pageSize);
         }
         stockEarningPriceVO.setDate(date);
         stockEarningPriceVO.setList(resultList);
