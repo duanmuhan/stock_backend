@@ -6,6 +6,7 @@ import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockStaticsFormService;
 import com.cgs.vo.StockEarningPerPriceVO;
+import com.cgs.vo.StockEarningPriceVO;
 import com.cgs.vo.StockPriceHistVO;
 import io.swagger.annotations.Api;
 import lombok.extern.log4j.Log4j;
@@ -29,11 +30,13 @@ public class StockStaticsFormController {
 
     @RequestMapping(value = UrlConstant.TOP_VALUE_STOCK_PER_PRICE_FORM, method = RequestMethod.GET)
     @ResponseBody
-    public  Response queryStockValuePerPriceForm(@RequestParam(name = "date",required = false) String date) {
+    public  Response queryStockValuePerPriceForm(@RequestParam(name = "date",required = false) String date,
+                                                 @RequestParam(name = "pageNo") Integer pageNo,
+                                                 @RequestParam(name = "pageSize") Integer pageSize) {
         com.cgs.constant.Response response = new Response();
         try {
-            List<StockEarningPerPriceVO> list = stockStaticsFormService.queryStockEarningPerPrice(date);
-            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, list);
+            StockEarningPriceVO vo = stockStaticsFormService.queryStockEarningPerPrice(date,pageNo,pageSize);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         } catch (Exception e) {
             log.error("queryTopValueStockPerPrice exception:{}", e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, null);

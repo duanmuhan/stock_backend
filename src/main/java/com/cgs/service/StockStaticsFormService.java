@@ -9,6 +9,7 @@ import com.cgs.entity.KItem;
 import com.cgs.entity.StockItem;
 import com.cgs.entity.StockPlateInfoMapping;
 import com.cgs.vo.StockEarningPerPriceVO;
+import com.cgs.vo.StockEarningPriceVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -31,7 +32,9 @@ public class StockStaticsFormService {
     @Autowired
     private StockPlateInfoMappingDAO stockPlateInfoMappingDAO;
 
-    public List<StockEarningPerPriceVO> queryStockEarningPerPrice(String date){
+    public StockEarningPriceVO queryStockEarningPerPrice(String date, Integer pageNo, Integer pageSize){
+
+        StockEarningPriceVO stockEarningPriceVO = new StockEarningPriceVO();
 
         List<FinanceInfo> financeInfos = financeInfoDAO.queryFinanceInfo();
         List<KItem> kItemList = kItemDAO.queryLatestValue();
@@ -73,7 +76,20 @@ public class StockStaticsFormService {
                 list.add(vo);
             }
         }
-        List<StockEarningPerPriceVO> resultList = list.stream().sorted(Comparator.comparing(StockEarningPerPriceVO::getEarningsPerPrice).reversed()).collect(Collectors.toList());
-        return resultList;
+        List<StockEarningPerPriceVO> finalResult = list.stream().sorted(Comparator.comparing(StockEarningPerPriceVO::getEarningsPerPrice).reversed()).collect(Collectors.toList());
+
+        List<StockEarningPerPriceVO> resultList = new ArrayList<>();
+        if ((pageNo+1) * pageSize > finalResult.size()){
+            resultList = finalResult.subList(pageNo*pageSize,list.size()-1);
+        }
+        if ((pageNo+1) * pageSize < list.size()){
+            resultList = finalResult.subList(pageNo*pageSize,(pageNo+1)*pageSize);
+        }
+        stockEarningPriceVO.setDate(date);
+        stockEarningPriceVO.setList(resultList);
+        stockEarningPriceVO.setPageNo(pageNo);
+        stockEarningPriceVO.setPageSize(pageSize);
+        stockEarningPriceVO.setSize(finalResult.size());
+        return stockEarningPriceVO;
     }
 }
