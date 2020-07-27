@@ -108,6 +108,7 @@ public class StockStaticsFormService {
             StockChangeRateVO stockChangeRateVO = new StockChangeRateVO();
             stockChangeRateVO.setStockId(kItem.getStockId());
             stockChangeRateVO.setDate(kItem.getDate());
+            stockChangeRateVO.setPrice(kItem.getClosePrice());
             stockChangeRateVO.setStockName(stockItemMap.get(kItem.getStockId()).getName());
             KItem secondLatestKItem = secondLatestMap.get(kItem.getStockId());
             if (ObjectUtils.isEmpty(secondLatestKItem)){
