@@ -39,6 +39,11 @@ public interface KItemDAO {
     @Cacheable(value = "kitem::latestPrice")
     public List<KItem> queryLatestValue();
 
+    @Select("select * from k_item where date = (select max(date) from k_item where date not in (select max(date) from k_item))" )
+    @ResultMap(value = "resultMap")
+    @Cacheable(value = "kitem::secondLatestPrice")
+    public List<KItem> querySecondLatestDate();
+
     @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId} order by date desc limit 1")
     @ResultMap(value = "resultMap")
     @Cacheable(value = "kitem:latest",key = "#stockId")

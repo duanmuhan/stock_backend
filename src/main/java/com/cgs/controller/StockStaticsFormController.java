@@ -8,6 +8,7 @@ import com.cgs.service.StockStaticsFormService;
 import com.cgs.vo.StockEarningPerPriceVO;
 import com.cgs.vo.StockEarningPriceVO;
 import com.cgs.vo.StockPriceHistVO;
+import com.cgs.vo.forms.StockChangeRateVO;
 import io.swagger.annotations.Api;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
@@ -51,9 +52,12 @@ public class StockStaticsFormController {
 
         Response response = new Response();
         try {
-
-        }catch (Exception e){
-
+            List<StockChangeRateVO> vo = stockStaticsFormService.queryLatestStockChangeRate(date,pageNo,pageSize);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
+        } catch (Exception e) {
+            log.error("queryTopValueStockPerPrice exception:{}", e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, null);
         }
+        return response;
     }
 }

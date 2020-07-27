@@ -10,8 +10,8 @@ import com.cgs.entity.StockItem;
 import com.cgs.entity.StockPlateInfoMapping;
 import com.cgs.vo.StockEarningPerPriceVO;
 import com.cgs.vo.StockEarningPriceVO;
+import com.cgs.vo.forms.StockChangeRateVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -92,5 +92,31 @@ public class StockStaticsFormService {
         stockEarningPriceVO.setPageSize(pageSize);
         stockEarningPriceVO.setSize(finalResult.size());
         return stockEarningPriceVO;
+    }
+
+    public List<StockChangeRateVO> queryLatestStockChangeRate(String date, Integer pageNo, Integer pageSize){
+        List<StockChangeRateVO> voList = new ArrayList<>();
+        List<KItem> kItems = kItemDAO.queryLatestValue();
+        List<KItem> secondLatestValue = kItemDAO.querySecondLatestDate();
+        List<StockItem> stockItemList = stockItemDAO.queryAllStockList();
+        if (CollectionUtils.isEmpty(kItems) || CollectionUtils.isEmpty(secondLatestValue) || CollectionUtils.isEmpty(stockItemList)){
+            return voList;
+        }
+        Map<String,KItem> secondLatestMap = secondLatestValue.stream().collect(Collectors.toMap(KItem::getStockId,Function.identity()));
+        Map<String,StockItem> stockItemMap = stockItemList.stream().collect(Collectors.toMap(StockItem::getStockId,Function.identity()));
+        for (KItem kItem : kItems){
+            StockChangeRateVO stockChangeRateVO = new StockChangeRateVO();
+            stockChangeRateVO.setStockId(kItem.getStockId());
+            stockChangeRateVO.setDate(kItem.getDate());
+            stockChangeRateVO.setStockName(stockItemMap.get(kItem.getStockId()).getName());
+            KItem secondLatestKItem = secondLatestMap.get(kItem.getStockId());
+            if (ObjectUtils.isEmpty(secondLatestKItem)){
+                continue;
+            }
+            DecimalFormat df = new DecimalFormat("#0.00");
+            stockChangeRateVO.setChangeRate(df.format((kItem.getClosePrice() - secondLatestKItem.getClosePrice())/secondLatestKItem.getClosePrice()));
+            voList.add(stockChangeRateVO);
+        }
+        return voList;
     }
 }
