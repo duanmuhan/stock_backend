@@ -134,7 +134,7 @@ public class StockStaticsFormService {
         return resultList;
     }
 
-    public List<StockPeriodChangeRateVO> queryStockPeriodChangeRate(String date, Integer pageNo, Integer pageSize){
+    public List<StockPeriodChangeRateVO> queryStockPeriodChangeRate(String date, Integer pageNo, Integer pageSize) throws Exception{
         List<StockPeriodChangeRateVO> voList = new ArrayList<>();
         SimpleDateFormat simpleDateFormat = getSimpleDateFormat("yyyyMMdd");
         List<KItem> kItems = kItemDAO.queryLatestValue();
@@ -145,7 +145,7 @@ public class StockStaticsFormService {
         String toDateStr = kItems.get(0).getDate();
         String fromDateStr = "";
         if (StringUtils.isEmpty(date)){
-            Date toDate = simpleDateFormat.parse(toDate);
+            Date toDate = simpleDateFormat.parse(toDateStr);
             long currmills = toDate.getTime();
             Date fromDate = new Date(currmills - 7 * 24 * 3600 * 1000);
             fromDateStr = simpleDateFormat.format(fromDate);
