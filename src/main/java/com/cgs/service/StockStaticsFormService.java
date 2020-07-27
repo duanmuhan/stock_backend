@@ -118,6 +118,13 @@ public class StockStaticsFormService {
             voList.add(stockChangeRateVO);
         }
         voList = voList.stream().sorted(Comparator.comparing(StockChangeRateVO::getChangeRate).reversed()).collect(Collectors.toList());
-        return voList;
+        List<StockChangeRateVO> resultList = new ArrayList<>();
+        if ((pageNo) * pageSize > voList.size()){
+            resultList = voList.subList((pageNo-1)*pageSize,voList.size()-1);
+        }
+        if ((pageNo) * pageSize < voList.size()){
+            resultList = voList.subList((pageNo-1)*pageSize,(pageNo)*pageSize);
+        }
+        return resultList;
     }
 }
