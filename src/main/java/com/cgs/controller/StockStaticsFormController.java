@@ -5,12 +5,10 @@ import com.cgs.constant.ErrorCode;
 import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockStaticsFormService;
-import com.cgs.vo.StockEarningPerPriceVO;
 import com.cgs.vo.StockEarningPriceVO;
-import com.cgs.vo.StockPriceHistVO;
 import com.cgs.vo.forms.StockChangeRateVO;
+import com.cgs.vo.forms.StockPeriodChangeRateVO;
 import io.swagger.annotations.Api;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,6 +52,22 @@ public class StockStaticsFormController {
         Response response = new Response();
         try {
             List<StockChangeRateVO> vo = stockStaticsFormService.queryLatestStockChangeRate(date,pageNo,pageSize);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
+        } catch (Exception e) {
+            log.error("queryTopValueStockPerPrice exception:{}", e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, null);
+        }
+        return response;
+    }
+
+    @RequestMapping(value = UrlConstant.RATE_OF_INCREASE_RANK, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockIncreaseRateRank(@RequestParam(name = "date",required = false) String date,
+                                               @RequestParam(name = "pageNo") Integer pageNo,
+                                               @RequestParam(name = "pageSize") Integer pageSize){
+        Response response = new Response();
+        try {
+            List<StockPeriodChangeRateVO> vo = stockStaticsFormService.queryStockPeriodChangeRate(date,pageNo,pageSize);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         } catch (Exception e) {
             log.error("queryTopValueStockPerPrice exception:{}", e);

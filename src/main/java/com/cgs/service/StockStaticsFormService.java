@@ -11,12 +11,15 @@ import com.cgs.entity.StockPlateInfoMapping;
 import com.cgs.vo.StockEarningPerPriceVO;
 import com.cgs.vo.StockEarningPriceVO;
 import com.cgs.vo.forms.StockChangeRateVO;
+import com.cgs.vo.forms.StockPeriodChangeRateVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -32,6 +35,8 @@ public class StockStaticsFormService {
     private StockItemDAO stockItemDAO;
     @Autowired
     private StockPlateInfoMappingDAO stockPlateInfoMappingDAO;
+
+    private static ThreadLocal<SimpleDateFormat> tl = new ThreadLocal<>();
 
     public StockEarningPriceVO queryStockEarningPerPrice(String date, Integer pageNo, Integer pageSize){
 
@@ -127,5 +132,62 @@ public class StockStaticsFormService {
             resultList = voList.subList((pageNo-1)*pageSize,(pageNo)*pageSize);
         }
         return resultList;
+    }
+
+    public List<StockPeriodChangeRateVO> queryStockPeriodChangeRate(String date, Integer pageNo, Integer pageSize){
+        List<StockPeriodChangeRateVO> voList = new ArrayList<>();
+        SimpleDateFormat simpleDateFormat = getSimpleDateFormat("yyyyMMdd");
+        List<KItem> kItems = kItemDAO.queryLatestValue();
+        List<StockItem> stockItemList = stockItemDAO.queryAllStockList();
+        if (CollectionUtils.isEmpty(kItems) || CollectionUtils.isEmpty(stockItemList)){
+            return voList;
+        }
+        String toDateStr = kItems.get(0).getDate();
+        String fromDateStr = "";
+        if (StringUtils.isEmpty(date)){
+            Date toDate = simpleDateFormat.parse(toDate);
+            long currmills = toDate.getTime();
+            Date fromDate = new Date(currmills - 7 * 24 * 3600 * 1000);
+            fromDateStr = simpleDateFormat.format(fromDate);
+        }else {
+            fromDateStr = date;
+        }
+        List<KItem> fromDateKItems = kItemDAO.queryKItemsByDate(fromDateStr);
+        if (CollectionUtils.isEmpty(fromDateKItems)){
+            return voList;
+        }
+        Map<String,KItem> fromDateKItemMap = fromDateKItems.stream().collect(Collectors.toMap(KItem::getStockId,Function.identity()));
+        Map<String,StockItem> stockItemMap = stockItemList.stream().collect(Collectors.toMap(StockItem::getStockId,Function.identity()));
+        for (KItem kItem : kItems){
+            if (!fromDateKItemMap.containsKey(kItem.getStockId()) && !stockItemMap.containsKey(kItem.getStockId())){
+                continue;
+            }
+            StockPeriodChangeRateVO vo = new StockPeriodChangeRateVO();
+            vo.setStockId(kItem.getStockId());
+            vo.setStockName(stockItemMap.get(kItem.getStockId()).getName());
+            vo.setFromDate(fromDateStr);
+            vo.setToDate(toDateStr);
+            vo.setPrice(kItem.getClosePrice());
+            vo.setChangeRate(((kItem.getClosePrice() - fromDateKItemMap.get(kItem.getStockId()).getClosePrice())/fromDateKItemMap.get(kItem.getStockId()).getClosePrice()) * 100 + "%");
+            voList.add(vo);
+        }
+        voList = voList.stream().sorted(Comparator.comparing(StockPeriodChangeRateVO::getChangeRate).reversed()).collect(Collectors.toList());
+        List<StockPeriodChangeRateVO> resultList = new ArrayList<>();
+        if ((pageNo) * pageSize > voList.size()){
+            resultList = voList.subList((pageNo-1)*pageSize,voList.size()-1);
+        }
+        if ((pageNo) * pageSize < voList.size()){
+            resultList = voList.subList((pageNo-1)*pageSize,(pageNo)*pageSize);
+        }
+        return resultList;
+    }
+
+    private SimpleDateFormat getSimpleDateFormat(String datePattern){
+        SimpleDateFormat sdf = tl.get();
+        if (ObjectUtils.isEmpty(sdf)){
+            sdf = new SimpleDateFormat(datePattern);
+            tl.set(sdf);
+        }
+        return sdf;
     }
 }
