@@ -117,6 +117,7 @@ public class StockStaticsFormService {
             stockChangeRateVO.setChangeRate(df.format((kItem.getClosePrice() - secondLatestKItem.getClosePrice())/secondLatestKItem.getClosePrice()));
             voList.add(stockChangeRateVO);
         }
+        voList = voList.stream().sorted(Comparator.comparing(StockChangeRateVO::getChangeRate).reversed()).collect(Collectors.toList());
         return voList;
     }
 }
