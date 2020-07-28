@@ -109,6 +109,7 @@ public class StockStaticsFormService {
         }
         Map<String,KItem> secondLatestMap = secondLatestValue.stream().collect(Collectors.toMap(KItem::getStockId,Function.identity()));
         Map<String,StockItem> stockItemMap = stockItemList.stream().collect(Collectors.toMap(StockItem::getStockId,Function.identity()));
+        DecimalFormat df = new DecimalFormat("#0.00");
         for (KItem kItem : kItems){
             StockChangeRateVO stockChangeRateVO = new StockChangeRateVO();
             stockChangeRateVO.setStockId(kItem.getStockId());
@@ -119,7 +120,6 @@ public class StockStaticsFormService {
             if (ObjectUtils.isEmpty(secondLatestKItem)){
                 continue;
             }
-            DecimalFormat df = new DecimalFormat("#0.00");
             stockChangeRateVO.setChangeRate(df.format((kItem.getClosePrice() - secondLatestKItem.getClosePrice())/secondLatestKItem.getClosePrice()));
             voList.add(stockChangeRateVO);
         }
@@ -158,18 +158,21 @@ public class StockStaticsFormService {
         }
         Map<String,KItem> fromDateKItemMap = fromDateKItems.stream().collect(Collectors.toMap(KItem::getStockId,Function.identity()));
         Map<String,StockItem> stockItemMap = stockItemList.stream().collect(Collectors.toMap(StockItem::getStockId,Function.identity()));
+        DecimalFormat df = new DecimalFormat("#0.00");
         for (KItem kItem : kItems){
             if (!fromDateKItemMap.containsKey(kItem.getStockId()) && !stockItemMap.containsKey(kItem.getStockId())){
                 continue;
             }
-            StockPeriodChangeRateVO vo = new StockPeriodChangeRateVO();
-            vo.setStockId(kItem.getStockId());
-            vo.setStockName(stockItemMap.get(kItem.getStockId()).getName());
-            vo.setFromDate(fromDateStr);
-            vo.setToDate(toDateStr);
-            vo.setPrice(kItem.getClosePrice());
-            vo.setChangeRate(((kItem.getClosePrice() - fromDateKItemMap.get(kItem.getStockId()).getClosePrice())/fromDateKItemMap.get(kItem.getStockId()).getClosePrice()) * 100 + "%");
-            voList.add(vo);
+            if(fromDateKItemMap.containsKey(kItem.getStockId())){
+                StockPeriodChangeRateVO vo = new StockPeriodChangeRateVO();
+                vo.setStockId(kItem.getStockId());
+                vo.setStockName(stockItemMap.get(kItem.getStockId()).getName());
+                vo.setFromDate(fromDateStr);
+                vo.setToDate(toDateStr);
+                vo.setPrice(kItem.getClosePrice());
+                vo.setChangeRate(df.format(((kItem.getClosePrice() - fromDateKItemMap.get(kItem.getStockId()).getClosePrice())/fromDateKItemMap.get(kItem.getStockId()).getClosePrice()) * 100) + "%");
+                voList.add(vo);
+            }
         }
         voList = voList.stream().sorted(Comparator.comparing(StockPeriodChangeRateVO::getChangeRate).reversed()).collect(Collectors.toList());
         List<StockPeriodChangeRateVO> resultList = new ArrayList<>();
