@@ -88,10 +88,10 @@ public class StockStaticsFormService {
 
         List<StockEarningPerPriceVO> resultList = new ArrayList<>();
         if ((pageNo) * pageSize > finalResult.size()){
-            resultList = finalResult.subList((pageNo-1)*pageSize,list.size()-1);
+            resultList = new ArrayList<>(finalResult.subList((pageNo-1)*pageSize,list.size()-1));
         }
         if ((pageNo) * pageSize < list.size()){
-            resultList = finalResult.subList((pageNo-1)*pageSize,(pageNo)*pageSize);
+            resultList = new ArrayList<>(finalResult.subList((pageNo-1)*pageSize,(pageNo)*pageSize));
         }
         stockEarningPriceVO.setDate(date);
         stockEarningPriceVO.setList(resultList);
@@ -129,10 +129,10 @@ public class StockStaticsFormService {
         voList = voList.stream().sorted(Comparator.comparing(StockChangeRateVO::getChangeRate).reversed()).collect(Collectors.toList());
         List<StockChangeRateVO> resultList = new ArrayList<>();
         if ((pageNo) * pageSize > voList.size()){
-            resultList = voList.subList((pageNo-1)*pageSize,voList.size()-1);
+            resultList = new ArrayList<>(voList.subList((pageNo-1)*pageSize,voList.size()-1));
         }
         if ((pageNo) * pageSize < voList.size()){
-            resultList = voList.subList((pageNo-1)*pageSize,(pageNo)*pageSize);
+            resultList = new ArrayList<>(voList.subList((pageNo-1)*pageSize,(pageNo)*pageSize));
         }
         return resultList;
     }
@@ -181,10 +181,10 @@ public class StockStaticsFormService {
         voList = voList.stream().sorted(Comparator.comparing(StockPeriodChangeRateVO::getChangeRate).reversed()).collect(Collectors.toList());
         List<StockPeriodChangeRateVO> resultList = new ArrayList<>();
         if ((pageNo) * pageSize > voList.size()){
-            resultList = voList.subList((pageNo-1)*pageSize,voList.size()-1);
+            resultList = new ArrayList<>(voList.subList((pageNo-1)*pageSize,voList.size()-1));
         }
         if ((pageNo) * pageSize < voList.size()){
-            resultList = voList.subList((pageNo-1)*pageSize,(pageNo)*pageSize);
+            resultList = new ArrayList<>(voList.subList((pageNo-1)*pageSize,(pageNo)*pageSize));
         }
         return resultList;
     }
