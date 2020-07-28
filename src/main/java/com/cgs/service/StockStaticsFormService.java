@@ -13,6 +13,7 @@ import com.cgs.vo.StockEarningPriceVO;
 import com.cgs.vo.forms.StockChangeRateVO;
 import com.cgs.vo.forms.StockPeriodChangeRateVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -38,6 +39,7 @@ public class StockStaticsFormService {
 
     private static ThreadLocal<SimpleDateFormat> tl = new ThreadLocal<>();
 
+    @Cacheable(value = "stockInfo::queryStockEarningPerPrice",key = "#pageNo + '-' + #pageSize")
     public StockEarningPriceVO queryStockEarningPerPrice(String date, Integer pageNo, Integer pageSize){
 
         StockEarningPriceVO stockEarningPriceVO = new StockEarningPriceVO();
@@ -99,6 +101,7 @@ public class StockStaticsFormService {
         return stockEarningPriceVO;
     }
 
+    @Cacheable(value = "stockInfo::queryLatestStockChangeRate",key = "#pageNo + '-' + #pageSize")
     public List<StockChangeRateVO> queryLatestStockChangeRate(String date, Integer pageNo, Integer pageSize){
         List<StockChangeRateVO> voList = new ArrayList<>();
         List<KItem> kItems = kItemDAO.queryLatestValue();
@@ -134,6 +137,7 @@ public class StockStaticsFormService {
         return resultList;
     }
 
+    @Cacheable(value = "stockInfo::queryStockPeriodChangeRate",key = "#pageNo + '-' + #pageSize")
     public List<StockPeriodChangeRateVO> queryStockPeriodChangeRate(String date, Integer pageNo, Integer pageSize) throws Exception{
         List<StockPeriodChangeRateVO> voList = new ArrayList<>();
         SimpleDateFormat simpleDateFormat = getSimpleDateFormat("yyyyMMdd");
