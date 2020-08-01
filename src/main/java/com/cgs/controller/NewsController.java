@@ -6,6 +6,7 @@ import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.NewsService;
 import com.cgs.vo.news.StockNewsVO;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,13 @@ import java.util.List;
 
 @Controller
 @Slf4j
+@Api(tags = "股票新闻信息接口")
 public class NewsController {
 
     @Autowired
     private NewsService newsService;
 
-    @RequestMapping(value = UrlConstant.STOCK_INFO_LIST,method = RequestMethod.GET)
+    @RequestMapping(value = UrlConstant.STOCK_NEWS_LIST,method = RequestMethod.GET)
     @ResponseBody
     public Response queryStockNews(@ApiParam(value = "新闻时间") @RequestParam(name = "releaseDate") String releaseDate){
         Response response = new Response();
