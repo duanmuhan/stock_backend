@@ -7,9 +7,11 @@ import com.cgs.vo.news.StockNewsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class NewsService {
@@ -30,8 +32,13 @@ public class NewsService {
             vo.setSource(e.getSource());
             vo.setTargetPlateId(e.getTargetPlateId());
             vo.setTargetPlate(e.getTargetPlate());
+            vo.setReleaseDate(e.getRelease_date());
             stockNewsVOS.add(vo);
         });
-       return stockNewsVOS;
+
+        List<StockNewsVO> resultList = stockNewsVOS.stream().filter(e->{
+            return !StringUtils.isEmpty(e.getTargetPlate()) && !StringUtils.isEmpty(e.getTargetPlateId());
+        }).collect(Collectors.toList());
+       return resultList;
     }
 }

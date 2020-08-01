@@ -9,4 +9,5 @@ public class StockNewsVO {
     private String targetPlateId;
     private String source;
     private String platform;
+    private String releaseDate;
 }
