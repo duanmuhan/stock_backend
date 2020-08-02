@@ -1,6 +1,5 @@
 package com.cgs.vo;
 
-import com.cgs.entity.PlateInfo;
 import com.cgs.entity.StockPlateInfoMapping;
 import lombok.Data;
 
