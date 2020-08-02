@@ -47,6 +47,7 @@ public interface StockItemDAO {
             "#{item} " +
             "</foreach>" +
             "</script>")
-    public List<StockItem> queryStockListByStockIds(@Param("stockIdList") List<String> stockIdList);
+    @Cacheable(value = "kitem:stockitem",key = "#stockIdList")
+    public List<StockItem> queryStockListByStockIds(@Param("stockIdList") List<Long> stockIdList);
 
 }

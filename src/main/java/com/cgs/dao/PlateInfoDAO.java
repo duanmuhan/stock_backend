@@ -22,6 +22,7 @@ public interface PlateInfoDAO {
     @Cacheable(value = "stock::plate",key = "#plateId")
     List<PlateInfo> queryPlateInfosByPlateId(@Param("plateId") String plateId);
 
+
     @ResultMap(value = "resultMap")
     @Select("<script>" +
             "select * from " + TABLE_NAME + "where plate_id in " +

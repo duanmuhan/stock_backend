@@ -48,4 +48,9 @@ public interface KItemDAO {
     @ResultMap(value = "resultMap")
     @Cacheable(value = "kitem:latest",key = "#stockId")
     public KItem queryLatestValueByStockId(@Param("stockId") String stockId);
+
+    @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId} order by date desc limit 1")
+    @ResultMap(value = "resultMap")
+    @Cacheable(value = "kitem:latest",key = "#stockIds")
+    public List<KItem> batchQueryLatestValueByStockIds(@Param("stockIds") List<Long> stockId);
 }

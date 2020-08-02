@@ -29,6 +29,7 @@ public interface UrlConstant {
     String RATE_OF_INCREASE_RANK="/stock/rate/rank";
 
     String STOCK_NEWS_LIST = "/stock/news/list";
+    String PLATE_STOCK_LIST = "/plate/stock/list";
 
 
 }
