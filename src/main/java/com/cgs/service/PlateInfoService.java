@@ -29,7 +29,7 @@ public class PlateInfoService {
     private KItemDAO kItemDAO;
 
     public List<StockOverViewVO> queryStockOverviewByPlateId(String plateId){
-        List<StockPlateInfoMapping> list = stockPlateInfoMappingDAO.queryPlateInfoByStockId(plateId);
+        List<StockPlateInfoMapping> list = stockPlateInfoMappingDAO.queryPlateInfoByPlateId(plateId);
         if (CollectionUtils.isEmpty(list)){
             return null;
         }

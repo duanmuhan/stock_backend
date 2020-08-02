@@ -49,8 +49,12 @@ public interface KItemDAO {
     @Cacheable(value = "kitem:latest",key = "#stockId")
     public KItem queryLatestValueByStockId(@Param("stockId") String stockId);
 
-    @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId} order by date desc limit 1")
+    @Select(" <script> select * from k_item INNER JOIN (select MAX(date) as max_date, stock_id as stockId from k_item GROUP BY stock_id) A ON stock_id = A.stockId AND date = A.max_date and stock_id in " +
+            "<foreach collection ='stockIds' index='index' item='item' open='(' close=')' separator=','>" +
+            "#{item} " +
+            "</foreach>" +
+            " </script>")
     @ResultMap(value = "resultMap")
-    @Cacheable(value = "kitem:latest",key = "#stockIds")
+    @Cacheable(value = "kitem:latest::list")
     public List<KItem> batchQueryLatestValueByStockIds(@Param("stockIds") List<Long> stockId);
 }

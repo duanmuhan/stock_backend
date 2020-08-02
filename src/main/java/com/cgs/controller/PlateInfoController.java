@@ -7,6 +7,7 @@ import com.cgs.constant.UrlConstant;
 import com.cgs.service.PlateInfoService;
 import com.cgs.vo.StockOverViewVO;
 import com.cgs.vo.news.StockNewsVO;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Controller
 @Slf4j
+@Api(tags = "板块信息接口")
 public class PlateInfoController {
 
     @Autowired
