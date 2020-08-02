@@ -1,15 +1,19 @@
 package com.cgs.service;
 
 import com.cgs.dao.NewsDAO;
+import com.cgs.dao.PlateInfoDAO;
+import com.cgs.entity.PlateInfo;
 import com.cgs.entity.PolicyInfo;
 import com.cgs.vo.StockInfoVO;
 import com.cgs.vo.news.StockNewsVO;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +22,8 @@ public class NewsService {
 
     @Autowired
     private NewsDAO newsDAO;
+    @Autowired
+    private PlateInfoDAO plateInfoDAO;
 
     public List<StockNewsVO> queryStockInfoByDate(String releaseDate){
        List<PolicyInfo> stockInfo =  newsDAO.queryNewsListBeforeDate(releaseDate);
@@ -30,14 +36,27 @@ public class NewsService {
             vo.setTitle(e.getTitle());
             vo.setPlatform(e.getPlatform());
             vo.setSource(e.getSource());
-            vo.setTargetPlateId(e.getTargetPlateId());
-            vo.setTargetPlate(e.getTargetPlate());
             vo.setReleaseDate(e.getRelease_date());
+
+            if (StringUtils.isEmpty(e.getTargetPlateId())){
+                return;
+            }
+            String[] plateIds = e.getTargetPlateId().split(",");
+            List<String> plateIdList = Arrays.asList(plateIds);
+            List<PlateInfo> plateInfoList = plateInfoDAO.batchQueryPlateInfosByPlateIds(plateIdList);
+            if (CollectionUtils.isEmpty(plateInfoList)){
+                return;
+            }
+            List<Pair<String,String>> pairList = new ArrayList<>();
+            for (PlateInfo plateInfo : plateInfoList){
+                Pair<String,String> pair = new Pair<>(plateInfo.getPlateId(),plateInfo.getPlateName());
+                pairList.add(pair);
+            }
+            vo.setPlatePairList(pairList);
             stockNewsVOS.add(vo);
         });
-
         List<StockNewsVO> resultList = stockNewsVOS.stream().filter(e->{
-            return !StringUtils.isEmpty(e.getTargetPlate()) && !StringUtils.isEmpty(e.getTargetPlateId());
+         return !CollectionUtils.isEmpty(e.getPlatePairList());
         }).collect(Collectors.toList());
        return resultList;
     }
