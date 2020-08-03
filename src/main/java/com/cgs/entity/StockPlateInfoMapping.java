@@ -6,7 +6,6 @@ import java.io.Serializable;
 
 @Data
 public class StockPlateInfoMapping implements Serializable {
-    private Long id;
     private String stockId;
     private String stockName;
     private String plateId;

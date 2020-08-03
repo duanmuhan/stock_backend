@@ -13,27 +13,20 @@ public interface StockPlateInfoMappingDAO {
     String TABLE_NAME = " plate_stock_mapping ";
 
     @Results(id="stockPlateInfoMapping", value = {
-            @Result(column = "id", property = "id", javaType = Long.class),
-            @Result(column = "stock_id", property = "stockId", javaType = String.class),
-            @Result(column = "stock_name", property = "stockName", javaType = String.class),
-            @Result(column = "plate_id", property = "plateId", javaType = String.class),
-            @Result(column = "plate_name", property = "plateName", javaType = String.class),
-            @Result(column = "date", property = "date", javaType = String.class)
+            @Result(property = "stockId",column = "stock_id"),
+            @Result(property = "stockName",column = "stock_name"),
+            @Result(property = "plateId",column = "plate_id"),
+            @Result(property = "plateName",column = "plate_name"),
+            @Result(property = "date",column = "date")
     })
     @Select(" select * from " + TABLE_NAME + " where stock_id = #{stockId}")
+    @ResultMap(value = "stockPlateInfoMapping")
     @Cacheable(value = "stock:plate", key = "#stockId")
     public List<StockPlateInfoMapping> queryPlateInfoMappingByStockId(@Param("stockId") String stockId);
 
     @Select(" select * from " + TABLE_NAME + " where plate_id = #{plateId} ")
+    @ResultMap(value = "stockPlateInfoMapping")
     @Cacheable(value = "stock:plate", key = "#plateId")
     public List<StockPlateInfoMapping> queryPlateInfoMappingByPlateId(@Param("plateId") String plateId);
 
-    @Select("<script>" +
-            "select * from " + TABLE_NAME + "where stock_id in " +
-            "<foreach collection ='stockList' index='index' item='item' open='(' close=')' separator=','>" +
-            "#{item} " +
-            "</foreach>" +
-            "</script>")
-    @ResultMap(value = "stockPlateInfoMapping")
-    public List<StockPlateInfoMapping> queryPlateInfoByStockIds(@Param("stockList") List<String> stockList);
 }
