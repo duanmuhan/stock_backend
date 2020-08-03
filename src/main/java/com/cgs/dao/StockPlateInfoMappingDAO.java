@@ -20,7 +20,6 @@ public interface StockPlateInfoMappingDAO {
             @Result(property = "date",column = "date")
     })
     @Select(" select * from " + TABLE_NAME + " where stock_id = #{stockId}")
-    @ResultMap(value = "stockPlateInfoMapping")
     @Cacheable(value = "stock:plate", key = "#stockId")
     public List<StockPlateInfoMapping> queryPlateInfoMappingByStockId(@Param("stockId") String stockId);
 

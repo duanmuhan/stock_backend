@@ -35,9 +35,6 @@ public class PlateInfoService {
         }
         List<String> stockIds = list.stream().map(e->e.getStockId()).collect(Collectors.toList());
         List<KItem> kItemList = kItemDAO.queryLatestValue();
-        List<KItem> targetKItem = kItemList.stream().filter(e->{
-            return stockIds.contains(e.getStockId());
-        }).collect(Collectors.toList());
         if (ObjectUtils.isEmpty(kItemList)){
             return null;
         }
