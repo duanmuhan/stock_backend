@@ -30,6 +30,5 @@ public interface PlateInfoDAO {
             "#{item} " +
             "</foreach>" +
             "</script>")
-    @Cacheable(value = "stock::plate::list",key = "#plateIds")
     List<PlateInfo> batchQueryPlateInfosByPlateIds(@Param("plateIds") List<String> plateIds);
 }
