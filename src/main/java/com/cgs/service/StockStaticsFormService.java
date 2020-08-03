@@ -66,7 +66,7 @@ public class StockStaticsFormService {
             StockEarningPerPriceVO vo = new StockEarningPerPriceVO();
             vo.setStockId(financeInfo.getStockId());
             vo.setDate(kItemList.get(0).getDate());
-            List<StockPlateInfoMapping> stockPlateInfoMappings = stockPlateInfoMappingDAO.queryPlateInfoByStockId(financeInfo.getStockId());
+            List<StockPlateInfoMapping> stockPlateInfoMappings = stockPlateInfoMappingDAO.queryPlateInfoMappingByStockId(financeInfo.getStockId());
             if (!CollectionUtils.isEmpty(stockPlateInfoMappings)){
                 StringBuilder sb = new StringBuilder();
                 stockPlateInfoMappings.forEach(e->{

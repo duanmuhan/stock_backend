@@ -22,11 +22,11 @@ public interface StockPlateInfoMappingDAO {
     })
     @Select(" select * from " + TABLE_NAME + " where stock_id = #{stockId}")
     @Cacheable(value = "stock:plate", key = "#stockId")
-    public List<StockPlateInfoMapping> queryPlateInfoByStockId(@Param("stockId") String stockId);
+    public List<StockPlateInfoMapping> queryPlateInfoMappingByStockId(@Param("stockId") String stockId);
 
     @Select(" select * from " + TABLE_NAME + " where plate_id = #{plateId} ")
     @Cacheable(value = "stock:plate", key = "#plateId")
-    public List<StockPlateInfoMapping> queryPlateInfoByPlateId(@Param("plateId") String plateId);
+    public List<StockPlateInfoMapping> queryPlateInfoMappingByPlateId(@Param("plateId") String plateId);
 
     @Select("<script>" +
             "select * from " + TABLE_NAME + "where stock_id in " +

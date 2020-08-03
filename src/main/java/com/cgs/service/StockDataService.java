@@ -49,7 +49,7 @@ public class StockDataService {
 
     public StockPlateVO queryStockPlateInfoByStockId(String stockId){
         StockPlateVO vo = new StockPlateVO();
-        List<StockPlateInfoMapping> list = stockPlateInfoMappingDAO.queryPlateInfoByStockId(stockId);
+        List<StockPlateInfoMapping> list = stockPlateInfoMappingDAO.queryPlateInfoMappingByStockId(stockId);
         vo.setStockId(stockId);
         vo.setPlateInfos(list);
         return vo;
