@@ -13,4 +13,5 @@ public class StockOverViewVO {
     private String priceRate;
     private String amountRate;
     private String dealCashRate;
+    private String date;
 }

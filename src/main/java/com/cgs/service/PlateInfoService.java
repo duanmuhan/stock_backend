@@ -50,8 +50,8 @@ public class PlateInfoService {
                 viewVO.setStockId(e.getStockId());
                 viewVO.setStockName(e.getName());
                 viewVO.setDealCash(kItem.getDealCash());
-                viewVO.setPriceRate(String.valueOf((kItem.getClosePrice()-kItem.getOpenPrice())/kItem.getOpenPrice() * 100) + "%");
-                viewVO.setAmountRate(String.valueOf((kItem.getDealAmount() - kItem.getDealAmount())/kItem.getDealAmount() * 100 + "%"));
+//                viewVO.setPriceRate(String.valueOf((kItem.getClosePrice()-kItem.getOpenPrice())/kItem.getOpenPrice() * 100) + "%");
+//                viewVO.setAmountRate(String.valueOf((kItem.getDealAmount() - kItem.getDealAmount())/kItem.getDealAmount() * 100 + "%"));
                 overViewVOList.add(viewVO);
             }
         });
