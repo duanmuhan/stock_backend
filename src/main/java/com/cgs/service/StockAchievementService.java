@@ -2,6 +2,7 @@ package com.cgs.service;
 
 import com.cgs.dao.StockAchievementDAO;
 import com.cgs.entity.StockAchievement;
+import com.cgs.vo.StockAchievementGroupVO;
 import com.cgs.vo.forms.StockAchievementVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,14 +41,17 @@ public class StockAchievementService {
         return list;
     }
 
-    public Map<String,Long> queryStockAchievementGroup(){
+    public StockAchievementGroupVO queryStockAchievementGroup(){
         String date = "2020-04-30";
         List<StockAchievement> list = stockAchievementDAO.queryStockAchievement(date);
         if (CollectionUtils.isEmpty(list)){
             return null;
         }
         Map<String,Long> resultMap = list.stream().collect(Collectors.groupingBy(StockAchievement::getAchievementType,Collectors.counting()));
-        return resultMap;
+        StockAchievementGroupVO vo = new StockAchievementGroupVO();
+        vo.setDate(date);
+        vo.setGroupMap(resultMap);
+        return vo;
     }
 
     public List<StockAchievementVO> queryStockAchievementListByType(String type,Integer pageSize, Integer pageNo){

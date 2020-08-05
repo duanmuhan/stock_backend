@@ -6,6 +6,7 @@ import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockAchievementService;
 import com.cgs.service.StockStaticsFormService;
+import com.cgs.vo.StockAchievementGroupVO;
 import com.cgs.vo.StockEarningPriceVO;
 import com.cgs.vo.forms.StockAchievementVO;
 import com.cgs.vo.forms.StockChangeRateVO;
@@ -102,8 +103,8 @@ public class StockStaticsFormController {
     public Response queryStockAchievementGroup(HttpServletRequest httpServletRequest){
         Response response = new Response();
         try {
-            Map<String,Long> resultMap = stockAchievementService.queryStockAchievementGroup();
-            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, resultMap);
+            StockAchievementGroupVO vo = stockAchievementService.queryStockAchievementGroup();
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         }catch (Exception e){
             log.error("queryStockAchievementGroup exception:{}", e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);
@@ -116,7 +117,7 @@ public class StockStaticsFormController {
     public Response queryStockAchievementType(@RequestParam("type") String type,@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
         Response response = new Response();
         try {
-            List<StockAchievementVO> list = stockAchievementService.queryStockAchievementListByType(type);
+            List<StockAchievementVO> list = stockAchievementService.queryStockAchievementListByType(type,pageNo,pageSize);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK, list);
         }catch (Exception e){
             log.error("queryStockAchievementGroup exception:{}", e);
