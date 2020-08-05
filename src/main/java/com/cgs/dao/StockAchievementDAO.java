@@ -23,6 +23,6 @@ public interface StockAchievementDAO {
             @Result(property = "profileLastYear",column = "profile_last_year"),
             @Result(property = "releaseDate",column = "release_date")
     })
-    @Select("select * from " + TABLE_NAME + " order by profile_change_rate desc limit #{startIndex}, #{endIndex}")
-    public List<StockAchievement> queryStockAchievementOrderByProfileChangeRate(@Param("startIndex") String startIndex,@Param("endIndex") String endIndex);
+    @Select("select * from " + TABLE_NAME  + " where release_date>=#{date}" + " order by profile_change_rate desc limit #{startIndex}, #{endIndex}")
+    public List<StockAchievement> queryStockAchievementOrderByProfileChangeRate(@Param("date") String date,@Param("startIndex") String startIndex,@Param("endIndex") String endIndex);
 }

@@ -4,8 +4,10 @@ import com.cgs.ResponseUtils;
 import com.cgs.constant.ErrorCode;
 import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
+import com.cgs.service.StockAchievementService;
 import com.cgs.service.StockStaticsFormService;
 import com.cgs.vo.StockEarningPriceVO;
+import com.cgs.vo.forms.StockAchievementVO;
 import com.cgs.vo.forms.StockChangeRateVO;
 import com.cgs.vo.forms.StockPeriodChangeRateVO;
 import io.swagger.annotations.Api;
@@ -26,6 +28,8 @@ public class StockStaticsFormController {
 
     @Autowired
     private StockStaticsFormService stockStaticsFormService;
+    @Autowired
+    private StockAchievementService stockAchievementService;
 
     @RequestMapping(value = UrlConstant.TOP_VALUE_STOCK_PER_PRICE_FORM, method = RequestMethod.GET)
     @ResponseBody
@@ -68,6 +72,21 @@ public class StockStaticsFormController {
         Response response = new Response();
         try {
             List<StockPeriodChangeRateVO> vo = stockStaticsFormService.queryStockPeriodChangeRate(date,pageNo,pageSize);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
+        } catch (Exception e) {
+            log.error("queryTopValueStockPerPrice exception:{}", e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, null);
+        }
+        return response;
+    }
+
+    @RequestMapping(value = UrlConstant.STOCK_ACHIEVEMENT_LIST, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockAchievementList(@RequestParam(name = "pageNo") Integer pageNo,
+                                              @RequestParam(name = "pageSize")Integer pageSize){
+        Response response = new Response();
+        try {
+            List<StockAchievementVO> vo = stockAchievementService.queryStockAchievementByPage(pageNo,pageSize);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         } catch (Exception e) {
             log.error("queryTopValueStockPerPrice exception:{}", e);
