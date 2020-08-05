@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -75,7 +77,7 @@ public class StockStaticsFormController {
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         } catch (Exception e) {
             log.error("queryTopValueStockPerPrice exception:{}", e);
-            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, null);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);
         }
         return response;
     }
@@ -89,8 +91,22 @@ public class StockStaticsFormController {
             List<StockAchievementVO> vo = stockAchievementService.queryStockAchievementByPage(pageNo,pageSize);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         } catch (Exception e) {
-            log.error("queryTopValueStockPerPrice exception:{}", e);
-            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, null);
+            log.error("queryStockAchievementList exception:{}", e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);
+        }
+        return response;
+    }
+
+    @RequestMapping(value = UrlConstant.STOCK_ACHIEVEMENT_GROUP,method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockAchievementGroup(HttpServletRequest httpServletRequest){
+        Response response = new Response();
+        try {
+            Map<String,Long> resultMap = stockAchievementService.queryStockAchievementGroup();
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, resultMap);
+        }catch (Exception e){
+            log.error("queryStockAchievementGroup exception:{}", e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);
         }
         return response;
     }

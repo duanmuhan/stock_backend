@@ -32,6 +32,6 @@ public interface UrlConstant {
     String PLATE_STOCK_LIST = "/plate/stock/list";
 
     String STOCK_ACHIEVEMENT_LIST = "/stock/achievement/list";
-
+    String STOCK_ACHIEVEMENT_GROUP = "/stock/achievement/group";
 
 }
