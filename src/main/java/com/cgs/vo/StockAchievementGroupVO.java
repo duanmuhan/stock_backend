@@ -1,11 +1,12 @@
 package com.cgs.vo;
 
+import javafx.util.Pair;
 import lombok.Data;
 
-import java.util.Map;
+import java.util.List;
 
 @Data
 public class StockAchievementGroupVO {
     private String date;
-    private Map<String,Long> groupMap;
+    private List<Pair<String,Long>> list;
 }

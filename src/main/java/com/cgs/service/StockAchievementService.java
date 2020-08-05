@@ -4,6 +4,7 @@ import com.cgs.dao.StockAchievementDAO;
 import com.cgs.entity.StockAchievement;
 import com.cgs.vo.StockAchievementGroupVO;
 import com.cgs.vo.forms.StockAchievementVO;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -50,7 +51,12 @@ public class StockAchievementService {
         Map<String,Long> resultMap = list.stream().collect(Collectors.groupingBy(StockAchievement::getAchievementType,Collectors.counting()));
         StockAchievementGroupVO vo = new StockAchievementGroupVO();
         vo.setDate(date);
-        vo.setGroupMap(resultMap);
+        List<Pair<String,Long>> pairs = new ArrayList<>();
+        for (Map.Entry<String,Long> entry : resultMap.entrySet()){
+            Pair<String,Long> pair = new Pair<>(entry.getKey(),entry.getValue());
+            pairs.add(pair);
+        }
+        vo.setList(pairs);
         return vo;
     }
 
