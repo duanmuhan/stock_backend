@@ -113,7 +113,7 @@ public class StockStaticsFormController {
 
     @RequestMapping(value = UrlConstant.STOCK_ACHIEVEMENT_TYPE,method = RequestMethod.GET)
     @ResponseBody
-    public Response queryStockAchievementType(@RequestParam("type") String type){
+    public Response queryStockAchievementType(@RequestParam("type") String type,@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
         Response response = new Response();
         try {
             List<StockAchievementVO> list = stockAchievementService.queryStockAchievementListByType(type);

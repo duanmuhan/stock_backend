@@ -50,9 +50,11 @@ public class StockAchievementService {
         return resultMap;
     }
 
-    public List<StockAchievementVO> queryStockAchievementListByType(String type){
+    public List<StockAchievementVO> queryStockAchievementListByType(String type,Integer pageSize, Integer pageNo){
         String date = "2020-04-30";
-        List<StockAchievement> stockAchievements = stockAchievementDAO.queryStockAchievementByType(date,type);
+        Integer startIndex = pageNo * pageSize;
+        Integer endIndex = (pageNo+1) * pageSize;
+        List<StockAchievement> stockAchievements = stockAchievementDAO.queryStockAchievementByType(date,type,startIndex,endIndex);
         if (CollectionUtils.isEmpty(stockAchievements)){
             return null;
         }
