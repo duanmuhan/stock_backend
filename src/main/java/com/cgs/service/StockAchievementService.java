@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,5 +48,26 @@ public class StockAchievementService {
         }
         Map<String,Long> resultMap = list.stream().collect(Collectors.groupingBy(StockAchievement::getAchievementType,Collectors.counting()));
         return resultMap;
+    }
+
+    public List<StockAchievementVO> queryStockAchievementListByType(String type){
+        String date = "2020-04-30";
+        List<StockAchievement> stockAchievements = stockAchievementDAO.queryStockAchievementByType(date,type);
+        if (CollectionUtils.isEmpty(stockAchievements)){
+            return null;
+        }
+        List<StockAchievementVO> list = new ArrayList<>();
+        stockAchievements.stream().forEach(e->{
+            StockAchievementVO vo = new StockAchievementVO();
+            vo.setStockId(e.getStockId());
+            vo.setStockName(e.getStockName());
+            vo.setAchievementType(e.getAchievementType());
+            vo.setAchievementTitle(e.getAchievementTitle());
+            vo.setProfileChangeRate(e.getProfileChangeRate());
+            vo.setProfileLastYear(e.getProfileLastYear());
+            vo.setReleaseDate(e.getReleaseDate());
+            list.add(vo);
+        });
+        return list;
     }
 }

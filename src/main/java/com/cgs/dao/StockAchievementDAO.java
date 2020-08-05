@@ -1,6 +1,7 @@
 package com.cgs.dao;
 
 import com.cgs.entity.StockAchievement;
+import com.cgs.vo.forms.StockAchievementVO;
 import org.apache.ibatis.annotations.*;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
@@ -25,7 +26,12 @@ public interface StockAchievementDAO {
     public List<StockAchievement> queryStockAchievementOrderByProfileChangeRate(@Param("date") String date,@Param("startIndex") Integer startIndex,@Param("endIndex") Integer endIndex);
 
     @ResultMap(value = "stockAchievement")
-    @Cacheable
+    @Cacheable(value = "stock::achievement::date",key = "#date")
     @Select("select * from " + TABLE_NAME  + " where release_date>=#{date}")
     public List<StockAchievement> queryStockAchievement(@Param("date") String date);
+
+    @ResultMap(value = "stockAchievement")
+    @Cacheable(value = "stock::achievement::date",key = "#type + '-' + #date")
+    @Select("select * from " + TABLE_NAME  + " where release_date>=#{date} and achievement_type = #{type}")
+    public List<StockAchievement> queryStockAchievementByType(@Param("date") String date, @Param("type") String type);
 }

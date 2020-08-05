@@ -110,4 +110,18 @@ public class StockStaticsFormController {
         }
         return response;
     }
+
+    @RequestMapping(value = UrlConstant.STOCK_ACHIEVEMENT_TYPE,method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockAchievementType(@RequestParam("type") String type){
+        Response response = new Response();
+        try {
+            List<StockAchievementVO> list = stockAchievementService.queryStockAchievementListByType(type);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, list);
+        }catch (Exception e){
+            log.error("queryStockAchievementGroup exception:{}", e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);
+        }
+        return response;
+    }
 }
