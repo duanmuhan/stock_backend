@@ -13,7 +13,7 @@ public class StockTechnologyVO {
     private String event;
     private String releaseDate;
 
-    StockTechnologyVO(){
+    public StockTechnologyVO(){
         this.buyCount = 0;
         this.sellCount = 0;
     }

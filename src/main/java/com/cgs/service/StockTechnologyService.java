@@ -101,7 +101,7 @@ public class StockTechnologyService {
             }
             if (!CollectionUtils.isEmpty(sellList)){
                 vo.setSell(sellList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",")));
-                vo.setBuyCount(sellList.size());
+                vo.setSellCount(sellList.size());
             }
             if (!CollectionUtils.isEmpty(eventList)){
                 vo.setEvent(eventList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",")));
