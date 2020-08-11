@@ -114,7 +114,7 @@ public class StockTechnologyService {
         if (endIndex > resultList.size()-1){
             endIndex = resultList.size() - 1;
         }
-        resultList = resultList.stream().sorted(Comparator.comparing(StockTechnologyVO::getBuy).reversed()).collect(Collectors.toList());
+        resultList = resultList.stream().sorted(Comparator.comparing(StockTechnologyVO::getBuyCount).reversed()).collect(Collectors.toList());
         return resultList.subList(startIndex,endIndex);
     }
 
