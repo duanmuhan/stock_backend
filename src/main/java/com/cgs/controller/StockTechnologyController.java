@@ -42,13 +42,13 @@ public class StockTechnologyController {
 
     @RequestMapping(value = UrlConstant.STOCK_TECHNOLOGY_SCORE_BY_STOCK_ID, method = RequestMethod.GET)
     @ResponseBody
-    public Response queryStockTechnologyScoreList(@RequestParam(name = "stockId") String stockId){
+    public Response queryStockTechnologyScoreByStockId(@RequestParam(name = "stockId") String stockId){
         Response response = new Response();
         try {
             StockTechnologyScoreVO vo = stockTechnologyService.queryStockTechnologyScoreByStockId(stockId);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         }catch (Exception e){
-            log.error("queryStockTechnologyScoreList exception:{}", e);
+            log.error("queryStockTechnologyScoreByStockId exception:{}", e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);
         }
         return response;
