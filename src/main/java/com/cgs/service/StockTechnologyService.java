@@ -69,6 +69,7 @@ public class StockTechnologyService {
         return vo;
     }
 
+    @Cacheable(value = "stockInfo::queryStockTechnologyList",key = "#pageNo + '-' + #pageSize")
     public List<StockTechnologyVO> queryStockTechnologyList(Integer pageNo, Integer pageSize){
         List<StockTechnology> stockTechnologyList = stockTechnologyDAO.queryLatestStockTechnologyList();
         if (CollectionUtils.isEmpty(stockTechnologyList)){
