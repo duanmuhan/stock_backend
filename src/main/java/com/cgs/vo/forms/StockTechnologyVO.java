@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class StockTechnologyVO {
     private String stockId;
-    private String type;
-    private String special;
-    private String queryStr;
-    private String tag;
-    private String descStr;
+    private String stockName;
+    private String buy;
+    private String sell;
+    private String buyCount;
+    private String sellCount;
     private String releaseDate;
 }
