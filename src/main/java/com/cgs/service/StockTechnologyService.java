@@ -38,7 +38,7 @@ public class StockTechnologyService {
         if (CollectionUtils.isEmpty(stockTechnologyScoreList)){
             return list;
         }
-        stockTechnologyScoreList = stockTechnologyScoreList.stream().sorted(Comparator.comparing(StockTechnologyScore::getScore).reversed()).collect(Collectors.toList()); ;
+        stockTechnologyScoreList = stockTechnologyScoreList.stream().sorted(Comparator.comparing(StockTechnologyScore::getScore).reversed()).collect(Collectors.toList());
         int startIndex = pageNo * pageSize;
         int endIndex = (pageNo+1) * pageSize -1;
         if (endIndex > stockTechnologyScoreList.size()-1){
@@ -114,6 +114,7 @@ public class StockTechnologyService {
         if (endIndex > resultList.size()-1){
             endIndex = resultList.size() - 1;
         }
+        resultList = resultList.stream().sorted(Comparator.comparing(StockTechnologyVO::getBuy).reversed()).collect(Collectors.toList());
         return resultList.subList(startIndex,endIndex);
     }
 
