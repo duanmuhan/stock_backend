@@ -69,7 +69,6 @@ public class StockTechnologyService {
         return vo;
     }
 
-    @Cacheable(value = "stockInfo::queryStockTechnologyList",key = "#pageNo + '-' + #pageSize")
     public List<StockTechnologyVO> queryStockTechnologyList(Integer pageNo, Integer pageSize){
         List<StockTechnology> stockTechnologyList = stockTechnologyDAO.queryLatestStockTechnologyList();
         if (CollectionUtils.isEmpty(stockTechnologyList)){
@@ -97,15 +96,15 @@ public class StockTechnologyService {
             vo.setStockId(entry.getKey());
             vo.setStockName(stockItemMap.get(entry.getKey()).getName());
             if (!CollectionUtils.isEmpty(buyList)){
-                vo.setBuy(buyList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",")));
+                vo.setBuy(buyList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",<br>")));
                 vo.setBuyCount(buyList.size());
             }
             if (!CollectionUtils.isEmpty(sellList)){
-                vo.setSell(sellList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",")));
+                vo.setSell(sellList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",<br>")));
                 vo.setSellCount(sellList.size());
             }
             if (!CollectionUtils.isEmpty(eventList)){
-                vo.setEvent(eventList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",")));
+                vo.setEvent(eventList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",<br>")));
             }
             vo.setReleaseDate(list.get(0).getReleaseDate());
             resultList.add(vo);

@@ -2,8 +2,10 @@ package com.cgs.vo.forms;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class StockTechnologyVO {
+public class StockTechnologyVO implements Serializable {
     private String stockId;
     private String stockName;
     private String buy;
