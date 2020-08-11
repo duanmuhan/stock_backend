@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ public class StockTechnologyService {
         if (CollectionUtils.isEmpty(stockTechnologyScoreList)){
             return list;
         }
+        stockTechnologyScoreList = stockTechnologyScoreList.stream().sorted(Comparator.comparing(StockTechnologyScore::getScore).reversed()).collect(Collectors.toList()); ;
         int startIndex = pageNo * pageSize;
         int endIndex = (pageNo+1) * pageSize -1;
         if (endIndex > stockTechnologyScoreList.size()-1){

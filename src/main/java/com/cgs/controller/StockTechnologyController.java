@@ -7,6 +7,7 @@ import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockTechnologyService;
 import com.cgs.vo.forms.StockTechnologyScoreVO;
 import com.cgs.vo.forms.StockTechnologyVO;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Controller
 @Slf4j
+@Api(tags = "股票技术信息接口")
 public class StockTechnologyController {
     @Autowired
     private StockTechnologyService stockTechnologyService;
