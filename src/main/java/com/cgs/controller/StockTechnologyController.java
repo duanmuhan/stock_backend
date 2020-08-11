@@ -6,6 +6,7 @@ import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockTechnologyService;
 import com.cgs.vo.forms.StockTechnologyScoreVO;
+import com.cgs.vo.forms.StockTechnologyVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,10 +43,39 @@ public class StockTechnologyController {
     public Response queryStockTechnologyScoreList(@RequestParam(name = "stockId") String stockId){
         Response response = new Response();
         try {
-            StockTechnologyScoreVO vo = stockTechnologyService.queryStockTechnologyByStockId(stockId);
+            StockTechnologyScoreVO vo = stockTechnologyService.queryStockTechnologyScoreByStockId(stockId);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         }catch (Exception e){
             log.error("queryStockTechnologyScoreList exception:{}", e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);
+        }
+        return response;
+    }
+
+    @RequestMapping(value = UrlConstant.STOCK_TECHNOLOGY, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockTechnology(@RequestParam(name = "pageNo") Integer pageNo,
+                                         @RequestParam(name = "pageSize")Integer pageSize){
+        Response response = new Response();
+        try {
+            List<StockTechnologyVO> list = stockTechnologyService.queryStockTechnologyList(pageNo,pageSize);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, list);
+        }catch (Exception e){
+            log.error("queryStockTechnology exception:{}", e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);
+        }
+        return response;
+    }
+
+    @RequestMapping(value = UrlConstant.STOCK_TECHNOLOGY_BY_STOCK_ID, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockTechnologyByStockId(@RequestParam(name = "stockId") String stockId){
+        Response response = new Response();
+        try {
+            StockTechnologyVO stockTechnologyVO= stockTechnologyService.queryStockTechnologyByStockId(stockId);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, stockTechnologyVO);
+        }catch (Exception e){
+            log.error("queryStockTechnologyByStockId exception:{}", e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);
         }
         return response;

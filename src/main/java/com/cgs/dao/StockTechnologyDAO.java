@@ -24,9 +24,9 @@ public interface StockTechnologyDAO {
     })
     @Select(" select * from stock_technology INNER JOIN (select MAX(release_date) as max_date, stock_id as stockId from stock_technology GROUP BY stock_id) A ON stock_id = A.stockId AND release_date = A.max_date")
     @Cacheable(value = "stock:latestStockTechnology")
-    public List<StockTechnology> queryLatestStockTechnologyScoreList();
+    public List<StockTechnology> queryLatestStockTechnologyList();
 
     @Select("select * from stock_score INNER JOIN (select MAX(release_date) as max_date, stock_id as stockId from stock_score GROUP BY stock_id) A ON stock_id = A.stockId AND release_date = A.max_date AND stock_id = #{stockId}")
     @Cacheable(value = "stock:latestStockTechnology",key = "#stockId")
-    public List<StockTechnology> queryStockTechnologyByStockId(@Param("stockId") String stockId);
+    public StockTechnology queryStockTechnologyByStockId(@Param("stockId") String stockId);
 }
