@@ -8,7 +8,8 @@ public class StockTechnologyVO {
     private String stockName;
     private String buy;
     private String sell;
-    private String buyCount;
-    private String sellCount;
+    private Integer buyCount;
+    private Integer sellCount;
+    private String event;
     private String releaseDate;
 }
