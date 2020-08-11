@@ -68,24 +68,13 @@ public class StockTechnologyService {
         if (CollectionUtils.isEmpty(stockTechnologyList)){
             return null;
         }
+
         int startIndex = pageNo * pageSize;
         int endIndex = (pageNo+1) * pageSize -1;
         if (endIndex > stockTechnologyList.size()-1){
             endIndex = stockTechnologyList.size() - 1;
         }
-        List<StockTechnology> technologyList = stockTechnologyList.subList(startIndex,endIndex);
-        List<StockTechnologyVO> list = technologyList.stream().map(e->{
-            StockTechnologyVO vo = new StockTechnologyVO();
-            vo.setStockId(e.getStockId());
-            vo.setDescStr(e.getDescStr());
-            vo.setQueryStr(e.getQueryStr());
-            vo.setSpecial(e.getSpecial());
-            vo.setTag(e.getTag());
-            vo.setType(e.getType());
-            vo.setReleaseDate(e.getReleaseDate());
-            return vo;
-        }).collect(Collectors.toList());
-        return list;
+        return null;
     }
 
     public StockTechnologyVO queryStockTechnologyByStockId(String stockId){
@@ -94,11 +83,6 @@ public class StockTechnologyService {
         if (ObjectUtils.isEmpty(stockTechnology)){
             vo.setStockId(stockTechnology.getStockId());
             vo.setReleaseDate(stockTechnology.getReleaseDate());
-            vo.setType(stockTechnology.getType());
-            vo.setTag(stockTechnology.getTag());
-            vo.setSpecial(stockTechnology.getSpecial());
-            vo.setQueryStr(stockTechnology.getQueryStr());
-            vo.setDescStr(stockTechnology.getDescStr());
         }
         return vo;
     }
