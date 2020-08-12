@@ -90,7 +90,7 @@ public class StockStaticsFormController {
                                               @RequestParam(name = "pageSize")Integer pageSize){
         Response response = new Response();
         try {
-            List<StockAchievementVO> vo = stockAchievementService.queryStockAchievementByPage(pageNo,pageSize);
+            PageHelperVO vo = stockAchievementService.queryStockAchievementByPage(pageNo,pageSize);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         } catch (Exception e) {
             log.error("queryStockAchievementList exception:{}", e);
@@ -121,7 +121,7 @@ public class StockStaticsFormController {
             List<StockAchievementVO> list = stockAchievementService.queryStockAchievementListByType(type,pageNo,pageSize);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK, list);
         }catch (Exception e){
-            log.error("queryStockAchievementGroup exception:{}", e);
+            log.error("queryStockAchievementType exception:{}", e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);
         }
         return response;

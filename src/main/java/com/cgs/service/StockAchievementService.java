@@ -2,6 +2,7 @@ package com.cgs.service;
 
 import com.cgs.dao.StockAchievementDAO;
 import com.cgs.entity.StockAchievement;
+import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.StockAchievementGroupVO;
 import com.cgs.vo.forms.StockAchievementVO;
 import javafx.util.Pair;
@@ -19,27 +20,31 @@ public class StockAchievementService {
     @Autowired
     private StockAchievementDAO stockAchievementDAO;
 
-    public List<StockAchievementVO> queryStockAchievementByPage(int pageNo,int pageSize){
+    public PageHelperVO queryStockAchievementByPage(int pageNo,int pageSize){
+        PageHelperVO vo = new PageHelperVO();
         String date = "2020-04-30";
         List<StockAchievementVO> list = new ArrayList<>();
         Integer startIndex = pageNo * pageSize;
         Integer endIndex = (pageNo+1) * pageSize;
+        Integer totalCount = stockAchievementDAO.queryStockAchievementCount(date);
         List<StockAchievement> stockAchievements = stockAchievementDAO.queryStockAchievementOrderByProfileChangeRate(date,startIndex,endIndex);
         if (CollectionUtils.isEmpty(stockAchievements)){
-            return null;
+            return vo;
         }
         stockAchievements.stream().forEach(e->{
-            StockAchievementVO vo = new StockAchievementVO();
-            vo.setStockId(e.getStockId());
-            vo.setStockName(e.getStockName());
-            vo.setAchievementType(e.getAchievementType());
-            vo.setAchievementTitle(e.getAchievementTitle());
-            vo.setProfileChangeRate(e.getProfileChangeRate());
-            vo.setProfileLastYear(e.getProfileLastYear());
-            vo.setReleaseDate(e.getReleaseDate());
-            list.add(vo);
+            StockAchievementVO stockAchievementVO = new StockAchievementVO();
+            stockAchievementVO.setStockId(e.getStockId());
+            stockAchievementVO.setStockName(e.getStockName());
+            stockAchievementVO.setAchievementType(e.getAchievementType());
+            stockAchievementVO.setAchievementTitle(e.getAchievementTitle());
+            stockAchievementVO.setProfileChangeRate(e.getProfileChangeRate());
+            stockAchievementVO.setProfileLastYear(e.getProfileLastYear());
+            stockAchievementVO.setReleaseDate(e.getReleaseDate());
+            list.add(stockAchievementVO);
         });
-        return list;
+        vo.setTotal(totalCount);
+        vo.setRows(stockAchievements);
+        return vo;
     }
 
     public StockAchievementGroupVO queryStockAchievementGroup(){

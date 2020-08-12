@@ -64,6 +64,7 @@ public class StockTechnologyService {
         return vo;
     }
 
+
     public StockTechnologyScoreVO queryStockTechnologyScoreByStockId(String stockId){
         StockTechnologyScoreVO vo = new StockTechnologyScoreVO();
         StockTechnologyScore stockTechnologyScore = stockTechnologyScoreDAO.queryStockTechnologyScoreByStockId(stockId);
@@ -77,7 +78,9 @@ public class StockTechnologyService {
         return vo;
     }
 
-    public List<StockTechnologyVO> queryStockTechnologyList(Integer pageNo, Integer pageSize){
+    @Cacheable(value = "stockInfo::queryStockTechnologyList",key = "#pageNo + '-' + #pageSize")
+    public PageHelperVO queryStockTechnologyList(Integer pageNo, Integer pageSize){
+        PageHelperVO vo = new PageHelperVO();
         List<StockTechnology> stockTechnologyList = stockTechnologyDAO.queryLatestStockTechnologyList();
         if (CollectionUtils.isEmpty(stockTechnologyList)){
             return null;
@@ -87,7 +90,7 @@ public class StockTechnologyService {
         Map<String,StockItem> stockItemMap = stockItemList.stream().collect(Collectors.toMap(StockItem::getStockId, Function.identity()));
         Map<String,List<StockTechnology>> stockTechnologyMap = stockTechnologyList.stream().collect(Collectors.groupingBy(StockTechnology::getStockId));
         for (Map.Entry<String,List<StockTechnology>> entry : stockTechnologyMap.entrySet()){
-            StockTechnologyVO vo = new StockTechnologyVO();
+            StockTechnologyVO stockTechnologyVO = new StockTechnologyVO();
             List<StockTechnology> list = entry.getValue();
             if (CollectionUtils.isEmpty(list)){
                 continue;
@@ -101,29 +104,34 @@ public class StockTechnologyService {
             List<StockTechnology> eventList = list.stream().filter(e->{
                 return "event".equals(e.getType());
             }).collect(Collectors.toList());
-            vo.setStockId(entry.getKey());
-            vo.setStockName(stockItemMap.get(entry.getKey()).getName());
+            stockTechnologyVO.setStockId(entry.getKey());
+            stockTechnologyVO.setStockName(stockItemMap.get(entry.getKey()).getName());
             if (!CollectionUtils.isEmpty(buyList)){
-                vo.setBuy(buyList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",<br>")));
-                vo.setBuyCount(buyList.size());
+                stockTechnologyVO.setBuy(buyList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",<br>")));
+                stockTechnologyVO.setBuyCount(buyList.size());
             }
             if (!CollectionUtils.isEmpty(sellList)){
-                vo.setSell(sellList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",<br>")));
-                vo.setSellCount(sellList.size());
+                stockTechnologyVO.setSell(sellList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",<br>")));
+                stockTechnologyVO.setSellCount(sellList.size());
             }
             if (!CollectionUtils.isEmpty(eventList)){
-                vo.setEvent(eventList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",<br>")));
+                stockTechnologyVO.setEvent(eventList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",<br>")));
             }
-            vo.setReleaseDate(list.get(0).getReleaseDate());
-            resultList.add(vo);
-        }
-        int startIndex = pageNo * pageSize;
-        int endIndex = (pageNo+1) * pageSize -1;
-        if (endIndex > resultList.size()-1){
-            endIndex = resultList.size() - 1;
+            stockTechnologyVO.setReleaseDate(list.get(0).getReleaseDate());
+            resultList.add(stockTechnologyVO);
         }
         resultList = resultList.stream().sorted(Comparator.comparing(StockTechnologyVO::getBuyCount).reversed()).collect(Collectors.toList());
-        return resultList.subList(startIndex,endIndex);
+        vo.setTotal(resultList.size());
+        if (pageNo * pageSize > resultList.size()){
+            return vo;
+        }
+        if ((pageNo + 1) * pageSize > resultList.size()){
+            vo.setRows(new ArrayList<>(resultList.subList((pageNo)*pageSize,resultList.size()-1)));
+        }
+        if ((pageNo + 1) * pageSize < resultList.size()){
+            vo.setRows(new ArrayList<>(resultList.subList((pageNo)*pageSize,(pageNo+1)*pageSize)));
+        }
+        return vo;
     }
 
     public StockTechnologyVO queryStockTechnologyByStockId(String stockId){

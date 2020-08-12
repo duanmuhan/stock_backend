@@ -61,8 +61,8 @@ public class StockTechnologyController {
                                          @RequestParam(name = "pageSize")Integer pageSize){
         Response response = new Response();
         try {
-            List<StockTechnologyVO> list = stockTechnologyService.queryStockTechnologyList(pageNo,pageSize);
-            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, list);
+            PageHelperVO vo = stockTechnologyService.queryStockTechnologyList(pageNo,pageSize);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         }catch (Exception e){
             log.error("queryStockTechnology exception:{}", e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);
