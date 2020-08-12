@@ -8,6 +8,7 @@ import com.cgs.entity.FinanceInfo;
 import com.cgs.entity.KItem;
 import com.cgs.entity.StockItem;
 import com.cgs.entity.StockPlateInfoMapping;
+import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.StockEarningPerPriceVO;
 import com.cgs.vo.StockEarningPriceVO;
 import com.cgs.vo.forms.StockChangeRateVO;
@@ -101,14 +102,14 @@ public class StockStaticsFormService {
         return stockEarningPriceVO;
     }
 
-    @Cacheable(value = "stockInfo::queryLatestStockChangeRate",key = "#pageNo + '-' + #pageSize")
-    public List<StockChangeRateVO> queryLatestStockChangeRate(String date, Integer pageNo, Integer pageSize){
+    public PageHelperVO queryLatestStockChangeRate(String date, Integer pageNo, Integer pageSize){
         List<StockChangeRateVO> voList = new ArrayList<>();
         List<KItem> kItems = kItemDAO.queryLatestValue();
         List<KItem> secondLatestValue = kItemDAO.querySecondLatestDate();
         List<StockItem> stockItemList = stockItemDAO.queryAllStockList();
+        PageHelperVO vo = new PageHelperVO();
         if (CollectionUtils.isEmpty(kItems) || CollectionUtils.isEmpty(secondLatestValue) || CollectionUtils.isEmpty(stockItemList)){
-            return voList;
+            return vo;
         }
         Map<String,KItem> secondLatestMap = secondLatestValue.stream().collect(Collectors.toMap(KItem::getStockId,Function.identity()));
         Map<String,StockItem> stockItemMap = stockItemList.stream().collect(Collectors.toMap(StockItem::getStockId,Function.identity()));
@@ -128,13 +129,15 @@ public class StockStaticsFormService {
         }
         voList = voList.stream().sorted(Comparator.comparing(StockChangeRateVO::getChangeRate).reversed()).collect(Collectors.toList());
         List<StockChangeRateVO> resultList = new ArrayList<>();
-        if ((pageNo) * pageSize > voList.size()){
-            resultList = new ArrayList<>(voList.subList((pageNo-1)*pageSize,voList.size()-1));
+        if ((pageNo + 1) * pageSize > voList.size()){
+            resultList = new ArrayList<>(voList.subList((pageNo)*pageSize,voList.size()-1));
         }
-        if ((pageNo) * pageSize < voList.size()){
-            resultList = new ArrayList<>(voList.subList((pageNo-1)*pageSize,(pageNo)*pageSize));
+        if ((pageNo + 1) * pageSize < voList.size()){
+            resultList = new ArrayList<>(voList.subList((pageNo)*pageSize,(pageNo+1)*pageSize));
         }
-        return resultList;
+        vo.setTotal(voList.size());
+        vo.setRows(resultList);
+        return vo;
     }
 
     @Cacheable(value = "stockInfo::queryStockPeriodChangeRate",key = "#pageNo + '-' + #pageSize")

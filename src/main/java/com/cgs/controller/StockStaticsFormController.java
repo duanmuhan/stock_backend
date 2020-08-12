@@ -6,6 +6,7 @@ import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockAchievementService;
 import com.cgs.service.StockStaticsFormService;
+import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.StockAchievementGroupVO;
 import com.cgs.vo.StockEarningPriceVO;
 import com.cgs.vo.forms.StockAchievementVO;
@@ -58,7 +59,7 @@ public class StockStaticsFormController {
 
         Response response = new Response();
         try {
-            List<StockChangeRateVO> vo = stockStaticsFormService.queryLatestStockChangeRate(date,pageNo,pageSize);
+            PageHelperVO vo = stockStaticsFormService.queryLatestStockChangeRate(date,pageNo,pageSize);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         } catch (Exception e) {
             log.error("queryTopValueStockPerPrice exception:{}", e);
