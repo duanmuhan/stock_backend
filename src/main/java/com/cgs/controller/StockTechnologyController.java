@@ -5,6 +5,7 @@ import com.cgs.constant.ErrorCode;
 import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockTechnologyService;
+import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.forms.StockTechnologyScoreVO;
 import com.cgs.vo.forms.StockTechnologyVO;
 import io.swagger.annotations.Api;
@@ -31,8 +32,8 @@ public class StockTechnologyController {
                                                   @RequestParam(name = "pageSize")Integer pageSize){
         Response response = new Response();
         try {
-            List<StockTechnologyScoreVO> list = stockTechnologyService.queryLatestStockTechnologyScoreByPage(pageSize,pageNo);
-            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, list);
+            PageHelperVO vo = stockTechnologyService.queryLatestStockTechnologyScoreByPage(pageSize,pageNo);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         }catch (Exception e){
             log.error("queryStockTechnologyScoreList exception:{}", e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);

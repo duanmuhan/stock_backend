@@ -6,6 +6,7 @@ import com.cgs.dao.StockTechnologyScoreDAO;
 import com.cgs.entity.StockItem;
 import com.cgs.entity.StockTechnology;
 import com.cgs.entity.StockTechnologyScore;
+import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.forms.StockTechnologyScoreVO;
 import com.cgs.vo.forms.StockTechnologyVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,28 +33,35 @@ public class StockTechnologyService {
     private StockItemDAO stockItemDAO;
 
     @Cacheable(value = "stockInfo::queryLatestStockTechnologyScoreByPage",key = "#pageNo + '-' + #pageSize")
-    public List<StockTechnologyScoreVO> queryLatestStockTechnologyScoreByPage(Integer pageSize, Integer pageNo){
+    public PageHelperVO queryLatestStockTechnologyScoreByPage(Integer pageSize, Integer pageNo){
+        PageHelperVO vo = new PageHelperVO();
         List<StockTechnologyScoreVO> list = new ArrayList<>();
         List<StockTechnologyScore> stockTechnologyScoreList = stockTechnologyScoreDAO.queryLatestStockTechnologyScoreList();
         if (CollectionUtils.isEmpty(stockTechnologyScoreList)){
-            return list;
-        }
-        stockTechnologyScoreList = stockTechnologyScoreList.stream().sorted(Comparator.comparing(StockTechnologyScore::getScore).reversed()).collect(Collectors.toList());
-        int startIndex = pageNo * pageSize;
-        int endIndex = (pageNo+1) * pageSize -1;
-        if (endIndex > stockTechnologyScoreList.size()-1){
-            endIndex = stockTechnologyScoreList.size() - 1;
-        }
-        List<StockTechnologyScore> stockTechnologyScores = stockTechnologyScoreList.subList(startIndex,endIndex);
-        list = stockTechnologyScores.stream().map(e->{
-            StockTechnologyScoreVO vo = new StockTechnologyScoreVO();
-            vo.setStockId(e.getStockId());
-            vo.setStockName(e.getStockName());
-            vo.setScore(e.getScore());
-            vo.setReleaseDate(e.getReleaseDate());
             return vo;
+        }
+        List<StockTechnologyScore> stockTechnologyScores = new ArrayList<>();
+        stockTechnologyScoreList = stockTechnologyScoreList.stream().sorted(Comparator.comparing(StockTechnologyScore::getScore).reversed()).collect(Collectors.toList());
+        if (pageNo * pageSize > stockTechnologyScoreList.size()){
+            return vo;
+        }
+        if ((pageNo + 1) * pageSize > stockTechnologyScoreList.size()){
+            stockTechnologyScores = new ArrayList<>(stockTechnologyScoreList.subList((pageNo)*pageSize,stockTechnologyScoreList.size()-1));
+        }
+        if ((pageNo + 1) * pageSize < stockTechnologyScoreList.size()){
+            stockTechnologyScores = new ArrayList<>(stockTechnologyScoreList.subList((pageNo)*pageSize,(pageNo+1)*pageSize));
+        }
+        list = stockTechnologyScores.stream().map(e->{
+            StockTechnologyScoreVO stockTechnologyScoreVO = new StockTechnologyScoreVO();
+            stockTechnologyScoreVO.setStockId(e.getStockId());
+            stockTechnologyScoreVO.setStockName(e.getStockName());
+            stockTechnologyScoreVO.setScore(e.getScore());
+            stockTechnologyScoreVO.setReleaseDate(e.getReleaseDate());
+            return stockTechnologyScoreVO;
         }).collect(Collectors.toList());
-        return list;
+        vo.setTotal(stockTechnologyScoreList.size());
+        vo.setRows(list);
+        return vo;
     }
 
     public StockTechnologyScoreVO queryStockTechnologyScoreByStockId(String stockId){
