@@ -42,7 +42,7 @@ public class StockStaticsFormController {
                                                  @RequestParam(name = "pageSize") Integer pageSize) {
         com.cgs.constant.Response response = new Response();
         try {
-            StockEarningPriceVO vo = stockStaticsFormService.queryStockEarningPerPrice(date,pageNo,pageSize);
+            PageHelperVO vo = stockStaticsFormService.queryStockEarningPerPrice(date,pageNo,pageSize);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         } catch (Exception e) {
             log.error("queryTopValueStockPerPrice exception:{}", e);
@@ -75,7 +75,7 @@ public class StockStaticsFormController {
                                                @RequestParam(name = "pageSize") Integer pageSize){
         Response response = new Response();
         try {
-            List<StockPeriodChangeRateVO> vo = stockStaticsFormService.queryStockPeriodChangeRate(date,pageNo,pageSize);
+            PageHelperVO vo = stockStaticsFormService.queryStockPeriodChangeRate(date,pageNo,pageSize);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         } catch (Exception e) {
             log.error("queryTopValueStockPerPrice exception:{}", e);

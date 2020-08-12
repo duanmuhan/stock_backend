@@ -40,16 +40,16 @@ public class StockStaticsFormService {
 
     private static ThreadLocal<SimpleDateFormat> tl = new ThreadLocal<>();
 
-    @Cacheable(value = "stockInfo::queryStockEarningPerPrice",key = "#pageNo + '-' + #pageSize")
-    public StockEarningPriceVO queryStockEarningPerPrice(String date, Integer pageNo, Integer pageSize){
+//    @Cacheable(value = "stockInfo::queryStockEarningPerPrice",key = "#pageNo + '-' + #pageSize")
+    public PageHelperVO queryStockEarningPerPrice(String date, Integer pageNo, Integer pageSize){
 
-        StockEarningPriceVO stockEarningPriceVO = new StockEarningPriceVO();
+        PageHelperVO vo = new PageHelperVO();
 
         List<FinanceInfo> financeInfos = financeInfoDAO.queryFinanceInfo();
         List<KItem> kItemList = kItemDAO.queryLatestValue();
         List<StockItem> stockItemList = stockItemDAO.queryAllStockList();
         if (CollectionUtils.isEmpty(financeInfos) || CollectionUtils.isEmpty(kItemList) || CollectionUtils.isEmpty(stockItemList)){
-            return null;
+            return vo;
         }
         Map<String,StockItem> stringStockItemMap = stockItemList.stream().collect(Collectors.toMap(StockItem::getStockId,Function.identity()));
         Map<String,KItem> kItemMap = kItemList.stream().collect(Collectors.toMap(KItem::getStockId, Function.identity()));
@@ -64,9 +64,9 @@ public class StockStaticsFormService {
         }
         List<StockEarningPerPriceVO> list = new ArrayList<>();
         for (FinanceInfo financeInfo : financeInfoList) {
-            StockEarningPerPriceVO vo = new StockEarningPerPriceVO();
-            vo.setStockId(financeInfo.getStockId());
-            vo.setDate(kItemList.get(0).getDate());
+            StockEarningPerPriceVO stockEarningPerPriceVO = new StockEarningPerPriceVO();
+            stockEarningPerPriceVO.setStockId(financeInfo.getStockId());
+            stockEarningPerPriceVO.setDate(kItemList.get(0).getDate());
             List<StockPlateInfoMapping> stockPlateInfoMappings = stockPlateInfoMappingDAO.queryPlateInfoMappingByStockId(financeInfo.getStockId());
             if (!CollectionUtils.isEmpty(stockPlateInfoMappings)){
                 StringBuilder sb = new StringBuilder();
@@ -77,29 +77,29 @@ public class StockStaticsFormService {
                     continue;
                 }
                 DecimalFormat df = new DecimalFormat("#.00");
-                vo.setEarningsPerPrice("--".equals(financeInfo.getUDPPS()) ? 0 : Double.valueOf(df.format(Double.valueOf(financeInfo.getUDPPS())/kItemMap.get(financeInfo.getStockId()).getClosePrice())));
-                vo.setPrice(kItemMap.get(financeInfo.getStockId()).getClosePrice());
-                vo.setPlate(sb.toString());
-                vo.setDate(kItemMap.get(financeInfo.getStockId()).getDate());
-                vo.setStockName(stringStockItemMap.get(financeInfo.getStockId()).getName());
-                list.add(vo);
+                stockEarningPerPriceVO.setEarningsPerPrice("--".equals(financeInfo.getUDPPS()) ? 0 : Double.valueOf(df.format(Double.valueOf(financeInfo.getUDPPS())/kItemMap.get(financeInfo.getStockId()).getClosePrice())));
+                stockEarningPerPriceVO.setPrice(kItemMap.get(financeInfo.getStockId()).getClosePrice());
+                stockEarningPerPriceVO.setPlate(sb.toString());
+                stockEarningPerPriceVO.setDate(kItemMap.get(financeInfo.getStockId()).getDate());
+                stockEarningPerPriceVO.setStockName(stringStockItemMap.get(financeInfo.getStockId()).getName());
+                list.add(stockEarningPerPriceVO);
             }
         }
         List<StockEarningPerPriceVO> finalResult = list.stream().sorted(Comparator.comparing(StockEarningPerPriceVO::getEarningsPerPrice).reversed()).collect(Collectors.toList());
 
         List<StockEarningPerPriceVO> resultList = new ArrayList<>();
+        if (pageNo * pageSize > finalResult.size()){
+            return vo;
+        }
         if ((pageNo) * pageSize > finalResult.size()){
-            resultList = new ArrayList<>(finalResult.subList((pageNo-1)*pageSize,list.size()-1));
+            resultList = new ArrayList<>(finalResult.subList((pageNo)*pageSize,list.size()));
         }
         if ((pageNo) * pageSize < list.size()){
-            resultList = new ArrayList<>(finalResult.subList((pageNo-1)*pageSize,(pageNo)*pageSize));
+            resultList = new ArrayList<>(finalResult.subList((pageNo)*pageSize,(pageNo + 1)*pageSize));
         }
-        stockEarningPriceVO.setDate(date);
-        stockEarningPriceVO.setList(resultList);
-        stockEarningPriceVO.setPageNo(pageNo);
-        stockEarningPriceVO.setPageSize(pageSize);
-        stockEarningPriceVO.setSize(finalResult.size());
-        return stockEarningPriceVO;
+        vo.setTotal(finalResult.size());
+        vo.setRows(resultList);
+        return vo;
     }
 
     public PageHelperVO queryLatestStockChangeRate(String date, Integer pageNo, Integer pageSize){
@@ -124,30 +124,34 @@ public class StockStaticsFormService {
             if (ObjectUtils.isEmpty(secondLatestKItem)){
                 continue;
             }
-            stockChangeRateVO.setChangeRate(df.format((kItem.getClosePrice() - secondLatestKItem.getClosePrice())/secondLatestKItem.getClosePrice()));
+            stockChangeRateVO.setChangeRate(Double.valueOf(df.format((kItem.getClosePrice() - secondLatestKItem.getClosePrice())/secondLatestKItem.getClosePrice())));
             voList.add(stockChangeRateVO);
         }
         voList = voList.stream().sorted(Comparator.comparing(StockChangeRateVO::getChangeRate).reversed()).collect(Collectors.toList());
+        vo.setTotal(voList.size());
         List<StockChangeRateVO> resultList = new ArrayList<>();
+        if (pageNo * pageSize > voList.size()){
+            return vo;
+        }
         if ((pageNo + 1) * pageSize > voList.size()){
             resultList = new ArrayList<>(voList.subList((pageNo)*pageSize,voList.size()-1));
         }
         if ((pageNo + 1) * pageSize < voList.size()){
             resultList = new ArrayList<>(voList.subList((pageNo)*pageSize,(pageNo+1)*pageSize));
         }
-        vo.setTotal(voList.size());
         vo.setRows(resultList);
         return vo;
     }
 
-    @Cacheable(value = "stockInfo::queryStockPeriodChangeRate",key = "#pageNo + '-' + #pageSize")
-    public List<StockPeriodChangeRateVO> queryStockPeriodChangeRate(String date, Integer pageNo, Integer pageSize) throws Exception{
+//    @Cacheable(value = "stockInfo::queryStockPeriodChangeRate",key = "#pageNo + '-' + #pageSize")
+    public PageHelperVO queryStockPeriodChangeRate(String date, Integer pageNo, Integer pageSize) throws Exception{
         List<StockPeriodChangeRateVO> voList = new ArrayList<>();
         SimpleDateFormat simpleDateFormat = getSimpleDateFormat("yyyyMMdd");
         List<KItem> kItems = kItemDAO.queryLatestValue();
         List<StockItem> stockItemList = stockItemDAO.queryAllStockList();
+        PageHelperVO vo = new PageHelperVO();
         if (CollectionUtils.isEmpty(kItems) || CollectionUtils.isEmpty(stockItemList)){
-            return voList;
+            return vo;
         }
         String toDateStr = kItems.get(0).getDate();
         String fromDateStr = "";
@@ -161,7 +165,7 @@ public class StockStaticsFormService {
         }
         List<KItem> fromDateKItems = kItemDAO.queryKItemsByDate(fromDateStr);
         if (CollectionUtils.isEmpty(fromDateKItems)){
-            return voList;
+            return vo;
         }
         Map<String,KItem> fromDateKItemMap = fromDateKItems.stream().collect(Collectors.toMap(KItem::getStockId,Function.identity()));
         Map<String,StockItem> stockItemMap = stockItemList.stream().collect(Collectors.toMap(StockItem::getStockId,Function.identity()));
@@ -171,25 +175,30 @@ public class StockStaticsFormService {
                 continue;
             }
             if(fromDateKItemMap.containsKey(kItem.getStockId())){
-                StockPeriodChangeRateVO vo = new StockPeriodChangeRateVO();
-                vo.setStockId(kItem.getStockId());
-                vo.setStockName(stockItemMap.get(kItem.getStockId()).getName());
-                vo.setFromDate(fromDateStr);
-                vo.setToDate(toDateStr);
-                vo.setPrice(kItem.getClosePrice());
-                vo.setChangeRate(df.format(((kItem.getClosePrice() - fromDateKItemMap.get(kItem.getStockId()).getClosePrice())/fromDateKItemMap.get(kItem.getStockId()).getClosePrice()) * 100) + "%");
-                voList.add(vo);
+                StockPeriodChangeRateVO stockPeriodChangeRateVO = new StockPeriodChangeRateVO();
+                stockPeriodChangeRateVO.setStockId(kItem.getStockId());
+                stockPeriodChangeRateVO.setStockName(stockItemMap.get(kItem.getStockId()).getName());
+                stockPeriodChangeRateVO.setFromDate(fromDateStr);
+                stockPeriodChangeRateVO.setToDate(toDateStr);
+                stockPeriodChangeRateVO.setPrice(kItem.getClosePrice());
+                stockPeriodChangeRateVO.setChangeRate(df.format(((kItem.getClosePrice() - fromDateKItemMap.get(kItem.getStockId()).getClosePrice())/fromDateKItemMap.get(kItem.getStockId()).getClosePrice()) * 100) + "%");
+                voList.add(stockPeriodChangeRateVO);
             }
         }
         voList = voList.stream().sorted(Comparator.comparing(StockPeriodChangeRateVO::getChangeRate).reversed()).collect(Collectors.toList());
         List<StockPeriodChangeRateVO> resultList = new ArrayList<>();
-        if ((pageNo) * pageSize > voList.size()){
-            resultList = new ArrayList<>(voList.subList((pageNo-1)*pageSize,voList.size()-1));
+        if (pageNo * pageSize > voList.size()){
+            return vo;
         }
-        if ((pageNo) * pageSize < voList.size()){
-            resultList = new ArrayList<>(voList.subList((pageNo-1)*pageSize,(pageNo)*pageSize));
+        if ((pageNo + 1) * pageSize > voList.size()){
+            resultList = new ArrayList<>(voList.subList((pageNo)*pageSize,voList.size()-1));
         }
-        return resultList;
+        if ((pageNo + 1) * pageSize < voList.size()){
+            resultList = new ArrayList<>(voList.subList((pageNo)*pageSize,(pageNo+1)*pageSize));
+        }
+        vo.setRows(resultList);
+        vo.setTotal(voList.size());
+        return vo;
     }
 
     private SimpleDateFormat getSimpleDateFormat(String datePattern){

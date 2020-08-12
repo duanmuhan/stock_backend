@@ -10,6 +10,6 @@ public class StockChangeRateVO implements Serializable {
     private String stockId;
     private String stockName;
     private Double price;
-    private String changeRate;
+    private Double changeRate;
     private String date;
 }
