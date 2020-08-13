@@ -105,6 +105,9 @@ public class StockTechnologyService {
                 return "event".equals(e.getType());
             }).collect(Collectors.toList());
             stockTechnologyVO.setStockId(entry.getKey());
+            if (!stockItemMap.containsKey(entry.getKey())){
+                continue;
+            }
             stockTechnologyVO.setStockName(stockItemMap.get(entry.getKey()).getName());
             if (!CollectionUtils.isEmpty(buyList)){
                 stockTechnologyVO.setBuy(buyList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(",<br>")));

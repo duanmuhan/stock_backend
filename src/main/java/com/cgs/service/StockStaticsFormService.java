@@ -76,6 +76,9 @@ public class StockStaticsFormService {
                 if (ObjectUtils.isEmpty(kItemMap.get(financeInfo.getStockId()))){
                     continue;
                 }
+                if (!stringStockItemMap.containsKey(financeInfo.getStockId())){
+                    continue;
+                }
                 DecimalFormat df = new DecimalFormat("#.00");
                 stockEarningPerPriceVO.setEarningsPerPrice("--".equals(financeInfo.getUDPPS()) ? 0 : Double.valueOf(df.format(Double.valueOf(financeInfo.getUDPPS())/kItemMap.get(financeInfo.getStockId()).getClosePrice())));
                 stockEarningPerPriceVO.setPrice(kItemMap.get(financeInfo.getStockId()).getClosePrice());
@@ -91,10 +94,10 @@ public class StockStaticsFormService {
         if (pageNo * pageSize > finalResult.size()){
             return vo;
         }
-        if ((pageNo) * pageSize > finalResult.size()){
+        if ((pageNo+1) * pageSize > finalResult.size()){
             resultList = new ArrayList<>(finalResult.subList((pageNo)*pageSize,list.size()));
         }
-        if ((pageNo) * pageSize < list.size()){
+        if ((pageNo+1) * pageSize < list.size()){
             resultList = new ArrayList<>(finalResult.subList((pageNo)*pageSize,(pageNo + 1)*pageSize));
         }
         vo.setTotal(finalResult.size());
@@ -119,11 +122,14 @@ public class StockStaticsFormService {
             stockChangeRateVO.setStockId(kItem.getStockId());
             stockChangeRateVO.setDate(kItem.getDate());
             stockChangeRateVO.setPrice(kItem.getClosePrice());
-            stockChangeRateVO.setStockName(stockItemMap.get(kItem.getStockId()).getName());
             KItem secondLatestKItem = secondLatestMap.get(kItem.getStockId());
             if (ObjectUtils.isEmpty(secondLatestKItem)){
                 continue;
             }
+            if (!stockItemMap.containsKey(kItem.getStockId())){
+                continue;
+            }
+            stockChangeRateVO.setStockName(stockItemMap.get(kItem.getStockId()).getName());
             stockChangeRateVO.setChangeRate(Double.valueOf(df.format((kItem.getClosePrice() - secondLatestKItem.getClosePrice())/secondLatestKItem.getClosePrice())));
             voList.add(stockChangeRateVO);
         }
@@ -143,7 +149,7 @@ public class StockStaticsFormService {
         return vo;
     }
 
-//    @Cacheable(value = "stockInfo::queryStockPeriodChangeRate",key = "#pageNo + '-' + #pageSize")
+    @Cacheable(value = "stockInfo::queryStockPeriodChangeRate",key = "#pageNo + '-' + #pageSize")
     public PageHelperVO queryStockPeriodChangeRate(String date, Integer pageNo, Integer pageSize) throws Exception{
         List<StockPeriodChangeRateVO> voList = new ArrayList<>();
         SimpleDateFormat simpleDateFormat = getSimpleDateFormat("yyyyMMdd");
@@ -171,10 +177,10 @@ public class StockStaticsFormService {
         Map<String,StockItem> stockItemMap = stockItemList.stream().collect(Collectors.toMap(StockItem::getStockId,Function.identity()));
         DecimalFormat df = new DecimalFormat("#0.00");
         for (KItem kItem : kItems){
-            if (!fromDateKItemMap.containsKey(kItem.getStockId()) && !stockItemMap.containsKey(kItem.getStockId())){
+            if (!fromDateKItemMap.containsKey(kItem.getStockId()) || !stockItemMap.containsKey(kItem.getStockId())){
                 continue;
             }
-            if(fromDateKItemMap.containsKey(kItem.getStockId())){
+            if(fromDateKItemMap.containsKey(kItem.getStockId()) && stockItemMap.containsKey(kItem.getStockId())){
                 StockPeriodChangeRateVO stockPeriodChangeRateVO = new StockPeriodChangeRateVO();
                 stockPeriodChangeRateVO.setStockId(kItem.getStockId());
                 stockPeriodChangeRateVO.setStockName(stockItemMap.get(kItem.getStockId()).getName());
