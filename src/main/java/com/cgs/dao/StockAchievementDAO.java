@@ -23,7 +23,7 @@ public interface StockAchievementDAO {
             @Result(property = "releaseDate",column = "release_date")
     })
     @Select("select * from " + TABLE_NAME  + " where release_date>=#{date}" + " order by profit_change_rate desc limit #{startIndex}, #{endIndex}")
-    @Cacheable(value = "stock::achievement::date",key = "#date" + '-' + "startIndex" + '-' + "endIndex")
+    @Cacheable(value = "stock::achievement::date",key = "#date" + '-' + "#startIndex" + '-' + "#endIndex")
     public List<StockAchievement> queryStockAchievementOrderByProfileChangeRate(@Param("date") String date,@Param("startIndex") Integer startIndex,@Param("endIndex") Integer endIndex);
 
     @Select("select count(*) from " + TABLE_NAME  + " where release_date>=#{date}")
