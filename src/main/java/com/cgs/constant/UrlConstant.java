@@ -40,4 +40,5 @@ public interface UrlConstant {
 
     String STOCK_TECHNOLOGY = "/stock/technology";
     String STOCK_TECHNOLOGY_BY_STOCK_ID = "/stock/technology/stockId";
+    String STOCK_TECHNOLOGY_BY_TYPE= "/stock/technology/type";
 }

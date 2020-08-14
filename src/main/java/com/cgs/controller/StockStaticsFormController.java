@@ -15,6 +15,7 @@ import com.cgs.vo.forms.StockPeriodChangeRateVO;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -118,8 +119,8 @@ public class StockStaticsFormController {
     public Response queryStockAchievementType(@RequestParam("type") String type,@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize){
         Response response = new Response();
         try {
-            List<StockAchievementVO> list = stockAchievementService.queryStockAchievementListByType(type,pageNo,pageSize);
-            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, list);
+            PageHelperVO vo = stockAchievementService.queryStockAchievementListByType(type,pageNo,pageSize);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, vo);
         }catch (Exception e){
             log.error("queryStockAchievementType exception:{}", e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);

@@ -6,6 +6,7 @@ import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.StockAchievementGroupVO;
 import com.cgs.vo.forms.StockAchievementVO;
 import javafx.util.Pair;
+import org.htmlparser.lexer.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -47,6 +48,12 @@ public class StockAchievementService {
         return vo;
     }
 
+    public PageHelperVO queryStockAchievementByType(String type,Integer pageNo, Integer pageSize){
+        PageHelperVO vo = new PageHelperVO();
+
+        return vo;
+    }
+
     public StockAchievementGroupVO queryStockAchievementGroup(){
         String date = "2020-04-30";
         List<StockAchievement> list = stockAchievementDAO.queryStockAchievement(date);
@@ -65,13 +72,14 @@ public class StockAchievementService {
         return vo;
     }
 
-    public List<StockAchievementVO> queryStockAchievementListByType(String type,Integer pageSize, Integer pageNo){
+    public PageHelperVO queryStockAchievementListByType(String type,Integer pageSize, Integer pageNo){
         String date = "2020-04-30";
         Integer startIndex = pageNo * pageSize;
         Integer endIndex = (pageNo+1) * pageSize;
+        PageHelperVO pageHelperVO = new PageHelperVO();
         List<StockAchievement> stockAchievements = stockAchievementDAO.queryStockAchievementByType(date,type,startIndex,endIndex);
         if (CollectionUtils.isEmpty(stockAchievements)){
-            return null;
+            return pageHelperVO;
         }
         List<StockAchievementVO> list = new ArrayList<>();
         stockAchievements.stream().forEach(e->{
@@ -85,6 +93,8 @@ public class StockAchievementService {
             vo.setReleaseDate(e.getReleaseDate());
             list.add(vo);
         });
-        return list;
+        pageHelperVO.setRows(list);
+        pageHelperVO.setTotal(list.size());
+        return pageHelperVO;
     }
 }

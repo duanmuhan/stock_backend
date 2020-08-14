@@ -34,7 +34,7 @@ public interface StockAchievementDAO {
     public List<StockAchievement> queryStockAchievement(@Param("date") String date);
 
     @ResultMap(value = "stockAchievement")
-    @Cacheable(value = "stock::achievement",key = "#type + '-' + #date")
+    @Cacheable(value = "stock::achievement",key = "#type + '-' + #date + '-' + #startIndex + '-' + #endIndex" )
     @Select("select * from " + TABLE_NAME  + " where release_date>=#{date} and achievement_type = #{type}" +" order by profit_change_rate desc limit #{startIndex}, #{endIndex}")
     public List<StockAchievement> queryStockAchievementByType(@Param("date") String date, @Param("type") String type ,@Param("startIndex") Integer startIndex,@Param("endIndex") Integer endIndex);
 }
