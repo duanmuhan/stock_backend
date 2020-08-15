@@ -28,13 +28,6 @@ public class StockHolderController {
     @Autowired
     private StockHolderService stockHolderService;
 
-    @RequestMapping(value = UrlConstant.STOCK_HOLDER_MARKET_VALUE, method = RequestMethod.GET)
-    @ResponseBody
-    public Response queryStockHolderMarketPair(HttpServletRequest httpServletRequest){
-        stockHolderService.queryStockHolderMarket(httpServletRequest);
-        return new Response();
-    }
-
     @RequestMapping(value = UrlConstant.STOCK_HOLDER_ORDER, method = RequestMethod.GET)
     @ResponseBody
     public Response queryStockHolderOrder(HttpServletRequest httpServletRequest){
@@ -63,4 +56,6 @@ public class StockHolderController {
         }
         return response;
     }
+
+
 }

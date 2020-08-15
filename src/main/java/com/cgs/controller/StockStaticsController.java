@@ -106,4 +106,15 @@ public class StockStaticsController {
         return response;
     }
 
+    @RequestMapping(value = UrlConstant.STOCK_PRICE_TYPE, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockPriceListByType(@RequestParam(name = "date",required = false) String date,
+                                              @RequestParam(name = "type") String type,
+                                              @RequestParam(name = "pageNo") Integer pageNo,
+                                              @RequestParam(name = "pageSize") Integer pageSize){
+        Response response = new Response();
+
+        return response;
+    }
+
 }

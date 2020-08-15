@@ -132,7 +132,7 @@ public class StockStaticsService {
         Long twoCount = kItems.stream().filter(e->{
             return e.getClosePrice() <= StockPriceConstant.TWO;
         }).count();
-        resultList.add(new Pair<>("<2元", twoCount));
+        resultList.add(new Pair<>("0-2元", twoCount));
         Long fiveCount = kItems.stream().filter(e->{
             return  e.getClosePrice() > StockPriceConstant.TWO && e.getClosePrice() <= StockPriceConstant.FIVE;
         }).count();
@@ -184,6 +184,17 @@ public class StockStaticsService {
         }
         vo.setList(resultList);
 
+        return vo;
+    }
+
+    public PageHelperVO queryStockPriceList(String type,String date,Integer pageNo,Integer pageSize){
+        PageHelperVO vo = new PageHelperVO();
+        List<KItem> kItems = new ArrayList<>();
+        if (StringUtils.isEmpty(date)){
+            kItems = kItemDAO.queryLatestValue();
+        }else {
+            kItems = kItemDAO.queryKItemsByDate(date);
+        }
         return vo;
     }
 

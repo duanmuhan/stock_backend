@@ -24,12 +24,6 @@ public class StockHolderService {
     @Autowired
     private StockHolderDAO stockHolderDAO;
 
-    public List<StockHolderMarketVO> queryStockHolderMarket(HttpServletRequest httpServletRequest){
-        List<StockHolder> list =  stockHolderDAO.queryNewestStockHolder();
-
-        return new ArrayList<>();
-    }
-
     public List<StockHolderCoverRateVO> queryStockHolderOrder(HttpServletRequest httpServletRequest){
         List<StockHolder> list =  stockHolderDAO.queryNewestStockHolder();
         if (CollectionUtils.isEmpty(list)){
