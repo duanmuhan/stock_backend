@@ -26,18 +26,20 @@ public interface StockAchievementDAO {
     public List<StockAchievement> queryStockAchievementOrderByProfileChangeRate(@Param("date") String date,@Param("startIndex") Integer startIndex,@Param("endIndex") Integer endIndex);
 
     @Select("select count(*) from " + TABLE_NAME  + " where release_date>=#{date} and achievement_type = #{type} ")
-    public Integer queryStockAchievementCount(@Param("date") String date,@Param("type") String type);
+    @Cacheable(value = "stock::achievement::queryStockAchievementCountByType",key = "#date + '-' + #type")
+    public Integer queryStockAchievementCountByType(@Param("date") String date, @Param("type") String type);
 
     @Select("select count(*) from " + TABLE_NAME  + " where release_date>=#{date} ")
+    @Cacheable(value = "stock::achievement::queryStockAchievementCount",key = "#date")
     public Integer queryStockAchievementCount(@Param("date") String date);
 
     @ResultMap(value = "stockAchievement")
-    @Cacheable(value = "stock::achievement",key = "#date")
+    @Cacheable(value = "stock::achievement::queryStockAchievement",key = "#date")
     @Select("select * from " + TABLE_NAME  + " where release_date>=#{date}")
     public List<StockAchievement> queryStockAchievement(@Param("date") String date);
 
     @ResultMap(value = "stockAchievement")
-    @Cacheable(value = "stock::achievement",key = "#type + '-' + #date + '-' + #startIndex + '-' + #endIndex" )
+    @Cacheable(value = "stock::achievement::queryStockAchievementByType",key = "#type + '-' + #date + '-' + #startIndex + '-' + #endIndex" )
     @Select("select * from " + TABLE_NAME  + " where release_date>=#{date} and achievement_type = #{type}" +" order by profit_change_rate desc limit #{startIndex}, #{endIndex}")
     public List<StockAchievement> queryStockAchievementByType(@Param("date") String date, @Param("type") String type ,@Param("startIndex") Integer startIndex,@Param("endIndex") Integer endIndex);
 }
