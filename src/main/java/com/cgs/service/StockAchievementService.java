@@ -72,12 +72,12 @@ public class StockAchievementService {
         return vo;
     }
 
-    public PageHelperVO queryStockAchievementListByType(String type,Integer pageSize, Integer pageNo){
+    public PageHelperVO queryStockAchievementListByType(String type,Integer pageNo, Integer pageSize){
         String date = "2020-04-30";
         Integer startIndex = pageNo * pageSize;
-        Integer endIndex = (pageNo+1) * pageSize;
         PageHelperVO pageHelperVO = new PageHelperVO();
-        List<StockAchievement> stockAchievements = stockAchievementDAO.queryStockAchievementByType(date,type,startIndex,endIndex);
+        Integer count = stockAchievementDAO.queryStockAchievementCount(date,type);
+        List<StockAchievement> stockAchievements = stockAchievementDAO.queryStockAchievementByType(date,type,startIndex,pageSize);
         if (CollectionUtils.isEmpty(stockAchievements)){
             return pageHelperVO;
         }
@@ -94,7 +94,7 @@ public class StockAchievementService {
             list.add(vo);
         });
         pageHelperVO.setRows(list);
-        pageHelperVO.setTotal(list.size());
+        pageHelperVO.setTotal(count);
         return pageHelperVO;
     }
 }

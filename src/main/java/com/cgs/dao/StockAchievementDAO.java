@@ -25,7 +25,10 @@ public interface StockAchievementDAO {
 //    @Cacheable(value = "stock::achievement",key = "#date" + '-' + "#startIndex" + '-' + "#endIndex")
     public List<StockAchievement> queryStockAchievementOrderByProfileChangeRate(@Param("date") String date,@Param("startIndex") Integer startIndex,@Param("endIndex") Integer endIndex);
 
-    @Select("select count(*) from " + TABLE_NAME  + " where release_date>=#{date}")
+    @Select("select count(*) from " + TABLE_NAME  + " where release_date>=#{date} and achievement_type = #{type} ")
+    public Integer queryStockAchievementCount(@Param("date") String date,@Param("type") String type);
+
+    @Select("select count(*) from " + TABLE_NAME  + " where release_date>=#{date} ")
     public Integer queryStockAchievementCount(@Param("date") String date);
 
     @ResultMap(value = "stockAchievement")
