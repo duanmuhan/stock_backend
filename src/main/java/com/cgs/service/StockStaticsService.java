@@ -195,6 +195,10 @@ public class StockStaticsService {
         }else {
             kItems = kItemDAO.queryKItemsByDate(date);
         }
+        if (StringUtils.isEmpty(type)){
+            return vo;
+        }
+
         return vo;
     }
 

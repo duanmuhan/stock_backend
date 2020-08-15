@@ -113,7 +113,13 @@ public class StockStaticsController {
                                               @RequestParam(name = "pageNo") Integer pageNo,
                                               @RequestParam(name = "pageSize") Integer pageSize){
         Response response = new Response();
-
+        try {
+            PageHelperVO vo = stockStaticsService.queryStockPriceList(date,type,pageNo,pageSize);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
+        }catch (Exception e){
+            log.error("queryStockPriceListByType exception:{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
+        }
         return response;
     }
 
