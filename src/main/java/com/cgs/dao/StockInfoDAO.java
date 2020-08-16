@@ -1,5 +1,6 @@
 package com.cgs.dao;
 
+import com.cgs.entity.StockItem;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,8 +17,12 @@ public interface StockInfoDAO {
             "total_market_value, flow_market_value, pe_ratio, average_turnover_rate, date ";
 
     @Select("select count from (select count(*) as count,date from stock_info where total_market_value <= #{maxValue} and total_market_value > #{minValue} group by date) A INNER JOIN (select MAX(date) as max_date from stock_info ) B on A.date = B.max_date")
-    @Cacheable(value = "stockInfo::value",key = "#maxValue + '-'+ #minValue")
+    @Cacheable(value = "stockInfo::value::queryStockInfoCountByValue",key = "#maxValue + '-'+ #minValue")
     public Integer queryStockInfoCountByValue(@Param("minValue") Integer minValue, @Param("maxValue") Integer maxValue);
+
+    @Select("select * from (select count(*) as count,date from stock_info where total_market_value <= #{maxValue} and total_market_value > #{minValue} group by date) A INNER JOIN (select MAX(date) as max_date from stock_info ) B on A.date = B.max_date")
+    @Cacheable(value = "stockInfo::value::queryStockInfoListByValue",key = "#maxValue + '-'+ #minValue")
+    public List<StockItem> queryStockInfoListByValue(@Param("minValue") Integer minValue, @Param("maxValue") Integer maxValue);
 
     @Select("select count from (select count(*) as count,date from stock_info where total_market_value > #{value} group by date) A INNER JOIN (select MAX(date) as max_date from stock_info ) B on A.date = B.max_date")
     @Cacheable(value = "stockInfo::value",key = "#value")

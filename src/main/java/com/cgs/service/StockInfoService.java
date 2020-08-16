@@ -3,6 +3,7 @@ package com.cgs.service;
 import com.cgs.dao.StockInfoDAO;
 import com.cgs.dao.StockItemDAO;
 import com.cgs.entity.StockItem;
+import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.StockInfoVO;
 import com.cgs.vo.StockValueStaticsVO;
 import javafx.util.Pair;
@@ -81,6 +82,11 @@ public class StockInfoService {
         resultPair.add(largerCountPair);
         vo.setValuePairList(resultPair);
         vo.setDate(date);
+        return vo;
+    }
+
+    public PageHelperVO queryStockMarketValueType(String type){
+        PageHelperVO vo = new PageHelperVO();
         return vo;
     }
 }

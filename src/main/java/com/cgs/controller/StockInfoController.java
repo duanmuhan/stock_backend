@@ -5,6 +5,7 @@ import com.cgs.constant.ErrorCode;
 import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockInfoService;
+import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.StockInfoVO;
 import com.cgs.vo.StockPlateVO;
 import com.cgs.vo.StockValueStaticsVO;
@@ -52,6 +53,20 @@ public class StockInfoController {
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
         }catch (Exception e){
             log.error("queryPlateInfoByStockId exception:{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
+        }
+        return response;
+    }
+
+    @RequestMapping(value = UrlConstant.STOCK_MARKET_TYPE,method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockMarketValueType(@RequestParam("type") String type){
+        Response response = new Response();
+        try {
+            PageHelperVO vo = stockInfoService.queryStockMarketValueType(type);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
+        }catch (Exception e){
+            log.error("queryStockMarketValueType exception:{}",e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
         }
         return response;
