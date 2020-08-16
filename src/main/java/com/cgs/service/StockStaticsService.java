@@ -4,8 +4,10 @@ import com.cgs.constant.StockPriceConstant;
 import com.cgs.dao.FinanceInfoDAO;
 import com.cgs.dao.KItemDAO;
 import com.cgs.dao.StockInfoDAO;
+import com.cgs.dao.StockItemDAO;
 import com.cgs.entity.FinanceInfo;
 import com.cgs.entity.KItem;
+import com.cgs.entity.StockItem;
 import com.cgs.vo.*;
 import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,8 @@ public class StockStaticsService {
     private FinanceInfoDAO financeInfoDAO;
     @Autowired
     private KItemDAO kItemDAO;
+    @Autowired
+    private StockItemDAO stockItemDAO;
 
     public List<StockBasicVO> queryValuableStockBasicInfo(){
         List<FinanceInfo> financeInfos = financeInfoDAO.queryFinanceInfo();
@@ -198,7 +202,98 @@ public class StockStaticsService {
         if (StringUtils.isEmpty(type)){
             return vo;
         }
-
+        List<StockItem> stockItemList = stockItemDAO.queryAllStockList();
+        if (!CollectionUtils.isEmpty(stockItemList)){
+            return vo;
+        }
+        Map<String,StockItem> stockItemMap = stockItemList.stream().collect(Collectors.toMap(StockItem::getStockId,Function.identity()));
+        List<StockPriceVO> stockPriceVOS = new ArrayList<>();
+        List<KItem> targetKItems = new ArrayList<>();
+        if ("0-2元".equals(type)){
+            targetKItems = kItems.stream().filter(e->{
+                return e.getClosePrice() <= StockPriceConstant.TWO;
+            }).collect(Collectors.toList());
+        }
+        if("2-5元".equals(type)){
+            targetKItems = kItems.stream().filter(e->{
+                 return  e.getClosePrice() > StockPriceConstant.TWO && e.getClosePrice() <= StockPriceConstant.FIVE;
+            }).collect(Collectors.toList());
+        }
+        if ("5-10元".equals(type)){
+            targetKItems = kItems.stream().filter(e->{
+                return e.getClosePrice() > StockPriceConstant.FIVE && e.getClosePrice() <= StockPriceConstant.TEN;
+            }).collect(Collectors.toList());
+        }
+        if ("10-20元".equals(type)){
+            targetKItems = kItems.stream().filter(e->{
+                return e.getClosePrice() > StockPriceConstant.TEN && e.getClosePrice() <= StockPriceConstant.TWENTY;
+            }).collect(Collectors.toList());
+        }
+        if ("20-30元".equals(type)){
+            targetKItems = kItems.stream().filter(e->{
+                return e.getClosePrice() > StockPriceConstant.TWENTY && e.getClosePrice() <= StockPriceConstant.THIRTY;
+            }).collect(Collectors.toList());
+        }
+        if ("30-40元".equals(type)){
+            targetKItems = kItems.stream().filter(e->{
+                return e.getClosePrice() > StockPriceConstant.THIRTY && e.getClosePrice() <= StockPriceConstant.FORTY;
+            }).collect(Collectors.toList());
+        }
+        if ("40-50元".equals(type)){
+            targetKItems = kItems.stream().filter(e->{
+                return e.getClosePrice() > StockPriceConstant.FORTY && e.getClosePrice() <= StockPriceConstant.FIFTY;
+            }).collect(Collectors.toList());
+        }
+        if ("50-1百元".equals(type)){
+            targetKItems = kItems.stream().filter(e->{
+                return e.getClosePrice() > StockPriceConstant.FIFTY && e.getClosePrice() <= StockPriceConstant.ONE_HUNDRED;
+            }).collect(Collectors.toList());
+        }
+        if ("1-2百元".equals(type)){
+            targetKItems = kItems.stream().filter(e->{
+                return e.getClosePrice() > StockPriceConstant.ONE_HUNDRED && e.getClosePrice() <= StockPriceConstant.TWO_HUNDRED;
+            }).collect(Collectors.toList());
+        }
+        if ("2-5百元".equals(type)){
+            targetKItems = kItems.stream().filter(e->{
+                return e.getClosePrice() > StockPriceConstant.TWO_HUNDRED && e.getClosePrice() <= StockPriceConstant.FIVE_HUNDRED;
+            }).collect(Collectors.toList());
+        }
+        if ("5百-1千元".equals(type)){
+            targetKItems = kItems.stream().filter(e->{
+                return e.getClosePrice() > StockPriceConstant.FIVE_HUNDRED && e.getClosePrice() <= StockPriceConstant.ONE_THOUSAND;
+            }).collect(Collectors.toList());
+        }
+        if ("1千元以上".equals(type)){
+            targetKItems = kItems.stream().filter(e->{
+                return e.getClosePrice() > StockPriceConstant.ONE_THOUSAND;
+            }).collect(Collectors.toList());
+        }
+        if (CollectionUtils.isEmpty(targetKItems)){
+            return vo;
+        }
+        targetKItems.stream().forEach(e->{
+            StockPriceVO stockPriceVO = new StockPriceVO();
+            stockPriceVO.setPrice(e.getClosePrice());
+            stockPriceVO.setStockId(e.getStockId());
+            if (stockItemMap.containsKey(e.getStockId())){
+                stockPriceVO.setStockName(stockItemMap.get(e.getStockId()).getName());
+            }
+            stockPriceVO.setReleaseDate(e.getDate());
+            stockPriceVOS.add(stockPriceVO);
+        });
+        List<StockPriceVO> resultList = new ArrayList<>();
+        if (pageNo * pageSize > stockPriceVOS.size()){
+            return vo;
+        }
+        if ((pageNo+1) * pageSize > stockPriceVOS.size()){
+            resultList = new ArrayList<>(stockPriceVOS.subList((pageNo)*pageSize,stockPriceVOS.size()));
+        }
+        if ((pageNo+1) * pageSize < stockPriceVOS.size()){
+            resultList = new ArrayList<>(stockPriceVOS.subList((pageNo)*pageSize,(pageNo + 1)*pageSize));
+        }
+        vo.setTotal(stockPriceVOS.size());
+        vo.setRows(resultList);
         return vo;
     }
 
