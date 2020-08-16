@@ -191,7 +191,7 @@ public class StockStaticsService {
         return vo;
     }
 
-    public PageHelperVO queryStockPriceList(String type,String date,Integer pageNo,Integer pageSize){
+    public PageHelperVO queryStockPriceList(String date,String type,Integer pageNo,Integer pageSize){
         PageHelperVO vo = new PageHelperVO();
         List<KItem> kItems = new ArrayList<>();
         if (StringUtils.isEmpty(date)){
@@ -203,7 +203,7 @@ public class StockStaticsService {
             return vo;
         }
         List<StockItem> stockItemList = stockItemDAO.queryAllStockList();
-        if (!CollectionUtils.isEmpty(stockItemList)){
+        if (CollectionUtils.isEmpty(stockItemList)){
             return vo;
         }
         Map<String,StockItem> stockItemMap = stockItemList.stream().collect(Collectors.toMap(StockItem::getStockId,Function.identity()));
@@ -273,24 +273,25 @@ public class StockStaticsService {
             return vo;
         }
         targetKItems.stream().forEach(e->{
+            if (!stockItemMap.containsKey(e.getStockId())){
+                return;
+            }
             StockPriceVO stockPriceVO = new StockPriceVO();
             stockPriceVO.setPrice(e.getClosePrice());
             stockPriceVO.setStockId(e.getStockId());
-            if (stockItemMap.containsKey(e.getStockId())){
-                stockPriceVO.setStockName(stockItemMap.get(e.getStockId()).getName());
-            }
+            stockPriceVO.setStockName(stockItemMap.get(e.getStockId()).getName());
             stockPriceVO.setReleaseDate(e.getDate());
             stockPriceVOS.add(stockPriceVO);
         });
-        List<StockPriceVO> resultList = new ArrayList<>();
-        if (pageNo * pageSize > stockPriceVOS.size()){
+        List<StockPriceVO> resultList = stockPriceVOS.stream().sorted(Comparator.comparing(StockPriceVO::getPrice)).collect(Collectors.toList());
+        if (pageNo * pageSize > resultList.size()){
             return vo;
         }
         if ((pageNo+1) * pageSize > stockPriceVOS.size()){
-            resultList = new ArrayList<>(stockPriceVOS.subList((pageNo)*pageSize,stockPriceVOS.size()));
+            resultList = new ArrayList<>(resultList.subList((pageNo)*pageSize,resultList.size()));
         }
-        if ((pageNo+1) * pageSize < stockPriceVOS.size()){
-            resultList = new ArrayList<>(stockPriceVOS.subList((pageNo)*pageSize,(pageNo + 1)*pageSize));
+        if ((pageNo+1) * pageSize < resultList.size()){
+            resultList = new ArrayList<>(resultList.subList((pageNo)*pageSize,(pageNo + 1)*pageSize));
         }
         vo.setTotal(stockPriceVOS.size());
         vo.setRows(resultList);
