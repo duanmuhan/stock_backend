@@ -132,7 +132,22 @@ public class StockHolderService {
                 return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FIFTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.SIXTY;
             }).collect(Collectors.toList());
         }
+        if (CollectionUtils.isEmpty(filterList)){
+            return vo;
+        }
+        List<StockHolder> resultList = new ArrayList<>();
+        if (pageNo * pageSize > filterList.size()){
+            return vo;
+        }
+        if ((pageNo+1) * pageSize > filterList.size()){
+            resultList = new ArrayList<>(filterList.subList((pageNo)*pageSize,filterList.size()));
+        }
+        if ((pageNo+1) * pageSize < filterList.size()){
+            resultList = new ArrayList<>(filterList.subList((pageNo)*pageSize,(pageNo + 1)*pageSize));
+        }
 
+        vo.setTotal(filterList.size());
+        vo.setRows(resultList);
         return vo;
     }
 
