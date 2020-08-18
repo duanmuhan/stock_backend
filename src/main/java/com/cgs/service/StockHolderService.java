@@ -145,7 +145,7 @@ public class StockHolderService {
         if ((pageNo+1) * pageSize < filterList.size()){
             resultList = new ArrayList<>(filterList.subList((pageNo)*pageSize,(pageNo + 1)*pageSize));
         }
-
+        resultList.stream().sorted(Comparator.comparing(StockHolder::getTopTenStockHolder).reversed()).collect(Collectors.toList());
         vo.setTotal(filterList.size());
         vo.setRows(resultList);
         return vo;
