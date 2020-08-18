@@ -31,6 +31,7 @@ public interface StockHolderDAO {
     @Cacheable(value = "stock::holder")
     public List<StockHolder> queryNewestStockHolder();
 
+
     @Select("select * from stock_holder where release_date = #{date}")
     @ResultMap(value = "resultMap")
     @Cacheable(value = "stock::holder", key="#date")

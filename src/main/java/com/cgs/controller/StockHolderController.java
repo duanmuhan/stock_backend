@@ -5,6 +5,7 @@ import com.cgs.constant.ErrorCode;
 import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.StockHolderService;
+import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.StockHolderCoverRateVO;
 import com.cgs.vo.StockHolderRateVO;
 import com.cgs.vo.StockInfoVO;
@@ -57,5 +58,21 @@ public class StockHolderController {
         return response;
     }
 
+    @RequestMapping(value = UrlConstant.STOCK_HOLDER_MARKET_VALUE_TYPE, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockHolderListByType(@RequestParam(name = "type") String type,
+                                               @RequestParam(name = "pageNo") Integer pageNo,
+                                               @RequestParam(name = "pageSize") Integer pageSize
+                                               ){
+        Response response = new Response();
+        try {
+            PageHelperVO vo =  stockHolderService.queryStockHolderList(type,pageNo,pageSize);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
+        }catch (Exception e){
+            log.error("queryPlateInfoByStockId exception:{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,e.getMessage());
+        }
+        return response;
 
+    }
 }

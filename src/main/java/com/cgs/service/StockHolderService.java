@@ -3,6 +3,7 @@ package com.cgs.service;
 import com.cgs.constant.StockHolderRateConstant;
 import com.cgs.dao.StockHolderDAO;
 import com.cgs.entity.StockHolder;
+import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.StockHolderCoverRateVO;
 import com.cgs.vo.StockHolderMarketVO;
 import com.cgs.vo.StockHolderRateVO;
@@ -66,6 +67,75 @@ public class StockHolderService {
         return vo;
     }
 
+    public PageHelperVO queryStockHolderList(String type,Integer pageNo,Integer pageSize){
+        PageHelperVO vo = new PageHelperVO();
+        List<StockHolder> stockHolderList = stockHolderDAO.queryNewestStockHolder();
+        if (CollectionUtils.isEmpty(stockHolderList)){
+            return vo;
+        }
+        stockHolderList = stockHolderList.stream().filter(e->{
+            return !StringUtils.isEmpty(e.getTopTenStockFlowHolder()) && !e.getTopTenStockFlowHolder().equals("--");
+        }).collect(Collectors.toList());
+        List<StockHolder> filterList = new ArrayList<>();
+        if ("0-5%".equals(type)){
+            filterList = stockHolderList.stream().filter(e->{
+                return Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.FIVE;
+            }).collect(Collectors.toList());
+        }
+        if ("5%-10%".equals(type)){
+            filterList = stockHolderList.stream().filter(e->{
+                return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FIVE && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.TEN;
+            }).collect(Collectors.toList());
+        }
+        if ("10%-20%".equals(type)){
+            filterList = stockHolderList.stream().filter(e->{
+                return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.TEN && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.TWENTY;
+            }).collect(Collectors.toList());
+        }
+        if ("20%-30%".equals(type)){
+            filterList = stockHolderList.stream().filter(e->{
+                return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.THIRTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.FORTY;
+            }).collect(Collectors.toList());
+        }
+        if ("30%-40%".equals(type)){
+            filterList = stockHolderList.stream().filter(e->{
+                return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FORTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.FIFTY;
+            }).collect(Collectors.toList());
+        }
+        if ("40%-50%".equals(type)){
+            filterList = stockHolderList.stream().filter(e->{
+                return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FIFTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.SIXTY;
+            }).collect(Collectors.toList());
+        }
+        if ("50%-60%".equals(type)){
+            filterList = stockHolderList.stream().filter(e->{
+                return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FIFTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.SIXTY;
+            }).collect(Collectors.toList());
+        }
+        if ("60%-70%".equals(type)){
+            filterList = stockHolderList.stream().filter(e->{
+                return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FIFTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.SIXTY;
+            }).collect(Collectors.toList());
+        }
+        if ("70%-80%".equals(type)){
+            filterList = stockHolderList.stream().filter(e->{
+                return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FIFTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.SIXTY;
+            }).collect(Collectors.toList());
+        }
+        if ("80%-90%".equals(type)){
+            filterList = stockHolderList.stream().filter(e->{
+                return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FIFTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.SIXTY;
+            }).collect(Collectors.toList());
+        }
+        if ("90%-100%".equals(type)){
+            filterList = stockHolderList.stream().filter(e->{
+                return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FIFTY && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.SIXTY;
+            }).collect(Collectors.toList());
+        }
+
+        return vo;
+    }
+
     private List<Pair<String,Long>> buildResultPairList(List<StockHolder> list){
         if (CollectionUtils.isEmpty(list)){
             return null;
@@ -74,7 +144,7 @@ public class StockHolderService {
         Long five = list.stream().filter(e->{
             return Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.FIVE;
         }).count();
-        pairList.add(new Pair<>("5%",five));
+        pairList.add(new Pair<>("0-5%",five));
         Long ten = list.stream().filter(e->{
             return Double.valueOf(e.getTopTenStockHolder()) > StockHolderRateConstant.FIVE && Double.valueOf(e.getTopTenStockHolder()) <= StockHolderRateConstant.TEN;
         }).count();
@@ -117,4 +187,6 @@ public class StockHolderService {
         pairList.add(new Pair<>("90%-100%",ninties));
         return pairList;
     }
+
+
 }
