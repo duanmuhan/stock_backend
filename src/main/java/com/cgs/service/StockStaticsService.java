@@ -108,7 +108,7 @@ public class StockStaticsService {
         List<StockChangeVO> list = new ArrayList<>();
         for (Map.Entry<String,Integer> entry : stockChangeMap.entrySet()){
             StockChangeVO stockChangeVO = new StockChangeVO();
-            stockChangeVO.setChangeRate(Double.valueOf(entry.getKey()) * 100 + "%" );
+            stockChangeVO.setChangeRate(entry.getKey());
             stockChangeVO.setChangeNum(entry.getValue());
             list.add(stockChangeVO);
         }
@@ -117,6 +117,7 @@ public class StockStaticsService {
         }else {
             stockChangeOverViewVO.setDate(kItems.get(0).getDate());
         }
+        list = list.stream().sorted(Comparator.comparing(e->Double.valueOf(e.getChangeRate()))).collect(Collectors.toList());
         stockChangeOverViewVO.setList(list);
         return stockChangeOverViewVO;
     }
