@@ -32,8 +32,8 @@ public interface StockInfoDAO {
             @Result(property = "averageTurnoverRate",column = "average_turnover_rate"),
             @Result(property = "date",column = "date")
     })
-    @Select("select * from stock_info INNER JOIN (select MAX(date) as max_date, stock_id as stockId from stock_info GROUP BY stock_id) A ON stock_id = A.stockId AND date = A.max_date" )
-    @Cacheable(value = "stockInfo:queryLatestStockInfoByStockId",key = "#stockId")
+    @Select("select * from stock_info INNER JOIN (select MAX(date) as max_date, stock_id as stockId from stock_info GROUP BY stock_id) A ON stock_id = A.stockId AND date = A.max_date and stock_id=#{stockId}" )
+//    @Cacheable(value = "stockInfo:queryLatestStockInfoByStockId",key = "#stockId")
     public StockInfo queryLatestStockInfoByStockId(@Param("stockId") String stockId);
 
     @Select("select count from (select count(*) as count,date from stock_info where total_market_value <= #{maxValue} and total_market_value > #{minValue} group by date) A INNER JOIN (select MAX(date) as max_date from stock_info ) B on A.date = B.max_date")
