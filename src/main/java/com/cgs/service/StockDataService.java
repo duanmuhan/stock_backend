@@ -24,9 +24,9 @@ public class StockDataService {
     @Autowired
     private StockPlateInfoMappingDAO stockPlateInfoMappingDAO;
     @Autowired
-    private FinanceInfoDAO financeInfoDAO;
-    @Autowired
     private StockItemDAO stockItemDAO;
+    @Autowired
+    private StockInfoDAO stockInfoDAO;
 
     public KItemVO queryKItemByStockId(String stockId){
         KItemVO vo = new KItemVO();
@@ -61,10 +61,15 @@ public class StockDataService {
         if (ObjectUtils.isEmpty(kItem)){
             return viewVO;
         }
+        StockInfo stockInfo = stockInfoDAO.queryLatestStockInfoByStockId(stockId);
+        if (ObjectUtils.isEmpty(stockInfo)){
+            return viewVO;
+        }
         StockItem item = stockItemDAO.queryStockItemByStockId(stockId);
         viewVO.setPrice(kItem.getClosePrice());
         viewVO.setDealAmount(kItem.getDealAmount());
         viewVO.setStockId(stockId);
+        viewVO.setDealCash(stockInfo.getTotalTransactionAmount());
         viewVO.setStockName(item.getName());
         viewVO.setDealCash(kItem.getDealCash());
         viewVO.setPriceRate(String.valueOf((kItem.getClosePrice()-kItem.getOpenPrice())/kItem.getOpenPrice() * 100));
