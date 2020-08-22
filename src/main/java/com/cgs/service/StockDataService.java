@@ -74,6 +74,7 @@ public class StockDataService {
         viewVO.setDealCash(kItem.getDealCash());
         viewVO.setPriceRate(String.valueOf((kItem.getClosePrice()-kItem.getOpenPrice())/kItem.getOpenPrice() * 100));
         viewVO.setAmountRate(String.valueOf((kItem.getDealAmount() - kItem.getDealAmount())/kItem.getDealAmount() * 100));
+        viewVO.setDate(kItem.getDate());
         return viewVO;
     }
 }
