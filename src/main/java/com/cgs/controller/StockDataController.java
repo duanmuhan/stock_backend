@@ -29,10 +29,11 @@ public class StockDataController {
 
     @RequestMapping(value = UrlConstant.K_ITEM, method = RequestMethod.GET)
     @ResponseBody
-    public Response queryStockKItemByStockId(@ApiParam(value = "股票id") @RequestParam(name="stockId")  String stockId){
+    public Response queryStockKItemByStockId(@ApiParam(value = "股票id") @RequestParam(name = "stockId")  String stockId,
+                                             @ApiParam(value = "k线类型") @RequestParam(name = "type") Integer type){
         Response response = new Response();
         try {
-            KItemVO vo = stockDataService.queryKItemByStockId(stockId);
+            KItemVO vo = stockDataService.queryKItemByStockId(stockId,type);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
         }catch (Exception e){
             log.error("queryStockKItemByStockId exception :{}",e);

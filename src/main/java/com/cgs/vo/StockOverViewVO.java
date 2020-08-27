@@ -7,7 +7,7 @@ public class StockOverViewVO {
     private String stockId;
     private String stockName;
     private Double price;
-    private String ricePercent;
+    private String change;
     private Long dealAmount;
     private Double dealCash;
     private String priceRate;

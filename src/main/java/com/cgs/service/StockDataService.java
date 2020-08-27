@@ -10,6 +10,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -28,9 +29,9 @@ public class StockDataService {
     @Autowired
     private StockInfoDAO stockInfoDAO;
 
-    public KItemVO queryKItemByStockId(String stockId){
+    public KItemVO queryKItemByStockId(String stockId,Integer type){
         KItemVO vo = new KItemVO();
-        List<KItem> items = kItemDAO.queryKItemsbyStockId(stockId);
+        List<KItem> items = kItemDAO.queryKItemsbyStockId(stockId,type);
         if (!CollectionUtils.isEmpty(items)){
             Collections.reverse(items);
         }
@@ -57,24 +58,26 @@ public class StockDataService {
 
     public StockOverViewVO queryTodayStockOverViewByStockId(String stockId){
         StockOverViewVO viewVO = new StockOverViewVO();
-        KItem kItem = kItemDAO.queryLatestValueByStockId(stockId);
-        if (ObjectUtils.isEmpty(kItem)){
+        List<KItem> kItems = kItemDAO.queryLatestValueByStockId(stockId);
+        if (CollectionUtils.isEmpty(kItems)){
             return viewVO;
         }
         StockInfo stockInfo = stockInfoDAO.queryLatestStockInfoByStockId(stockId);
         if (ObjectUtils.isEmpty(stockInfo)){
             return viewVO;
         }
+        DecimalFormat df = new DecimalFormat("#0.00");
         StockItem item = stockItemDAO.queryStockItemByStockId(stockId);
-        viewVO.setPrice(kItem.getClosePrice());
-        viewVO.setDealAmount(kItem.getDealAmount());
+        viewVO.setPrice(kItems.get(0).getClosePrice());
+        viewVO.setDealAmount(kItems.get(0).getDealAmount());
         viewVO.setStockId(stockId);
         viewVO.setDealCash(stockInfo.getTotalTransactionAmount());
         viewVO.setStockName(item.getName());
         viewVO.setDealCash(stockInfo.getTotalTransactionAmount());
-        viewVO.setPriceRate(String.valueOf((kItem.getClosePrice()-kItem.getOpenPrice())/kItem.getOpenPrice() * 100));
-        viewVO.setAmountRate(String.valueOf((kItem.getDealAmount() - kItem.getDealAmount())/kItem.getDealAmount() * 100));
-        viewVO.setDate(kItem.getDate());
+        viewVO.setPriceRate(df.format((kItems.get(0).getClosePrice()-kItems.get(1).getClosePrice())/kItems.get(0).getOpenPrice() * 100));
+        viewVO.setChange(df.format(kItems.get(0).getClosePrice()-kItems.get(1).getClosePrice()) + "(" + viewVO.getPriceRate() + "%" + ")");
+        viewVO.setAmountRate(String.valueOf((kItems.get(0).getDealAmount() - kItems.get(0).getDealAmount())/kItems.get(0).getDealAmount() * 100));
+        viewVO.setDate(kItems.get(0).getDate());
         viewVO.setAverageTurnoverRate(stockInfo.getAverageTurnoverRate());
         return viewVO;
     }

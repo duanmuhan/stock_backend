@@ -15,7 +15,7 @@ public interface KItemDAO {
 
     String COLUMNS = " stock_id, open_price, close_price, high, low, deal_amount, date ";
 
-    @Select("select * from" + TABLE_NAME + "where stock_id = #{stockId} order by date desc limit 100")
+    @Select("select * from" + TABLE_NAME + "where stock_id = #{stockId}  and type = #{type} order by date desc limit 100")
     @Results( id = "resultMap",value = {
             @Result(property = "stockId",column = "stock_id"),
             @Result(property = "openPrice",column = "open_price"),
@@ -26,8 +26,8 @@ public interface KItemDAO {
             @Result(property = "dealCash",column = "deal_cash"),
             @Result(property = "date",column = "date")
     })
-    @Cacheable(value = "kitem",key = "#stockId")
-    public List<KItem> queryKItemsbyStockId(@Param("stockId") String stockId);
+    @Cacheable(value = "kitem",key = "#stockId + '-' +#type")
+    public List<KItem> queryKItemsbyStockId(@Param("stockId") String stockId, @Param("type") Integer type);
 
     @Select("select * from" + TABLE_NAME + "where date = #{date}")
     @ResultMap(value = "resultMap")
@@ -44,10 +44,11 @@ public interface KItemDAO {
     @Cacheable(value = "kitem::secondLatestPrice")
     public List<KItem> querySecondLatestDate();
 
-    @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId} order by date desc limit 1")
+    @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId} order by date desc limit 2")
     @ResultMap(value = "resultMap")
-    @Cacheable(value = "kitem:latest",key = "#stockId")
-    public KItem queryLatestValueByStockId(@Param("stockId") String stockId);
+    @Cacheable(value = "kitem:queryLatestValueByStockId",key = "#stockId")
+    public List<KItem> queryLatestValueByStockId(@Param("stockId") String stockId);
+
 
     @Select(" <script> select * from k_item INNER JOIN (select MAX(date) as max_date, stock_id as stockId from k_item GROUP BY stock_id) A ON stock_id = A.stockId AND date = A.max_date and A.stockId in " +
             "<foreach collection ='stockIds' index='index' item='item' open='(' close=')' separator=','>" +
