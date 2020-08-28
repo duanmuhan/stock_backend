@@ -34,17 +34,17 @@ public interface KItemDAO {
     @Cacheable(value = "kitem",key = "#date")
     public List<KItem> queryKItemsByDate(@Param("date") String date);
 
-    @Select("select * from k_item INNER JOIN (select MAX(date) as max_date, stock_id as stockId from k_item GROUP BY stock_id) A ON stock_id = A.stockId AND date = A.max_date" )
+    @Select("select * from k_item INNER JOIN (select MAX(date) as max_date, stock_id as stockId from k_item GROUP BY stock_id) A ON stock_id = A.stockId AND date = A.max_date and type = 1" )
     @ResultMap(value = "resultMap")
     @Cacheable(value = "kitem::latestPrice")
     public List<KItem> queryLatestValue();
 
-    @Select("select * from k_item where date = (select max(date) from k_item where date not in (select max(date) from k_item))" )
+    @Select("select * from k_item where date = (select max(date) from k_item where date not in (select max(date) from k_item)) and type = 1" )
     @ResultMap(value = "resultMap")
     @Cacheable(value = "kitem::secondLatestPrice")
     public List<KItem> querySecondLatestDate();
 
-    @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId} order by date desc limit 2")
+    @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId} and type = 1 order by date desc limit 2")
     @ResultMap(value = "resultMap")
     @Cacheable(value = "kitem:queryLatestValueByStockId",key = "#stockId")
     public List<KItem> queryLatestValueByStockId(@Param("stockId") String stockId);
