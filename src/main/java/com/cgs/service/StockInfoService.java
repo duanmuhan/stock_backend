@@ -6,8 +6,8 @@ import com.cgs.entity.StockItem;
 import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.StockInfoVO;
 import com.cgs.vo.StockValueStaticsVO;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 @Service
 public class StockInfoService {
@@ -59,16 +58,16 @@ public class StockInfoService {
         Integer fiveThousandCount = stockInfoDAO.queryStockInfoCountByValue(2000,5000);
         Integer tenThousandCount = stockInfoDAO.queryStockInfoCountByValue(5000,10000);
         Integer largerCount = stockInfoDAO.queryStockInfoCountLargerThanValue(10000);
-        Pair<Integer,Integer> tenPair = new Pair<>(10,tenValueCount);
-        Pair<Integer,Integer> fiftyValueCountPair = new Pair<>(50,fiftyValueCount);
-        Pair<Integer,Integer> oneHundredCountPair = new Pair<>(100,oneHundredCount);
-        Pair<Integer,Integer> twoHundredCountPair = new Pair<>(200,twoHundredCount);
-        Pair<Integer,Integer> fiveHundredCountPair = new Pair<>(500,fiveHundredCount);
-        Pair<Integer,Integer> oneThousandCountPair = new Pair<>(1000,oneThousandCount);
-        Pair<Integer,Integer> twoThousandCountPair = new Pair<>(2000,twoThousandCount);
-        Pair<Integer,Integer> fiveThousandCountPair = new Pair<>(5000,fiveThousandCount);
-        Pair<Integer,Integer> tenThousandCountPair = new Pair<>(10000,tenThousandCount);
-        Pair<Integer,Integer> largerCountPair = new Pair<>(20000,largerCount);
+        Pair<Integer,Integer> tenPair = Pair.of(10,tenValueCount);
+        Pair<Integer,Integer> fiftyValueCountPair = Pair.of(50,fiftyValueCount);
+        Pair<Integer,Integer> oneHundredCountPair = Pair.of(100,oneHundredCount);
+        Pair<Integer,Integer> twoHundredCountPair = Pair.of(200,twoHundredCount);
+        Pair<Integer,Integer> fiveHundredCountPair = Pair.of(500,fiveHundredCount);
+        Pair<Integer,Integer> oneThousandCountPair = Pair.of(1000,oneThousandCount);
+        Pair<Integer,Integer> twoThousandCountPair = Pair.of(2000,twoThousandCount);
+        Pair<Integer,Integer> fiveThousandCountPair = Pair.of(5000,fiveThousandCount);
+        Pair<Integer,Integer> tenThousandCountPair = Pair.of(10000,tenThousandCount);
+        Pair<Integer,Integer> largerCountPair = Pair.of(20000,largerCount);
         List<Pair<Integer,Integer>> resultPair = new ArrayList<>();
         resultPair.add(tenPair);
         resultPair.add(fiftyValueCountPair);

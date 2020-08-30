@@ -3,25 +3,21 @@ package com.cgs.service;
 import com.cgs.constant.StockPriceConstant;
 import com.cgs.dao.FinanceInfoDAO;
 import com.cgs.dao.KItemDAO;
-import com.cgs.dao.StockInfoDAO;
 import com.cgs.dao.StockItemDAO;
 import com.cgs.entity.FinanceInfo;
 import com.cgs.entity.KItem;
 import com.cgs.entity.StockItem;
 import com.cgs.vo.*;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -137,51 +133,51 @@ public class StockStaticsService {
         Long twoCount = kItems.stream().filter(e->{
             return e.getClosePrice() <= StockPriceConstant.TWO;
         }).count();
-        resultList.add(new Pair<>("0-2元", twoCount));
+        resultList.add(Pair.of("0-2元", twoCount));
         Long fiveCount = kItems.stream().filter(e->{
             return  e.getClosePrice() > StockPriceConstant.TWO && e.getClosePrice() <= StockPriceConstant.FIVE;
         }).count();
-        resultList.add(new Pair<>("2-5元", fiveCount));
+        resultList.add(Pair.of("2-5元", fiveCount));
         Long tenCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.FIVE && e.getClosePrice() <= StockPriceConstant.TEN;
         }).count();
-        resultList.add(new Pair<>("5-10元", tenCount));
+        resultList.add(Pair.of("5-10元", tenCount));
         Long twentyCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.TEN && e.getClosePrice() <= StockPriceConstant.TWENTY;
         }).count();
-        resultList.add(new Pair<>("10-20元", twentyCount));
+        resultList.add(Pair.of("10-20元", twentyCount));
         Long thirtyCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.TWENTY && e.getClosePrice() <= StockPriceConstant.THIRTY;
         }).count();
-        resultList.add(new Pair<>("20-30元", thirtyCount));
+        resultList.add(Pair.of("20-30元", thirtyCount));
         Long fourtyCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.THIRTY && e.getClosePrice() <= StockPriceConstant.FORTY;
         }).count();
-        resultList.add(new Pair<>("30-40元", fourtyCount));
+        resultList.add(Pair.of("30-40元", fourtyCount));
         Long fiftyCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.FORTY && e.getClosePrice() <= StockPriceConstant.FIFTY;
         }).count();
-        resultList.add(new Pair<>("40-50元", fiftyCount));
+        resultList.add(Pair.of("40-50元", fiftyCount));
         Long oneHundredCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.FIFTY && e.getClosePrice() <= StockPriceConstant.ONE_HUNDRED;
         }).count();
-        resultList.add(new Pair<>("50-1百元", oneHundredCount));
+        resultList.add(Pair.of("50-1百元", oneHundredCount));
         Long twoHundredCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.ONE_HUNDRED && e.getClosePrice() <= StockPriceConstant.TWO_HUNDRED;
         }).count();
-        resultList.add(new Pair<>("1-2百元", twoHundredCount));
+        resultList.add(Pair.of("1-2百元", twoHundredCount));
         Long fiveHundredCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.TWO_HUNDRED && e.getClosePrice() <= StockPriceConstant.FIVE_HUNDRED;
         }).count();
-        resultList.add(new Pair<>("2-5百元", fiveHundredCount));
+        resultList.add(Pair.of("2-5百元", fiveHundredCount));
         Long oneThousandCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.FIVE_HUNDRED && e.getClosePrice() <= StockPriceConstant.ONE_THOUSAND;
         }).count();
-        resultList.add(new Pair<>("5百-1千元", oneThousandCount));
+        resultList.add(Pair.of("5百-1千元", oneThousandCount));
         Long largerThanOneThousandCount = kItems.stream().filter(e->{
             return e.getClosePrice() > StockPriceConstant.ONE_THOUSAND;
         }).count();
-        resultList.add(new Pair<>("1千元以上", largerThanOneThousandCount));
+        resultList.add(Pair.of("1千元以上", largerThanOneThousandCount));
         if (!StringUtils.isEmpty(date)){
             vo.setDate(date);
         }else {

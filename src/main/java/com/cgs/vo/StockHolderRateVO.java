@@ -1,6 +1,6 @@
 package com.cgs.vo;
 
-import javafx.util.Pair;
+import org.springframework.data.util.Pair;
 import lombok.Data;
 
 import java.util.List;

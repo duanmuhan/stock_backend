@@ -4,10 +4,9 @@ import com.cgs.dao.NewsDAO;
 import com.cgs.dao.PlateInfoDAO;
 import com.cgs.entity.PlateInfo;
 import com.cgs.entity.PolicyInfo;
-import com.cgs.vo.StockInfoVO;
 import com.cgs.vo.news.StockNewsVO;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -49,7 +48,7 @@ public class NewsService {
             }
             List<Pair<String,String>> pairList = new ArrayList<>();
             for (PlateInfo plateInfo : plateInfoList){
-                Pair<String,String> pair = new Pair<>(plateInfo.getPlateId(),plateInfo.getPlateName());
+                Pair<String,String> pair = Pair.of(plateInfo.getPlateId(),plateInfo.getPlateName());
                 pairList.add(pair);
             }
             vo.setPlatePairList(pairList);

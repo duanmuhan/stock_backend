@@ -5,9 +5,8 @@ import com.cgs.entity.StockAchievement;
 import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.StockAchievementGroupVO;
 import com.cgs.vo.forms.StockAchievementVO;
-import javafx.util.Pair;
-import org.htmlparser.lexer.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -23,7 +22,7 @@ public class StockAchievementService {
 
     public PageHelperVO queryStockAchievementByPage(int pageNo,int pageSize){
         PageHelperVO vo = new PageHelperVO();
-        String date = "2020-04-30";
+        String date = "2020-08-31";
         List<StockAchievementVO> list = new ArrayList<>();
         Integer startIndex = pageNo * pageSize;
         Integer endIndex = (pageNo+1) * pageSize;
@@ -65,7 +64,7 @@ public class StockAchievementService {
         vo.setDate(date);
         List<Pair<String,Long>> pairs = new ArrayList<>();
         for (Map.Entry<String,Long> entry : resultMap.entrySet()){
-            Pair<String,Long> pair = new Pair<>(entry.getKey(),entry.getValue());
+            Pair<String,Long> pair = Pair.of(entry.getKey(),entry.getValue());
             pairs.add(pair);
         }
         vo.setList(pairs);

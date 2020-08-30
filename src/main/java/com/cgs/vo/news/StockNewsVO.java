@@ -1,7 +1,7 @@
 package com.cgs.vo.news;
 
-import javafx.util.Pair;
 import lombok.Data;
+import org.springframework.data.util.Pair;
 
 import java.util.List;
 
