@@ -107,6 +107,11 @@
             <artifactId>javax.mail-api</artifactId>
             <version>1.6.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>14-ea+7</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
