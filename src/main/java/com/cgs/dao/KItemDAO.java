@@ -5,7 +5,6 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
-import javax.tools.Diagnostic;
 import java.util.List;
 
 @Repository
