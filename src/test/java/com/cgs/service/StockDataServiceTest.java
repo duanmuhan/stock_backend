@@ -18,7 +18,7 @@ public class StockDataServiceTest {
 
     @Test
     public void testQueryKItemByStockId(){
-        KItemVO vo = stockDataService.queryKItemByStockId("300064");
+        KItemVO vo = stockDataService.queryKItemByStockId("300064",1);
     }
 
 }
