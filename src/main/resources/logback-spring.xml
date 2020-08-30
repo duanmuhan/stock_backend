@@ -133,10 +133,8 @@
     </appender>
 
 
-    <!-- root级别   DEBUG -->
+    <!-- root级别   INFO -->
     <root>
-        <!-- 打印debug级别日志及以上级别日志 -->
-        <level value="debug" />
         <!-- 控制台输出 -->
         <appender-ref ref="console" />
         <!-- 文件输出 -->
