@@ -40,7 +40,7 @@ public class StockStaticsFormService {
 
     private static ThreadLocal<SimpleDateFormat> tl = new ThreadLocal<>();
 
-//    @Cacheable(value = "stockInfo::queryStockEarningPerPrice",key = "#pageNo + '-' + #pageSize")
+    @Cacheable(value = "stockInfo::queryStockEarningPerPrice",key = "#pageNo + '-' + #pageSize")
     public PageHelperVO queryStockEarningPerPrice(String date, Integer pageNo, Integer pageSize){
 
         PageHelperVO vo = new PageHelperVO();
