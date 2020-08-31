@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StockInfoService {
@@ -59,15 +60,15 @@ public class StockInfoService {
         Integer tenThousandCount = stockInfoDAO.queryStockInfoCountByValue(5000,10000);
         Integer largerCount = stockInfoDAO.queryStockInfoCountLargerThanValue(10000);
         Pair<Integer,Integer> tenPair = Pair.of(10,tenValueCount);
-        Pair<Integer,Integer> fiftyValueCountPair = Pair.of(50,fiftyValueCount);
-        Pair<Integer,Integer> oneHundredCountPair = Pair.of(100,oneHundredCount);
-        Pair<Integer,Integer> twoHundredCountPair = Pair.of(200,twoHundredCount);
-        Pair<Integer,Integer> fiveHundredCountPair = Pair.of(500,fiveHundredCount);
-        Pair<Integer,Integer> oneThousandCountPair = Pair.of(1000,oneThousandCount);
-        Pair<Integer,Integer> twoThousandCountPair = Pair.of(2000,twoThousandCount);
-        Pair<Integer,Integer> fiveThousandCountPair = Pair.of(5000,fiveThousandCount);
-        Pair<Integer,Integer> tenThousandCountPair = Pair.of(10000,tenThousandCount);
-        Pair<Integer,Integer> largerCountPair = Pair.of(20000,largerCount);
+        Pair<Integer,Integer> fiftyValueCountPair = Pair.of(50,Optional.ofNullable(fiftyValueCount).orElseGet(()->0));
+        Pair<Integer,Integer> oneHundredCountPair = Pair.of(100,Optional.ofNullable(oneHundredCount).orElseGet(()->0));
+        Pair<Integer,Integer> twoHundredCountPair = Pair.of(200,Optional.ofNullable(twoHundredCount).orElseGet(()->0));
+        Pair<Integer,Integer> fiveHundredCountPair = Pair.of(500,Optional.ofNullable(fiveHundredCount).orElseGet(()->0));
+        Pair<Integer,Integer> oneThousandCountPair = Pair.of(1000,Optional.ofNullable(oneThousandCount).orElseGet(()->0));
+        Pair<Integer,Integer> twoThousandCountPair = Pair.of(2000,Optional.ofNullable(twoThousandCount).orElseGet(()->0));
+        Pair<Integer,Integer> fiveThousandCountPair = Pair.of(5000,Optional.ofNullable(fiveThousandCount).orElseGet(()->0));
+        Pair<Integer,Integer> tenThousandCountPair = Pair.of(10000,Optional.ofNullable(tenThousandCount).orElseGet(()->0));
+        Pair<Integer,Integer> largerCountPair = Pair.of(20000, Optional.ofNullable(largerCount).orElseGet(()->0));
         List<Pair<Integer,Integer>> resultPair = new ArrayList<>();
         resultPair.add(tenPair);
         resultPair.add(fiftyValueCountPair);
