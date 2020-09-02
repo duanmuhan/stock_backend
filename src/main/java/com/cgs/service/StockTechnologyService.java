@@ -32,7 +32,7 @@ public class StockTechnologyService {
     @Autowired
     private StockItemDAO stockItemDAO;
 
-    @Cacheable(value = "stockInfo::queryLatestStockTechnologyScoreByPage",key = "#pageNo + '-' + #pageSize")
+//    @Cacheable(value = "stockInfo::queryLatestStockTechnologyScoreByPage",key = "#pageNo + '-' + #pageSize")
     public PageHelperVO queryLatestStockTechnologyScoreByPage(Integer pageSize, Integer pageNo){
         PageHelperVO vo = new PageHelperVO();
         List<StockTechnologyScoreVO> list = new ArrayList<>();

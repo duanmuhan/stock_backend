@@ -14,5 +14,9 @@ public class StockOverViewVO {
     private String amountRate;
     private String dealCashRate;
     private Double averageTurnoverRate;
+    private String plateInfo;
+    private String score;
+    private String sharePerPrice;
+    private String earningChange;
     private String date;
 }
