@@ -28,6 +28,10 @@ public class StockDataService {
     private StockItemDAO stockItemDAO;
     @Autowired
     private StockInfoDAO stockInfoDAO;
+    @Autowired
+    private StockTechnologyScoreDAO stockTechnologyScoreDAO;
+    @Autowired
+    private StockAchievementDAO stockAchievementDAO;
 
     public KItemVO queryKItemByStockId(String stockId,Integer type){
         KItemVO vo = new KItemVO();
@@ -66,12 +70,17 @@ public class StockDataService {
         if (ObjectUtils.isEmpty(stockInfo)){
             return viewVO;
         }
+        StockTechnologyScore stockTechnologyScore = stockTechnologyScoreDAO.queryStockTechnologyScoreByStockId(stockId);
+        List<StockTechnologyScore> stockTechnologyScoreList = stockTechnologyScoreDAO.queryLatestStockTechnologyScoreList();
+        Long rank = stockTechnologyScoreList.stream().filter(e->{
+            return e.getScore() >= stockTechnologyScore.getScore();
+        }).count();
+        List<StockPlateInfoMapping> plateInfoMappings = stockPlateInfoMappingDAO.queryPlateInfoMappingByStockId(stockId);
         DecimalFormat df = new DecimalFormat("#0.00");
         StockItem item = stockItemDAO.queryStockItemByStockId(stockId);
         viewVO.setPrice(kItems.get(0).getClosePrice());
         viewVO.setDealAmount(kItems.get(0).getDealAmount());
         viewVO.setStockId(stockId);
-        viewVO.setDealCash(stockInfo.getTotalTransactionAmount());
         viewVO.setStockName(item.getName());
         viewVO.setDealCash(stockInfo.getTotalTransactionAmount());
         viewVO.setPriceRate(df.format((kItems.get(0).getClosePrice()-kItems.get(1).getClosePrice())/kItems.get(0).getOpenPrice() * 100));
@@ -79,6 +88,14 @@ public class StockDataService {
         viewVO.setAmountRate(String.valueOf((kItems.get(0).getDealAmount() - kItems.get(0).getDealAmount())/kItems.get(0).getDealAmount() * 100));
         viewVO.setDate(kItems.get(0).getDate());
         viewVO.setAverageTurnoverRate(stockInfo.getAverageTurnoverRate());
+
+        List<StockAchievement> stockAchievements = stockAchievementDAO.queryStockAchievementByStockId(stockId);
+        if (!CollectionUtils.isEmpty(stockAchievements)){
+            viewVO.setEarningChange(stockAchievements.get(0).getAchievementTitle());
+        }
+        String plateStr = plateInfoMappings.stream().map(e->e.getPlateName()).collect(Collectors.joining(","));
+        viewVO.setPlateInfo("股票板块:" + plateStr);
+        viewVO.setScore("股票评分：" + stockTechnologyScore.getScore() + " 评分排名: " + rank);
         return viewVO;
     }
 }

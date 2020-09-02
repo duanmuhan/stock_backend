@@ -18,5 +18,6 @@ public class StockOverViewVO {
     private String score;
     private String sharePerPrice;
     private String earningChange;
+    private String stockPeriodChangeRate;
     private String date;
 }

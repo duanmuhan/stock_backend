@@ -22,7 +22,7 @@ public class StockAchievementService {
 
     public PageHelperVO queryStockAchievementByPage(int pageNo,int pageSize){
         PageHelperVO vo = new PageHelperVO();
-        String date = "2020-08-31";
+        String date = "2020-08-28";
         List<StockAchievementVO> list = new ArrayList<>();
         Integer startIndex = pageNo * pageSize;
         Integer endIndex = (pageNo+1) * pageSize;

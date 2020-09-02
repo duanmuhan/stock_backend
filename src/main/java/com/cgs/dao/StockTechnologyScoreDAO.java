@@ -16,8 +16,7 @@ public interface StockTechnologyScoreDAO {
     @Results(id="stockTechnologyScore", value = {
             @Result(property = "stockId",column = "stock_id"),
             @Result(property = "stockName",column = "stock_name"),
-            @Result(property = "plateId",column = "plate_id"),
-            @Result(property = "plateName",column = "plate_name"),
+            @Result(property = "score",column = "score"),
             @Result(property = "releaseDate",column = "release_date")
     })
     @Select(" select * from stock_score INNER JOIN (select MAX(release_date) as max_date, stock_id as stockId from stock_score GROUP BY stock_id) A ON stock_id = A.stockId AND release_date = A.max_date")
@@ -27,5 +26,6 @@ public interface StockTechnologyScoreDAO {
     @Cacheable(value = "stock::latestStockScore",key = "#stockId")
     @Select("select * from stock_score INNER JOIN (select MAX(release_date) as max_date, stock_id as stockId from stock_score GROUP BY stock_id) A ON stock_id = A.stockId AND release_date = A.max_date AND stock_id = #{stockId}")
     public StockTechnologyScore queryStockTechnologyScoreByStockId(@Param("stockId") String stockId);
+
 
 }
