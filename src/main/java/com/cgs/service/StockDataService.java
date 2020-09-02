@@ -94,7 +94,7 @@ public class StockDataService {
             viewVO.setEarningChange(stockAchievements.get(0).getAchievementTitle());
         }
         String plateStr = plateInfoMappings.stream().map(e->e.getPlateName()).collect(Collectors.joining(","));
-        viewVO.setPlateInfo("股票板块:" + plateStr);
+        viewVO.setPlateInfo("股票板块: " + plateStr);
         viewVO.setScore("股票评分：" + stockTechnologyScore.getScore() + " 评分排名: " + rank);
         return viewVO;
     }

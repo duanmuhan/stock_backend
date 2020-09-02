@@ -39,7 +39,7 @@ public interface StockAchievementDAO {
     public List<StockAchievement> queryStockAchievement(@Param("date") String date);
 
     @ResultMap(value = "stockAchievement")
-    @Cacheable(value = "stock::achievement::queryStockAchievementByStockId",key = "#date")
+    @Cacheable(value = "stock::achievement::queryStockAchievementByStockId",key = "#stockId")
     @Select("select * from " + TABLE_NAME + " where stock_id=#{stockId} order by release_date desc ")
     public List<StockAchievement> queryStockAchievementByStockId(@Param("stockId") String stockId);
 
