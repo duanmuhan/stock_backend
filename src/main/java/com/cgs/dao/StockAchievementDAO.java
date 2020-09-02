@@ -21,7 +21,7 @@ public interface StockAchievementDAO {
             @Result(property = "profileLastYear",column = "profit_last_year"),
             @Result(property = "releaseDate",column = "release_date")
     })
-    @Select("select * from " + TABLE_NAME  + " where release_date>=#{date}" + " order by profit_change_rate desc limit #{startIndex}, #{endIndex}")
+    @Select("select * from " + TABLE_NAME  + " where release_date>=#{date}" + " order by release_date desc limit #{startIndex}, #{endIndex}")
 //    @Cacheable(value = "stock::queryStockAchievementOrderByProfileChangeRate",key = "#date" + '-' + "#startIndex" + '-' + "#endIndex")
     public List<StockAchievement> queryStockAchievementOrderByProfileChangeRate(@Param("date") String date,@Param("startIndex") Integer startIndex,@Param("endIndex") Integer endIndex);
 
