@@ -26,6 +26,6 @@ public interface AverageDAO {
             @Result(property = "type",column = "type"),
             @Result(property = "date",column = "date"),
     })
-    @Cacheable(value = REDIS_PREFIX,key = "#stockId")
-    public List<AverageItem> queryAverageItemListByStockId( @Param("stockId") String stockId);
+    @Cacheable(value = REDIS_PREFIX,key = "#stockId + '-' + #type ")
+    public List<AverageItem> queryAverageItemListByStockId( @Param("stockId") String stockId,@Param("type") Integer type);
 }

@@ -11,6 +11,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -44,9 +46,17 @@ public class StockDataService {
         return vo;
     }
 
-    public AverageVO queryAverageItemByStockId(String stockId){
+    public AverageVO queryAverageItemByStockId(String stockId,Integer type) throws ParseException {
         AverageVO vo = new AverageVO();
-        List<AverageItem> list = averageDAO.queryAverageItemListByStockId(stockId);
+        SimpleDateFormat oldDateFormat = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        List<AverageItem> list = averageDAO.queryAverageItemListByStockId(stockId,type);
+        if (!CollectionUtils.isEmpty(list)){
+            for (AverageItem item : list){
+                String date = dateFormat.format(oldDateFormat.parse(item.getDate()));
+                item.setDate(date);
+            }
+        }
         vo.setStockId(stockId);
         vo.setFiveDayList(list);
         return vo;
