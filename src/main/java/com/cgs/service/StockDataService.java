@@ -34,6 +34,8 @@ public class StockDataService {
     private StockTechnologyScoreDAO stockTechnologyScoreDAO;
     @Autowired
     private StockAchievementDAO stockAchievementDAO;
+    @Autowired
+    private StockTechnologyDAO stockTechnologyDAO;
 
     public KItemVO queryKItemByStockId(String stockId,Integer type){
         KItemVO vo = new KItemVO();
@@ -103,6 +105,34 @@ public class StockDataService {
         if (!CollectionUtils.isEmpty(stockAchievements)){
             viewVO.setEarningChange(stockAchievements.get(0).getAchievementTitle());
         }
+        List<StockTechnology> stockTechnologies = stockTechnologyDAO.queryLatestStockTechnologyListByStockId(stockId);
+        if (!CollectionUtils.isEmpty(stockTechnologies)){
+            List<StockTechnology> buyStockList = stockTechnologies.stream().filter(e->{
+                return "buy".equals(e.getType());
+            }).collect(Collectors.toList());
+            List<StockTechnology> sellStockList = stockTechnologies.stream().filter(e->{
+                return "sell".equals(e.getType());
+            }).collect(Collectors.toList());
+            List<StockTechnology> eventStockList = stockTechnologies.stream().filter(e->{
+                return "event".equals(e.getType());
+            }).collect(Collectors.toList());
+            StringBuilder stringBuilder = new StringBuilder();
+            if (!CollectionUtils.isEmpty(buyStockList)){
+                String buyStr = buyStockList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(";<br><br>"));
+                stringBuilder.append("<strong>买入信号： </strong>").append(buyStr).append("<br><br>");
+            }
+            if (!CollectionUtils.isEmpty(sellStockList)){
+                String sellStr = sellStockList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(";<br><br>"));
+                stringBuilder.append("<strong>卖出信号： </strong>").append(sellStr).append("<br><br>");
+
+            }
+            if (!CollectionUtils.isEmpty(eventStockList)){
+                String eventStr = eventStockList.stream().map(e->e.getQueryStr()).collect(Collectors.joining(";<br><br>"));
+                stringBuilder.append("<strong>股票事件： </strong>").append(eventStr).append("<br><br>");
+            }
+            viewVO.setTechnologyStr(stringBuilder.toString());
+        }
+
         String plateStr = plateInfoMappings.stream().map(e->e.getPlateName()).collect(Collectors.joining(","));
         viewVO.setPlateInfo("股票板块: " + plateStr);
         viewVO.setScore("股票评分：" + stockTechnologyScore.getScore() + " 评分排名: " + rank);

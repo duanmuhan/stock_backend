@@ -70,17 +70,4 @@ public class StockTechnologyController {
         return response;
     }
 
-    @RequestMapping(value = UrlConstant.STOCK_TECHNOLOGY_BY_STOCK_ID, method = RequestMethod.GET)
-    @ResponseBody
-    public Response queryStockTechnologyByStockId(@RequestParam(name = "stockId") String stockId){
-        Response response = new Response();
-        try {
-            StockTechnologyVO stockTechnologyVO= stockTechnologyService.queryStockTechnologyByStockId(stockId);
-            response = ResponseUtils.buildResponseByCode(ErrorCode.OK, stockTechnologyVO);
-        }catch (Exception e){
-            log.error("queryStockTechnologyByStockId exception:{}", e);
-            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION, e);
-        }
-        return response;
-    }
 }

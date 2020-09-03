@@ -136,14 +136,4 @@ public class StockTechnologyService {
         }
         return vo;
     }
-
-    public StockTechnologyVO queryStockTechnologyByStockId(String stockId){
-        StockTechnologyVO vo = new StockTechnologyVO();
-        StockTechnology stockTechnology = stockTechnologyDAO.queryStockTechnologyByStockId(stockId);
-        if (ObjectUtils.isEmpty(stockTechnology)){
-            vo.setStockId(stockTechnology.getStockId());
-            vo.setReleaseDate(stockTechnology.getReleaseDate());
-        }
-        return vo;
-    }
 }
