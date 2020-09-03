@@ -1,5 +1,6 @@
 package com.cgs.service;
 
+import com.cgs.constant.AverageType;
 import com.cgs.dao.*;
 import com.cgs.entity.*;
 import com.cgs.vo.*;
@@ -48,19 +49,19 @@ public class StockDataService {
         return vo;
     }
 
-    public AverageVO queryAverageItemByStockId(String stockId,Integer type) throws ParseException {
+    public AverageVO queryAverageItemByStockId(String stockId) throws ParseException {
         AverageVO vo = new AverageVO();
-        SimpleDateFormat oldDateFormat = new SimpleDateFormat("yyyyMMdd");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        List<AverageItem> list = averageDAO.queryAverageItemListByStockId(stockId,type);
-        if (!CollectionUtils.isEmpty(list)){
-            for (AverageItem item : list){
-                String date = dateFormat.format(oldDateFormat.parse(item.getDate()));
-                item.setDate(date);
-            }
-        }
+        List<AverageItem> fiveDayList = averageDAO.queryAverageItemListByStockId(stockId, AverageType.FIVE_DAYS);
+        List<AverageItem> tenDayList = averageDAO.queryAverageItemListByStockId(stockId,AverageType.TEN_DAYS);
+        List<AverageItem> twentiesDayList = averageDAO.queryAverageItemListByStockId(stockId,AverageType.TWENTY_DAYS);
+        List<AverageItem> sixtiesDayList = averageDAO.queryAverageItemListByStockId(stockId,AverageType.SIXTIES_DAYS);
+        List<AverageItem> oneHundredDayList = averageDAO.queryAverageItemListByStockId(stockId,AverageType.ONE_HUNDRED_TWENTY_DAYS);
         vo.setStockId(stockId);
-        vo.setFiveDayList(list);
+        vo.setFiveDayList(fiveDayList);
+        vo.setTenDayList(tenDayList);
+        vo.setTwentiesDayList(twentiesDayList);
+        vo.setSixtiesDayList(sixtiesDayList);
+        vo.setOneHundredAndTwentiesDayList(oneHundredDayList);
         return vo;
     }
 

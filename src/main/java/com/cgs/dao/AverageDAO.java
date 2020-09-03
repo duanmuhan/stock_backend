@@ -17,7 +17,7 @@ public interface AverageDAO {
 
     String COLUMNS = " stock_id, price, type, date ";
 
-    String REDIS_PREFIX="stock::average";
+    String REDIS_PREFIX="stock::average::";
 
     @Select("select * from " + TABLE_NAME + " where stock_id = #{stockId} order by date desc limit 100")
     @Results( id = "resultMap",value = {
@@ -26,6 +26,6 @@ public interface AverageDAO {
             @Result(property = "type",column = "type"),
             @Result(property = "date",column = "date"),
     })
-    @Cacheable(value = REDIS_PREFIX,key = "#stockId + '-' + #type ")
+    @Cacheable(value = REDIS_PREFIX + "queryAverageItemListByStockId" ,key = "#stockId + '-' + #type ")
     public List<AverageItem> queryAverageItemListByStockId( @Param("stockId") String stockId,@Param("type") Integer type);
 }

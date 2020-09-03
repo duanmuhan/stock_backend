@@ -10,4 +10,7 @@ public class AverageVO {
     private String stockId;
     private List<AverageItem> fiveDayList;
     private List<AverageItem> tenDayList;
+    private List<AverageItem> twentiesDayList;
+    private List<AverageItem> sixtiesDayList;
+    private List<AverageItem> oneHundredAndTwentiesDayList;
 }
