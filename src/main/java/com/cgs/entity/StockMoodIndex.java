@@ -2,8 +2,10 @@ package com.cgs.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class StockMoodIndex {
+public class StockMoodIndex implements Serializable {
 
     private String stockIncreaseRate;
     private Double stockPoint;
