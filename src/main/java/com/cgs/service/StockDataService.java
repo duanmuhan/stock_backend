@@ -6,6 +6,7 @@ import com.cgs.entity.*;
 import com.cgs.vo.*;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -49,18 +50,51 @@ public class StockDataService {
         return vo;
     }
 
+    @Cacheable(value = "stock::average::queryAverageItemByStockId" ,key = "#stockId")
     public AverageVO queryAverageItemByStockId(String stockId) throws ParseException {
         AverageVO vo = new AverageVO();
+        SimpleDateFormat oldDateFormat = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         List<AverageItem> fiveDayList = averageDAO.queryAverageItemListByStockId(stockId, AverageType.FIVE_DAYS);
         List<AverageItem> tenDayList = averageDAO.queryAverageItemListByStockId(stockId,AverageType.TEN_DAYS);
         List<AverageItem> twentiesDayList = averageDAO.queryAverageItemListByStockId(stockId,AverageType.TWENTY_DAYS);
         List<AverageItem> sixtiesDayList = averageDAO.queryAverageItemListByStockId(stockId,AverageType.SIXTIES_DAYS);
         List<AverageItem> oneHundredDayList = averageDAO.queryAverageItemListByStockId(stockId,AverageType.ONE_HUNDRED_TWENTY_DAYS);
         vo.setStockId(stockId);
+        if (!CollectionUtils.isEmpty(fiveDayList)){
+            for (AverageItem item : fiveDayList){
+                String date = dateFormat.format(oldDateFormat.parse(item.getDate()));
+                item.setDate(date);
+            }
+        }
         vo.setFiveDayList(fiveDayList);
+        if (!CollectionUtils.isEmpty(tenDayList)){
+            for (AverageItem item : tenDayList){
+                String date = dateFormat.format(oldDateFormat.parse(item.getDate()));
+                item.setDate(date);
+            }
+        }
         vo.setTenDayList(tenDayList);
+        if (!CollectionUtils.isEmpty(twentiesDayList)){
+            for (AverageItem item : twentiesDayList){
+                String date = dateFormat.format(oldDateFormat.parse(item.getDate()));
+                item.setDate(date);
+            }
+        }
         vo.setTwentiesDayList(twentiesDayList);
+        if (!CollectionUtils.isEmpty(sixtiesDayList)){
+            for (AverageItem item : sixtiesDayList){
+                String date = dateFormat.format(oldDateFormat.parse(item.getDate()));
+                item.setDate(date);
+            }
+        }
         vo.setSixtiesDayList(sixtiesDayList);
+        if (!CollectionUtils.isEmpty(oneHundredDayList)){
+            for (AverageItem item : oneHundredDayList){
+                String date = dateFormat.format(oldDateFormat.parse(item.getDate()));
+                item.setDate(date);
+            }
+        }
         vo.setOneHundredAndTwentiesDayList(oneHundredDayList);
         return vo;
     }

@@ -4,6 +4,8 @@ import com.cgs.ResponseUtils;
 import com.cgs.constant.ErrorCode;
 import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
+import com.cgs.entity.StockMoodIndex;
+import com.cgs.service.StockMoodIndexService;
 import com.cgs.service.StockStaticsService;
 import com.cgs.vo.*;
 import io.swagger.annotations.Api;
@@ -28,6 +30,8 @@ public class StockStaticsController {
 
     @Autowired
     private StockStaticsService stockStaticsService;
+    @Autowired
+    private StockMoodIndexService stockMoodIndexService;
 
     @RequestMapping(value = UrlConstant.FINANCE_INFO, method = RequestMethod.GET)
     @ResponseBody
@@ -123,4 +127,17 @@ public class StockStaticsController {
         return response;
     }
 
+    @RequestMapping(value = UrlConstant.STOCK_MOOD_LINE, method = RequestMethod.GET)
+    @ResponseBody
+    public Response queryStockMoodIndex(HttpServletRequest httpServletRequest){
+        Response response = new Response();
+        try {
+            List<StockMoodIndex> list = stockMoodIndexService.batchQueryStockMoodIndex();
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,list);
+        }catch (Exception e){
+            log.error("queryStockMoodIndex exception:{}",e);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
+        }
+        return response;
+    }
 }
