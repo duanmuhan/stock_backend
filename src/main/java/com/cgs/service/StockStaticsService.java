@@ -60,14 +60,24 @@ public class StockStaticsService {
     public List<StockPriceAndEarningVO> queryValueStockPerPrice(){
         List<StockBasicVO> list = queryValuableStockBasicInfo();
         List<KItem> valueList = kItemDAO.queryLatestValue();
+        List<StockItem> stockItemList = stockItemDAO.queryAllStockList();
         Map<String,KItem> valueMap = valueList.stream().collect(Collectors.toMap(KItem::getStockId, Function.identity()));
         List<StockPriceAndEarningVO> resultList = new ArrayList<>();
+        if (CollectionUtils.isEmpty(list) || CollectionUtils.isEmpty(stockItemList)){
+            return new ArrayList<>();
+        }
+        Map<String,StockItem> stockItemMap = stockItemList.stream().collect(Collectors.toMap(StockItem::getStockId,Function.identity()));
         list.forEach(e->{
             StockPriceAndEarningVO stockPriceAndEarningVO = new StockPriceAndEarningVO();
-            if (valueMap.containsKey(e.getStockId()) && e.getBasicEarningsPerCommonShare()>0){
+            if (valueMap.containsKey(e.getStockId())
+                    && e.getBasicEarningsPerCommonShare()>0
+                    && stockItemMap.containsKey(e.getStockId())
+                    && !stockItemMap.get(e.getStockId()).getName().contains("ST")){
                 stockPriceAndEarningVO.setStockId(e.getStockId());
                 stockPriceAndEarningVO.setBasicEarningsPerCommonShare(e.getBasicEarningsPerCommonShare());
                 stockPriceAndEarningVO.setPrice(valueMap.get(e.getStockId()).getClosePrice());
+                stockPriceAndEarningVO.setReleaseDate(valueMap.get(e.getStockId()).getDate());
+                stockPriceAndEarningVO.setStockName(stockItemMap.get(e.getStockId()).getName());
                 resultList.add(stockPriceAndEarningVO);
             }
         });
