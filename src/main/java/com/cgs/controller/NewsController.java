@@ -11,11 +11,14 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -28,9 +31,14 @@ public class NewsController {
 
     @RequestMapping(value = UrlConstant.STOCK_NEWS_LIST,method = RequestMethod.GET)
     @ResponseBody
-    public Response queryStockNews(@ApiParam(value = "新闻时间") @RequestParam(name = "releaseDate") String releaseDate){
+    public Response queryStockNews(){
         Response response = new Response();
         try {
+            String releaseDate = "";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            if (StringUtils.isEmpty(releaseDate)){
+                releaseDate = simpleDateFormat.format(new Date());
+            }
             List<StockNewsVO> voList = newsService.queryStockInfoByDate(releaseDate);
             response = ResponseUtils.buildResponseByCode(ErrorCode.OK,voList);
         }catch (Exception e){

@@ -23,6 +23,6 @@ public interface NewsDAO {
             @Result(property = "release_date",column = "release_date"),
     })
     @Cacheable(value = "news",key = "#releaseDate")
-    @Select("select * from" + TABLE_NAME + "where release_date >= #{releaseDate} order by release_date desc ")
+    @Select("select * from" + TABLE_NAME + "where order by id desc limit 50 ")
     public List<PolicyInfo> queryNewsListBeforeDate(@Param("releaseDate") String releaseDate);
 }
