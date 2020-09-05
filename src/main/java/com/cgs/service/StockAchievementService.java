@@ -72,7 +72,7 @@ public class StockAchievementService {
     }
 
     public PageHelperVO queryStockAchievementListByType(String type,Integer pageNo, Integer pageSize){
-        String date = "2020-04-30";
+        String date = "2020-08-29";
         Integer startIndex = pageNo * pageSize;
         PageHelperVO pageHelperVO = new PageHelperVO();
         Integer count = stockAchievementDAO.queryStockAchievementCountByType(date,type);

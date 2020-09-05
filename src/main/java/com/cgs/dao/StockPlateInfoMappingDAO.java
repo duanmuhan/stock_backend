@@ -23,9 +23,12 @@ public interface StockPlateInfoMappingDAO {
     @Cacheable(value = "stock:plate", key = "#stockId")
     public List<StockPlateInfoMapping> queryPlateInfoMappingByStockId(@Param("stockId") String stockId);
 
-    @Select(" select * from " + TABLE_NAME + " where plate_id = #{plateId} ")
+    @Select(" select * from " + TABLE_NAME + " where plate_id = #{plateId} limit #{startIndex}, #{endIndex}")
     @ResultMap(value = "stockPlateInfoMapping")
-    @Cacheable(value = "stock:plate", key = "#plateId")
-    public List<StockPlateInfoMapping> queryPlateInfoMappingByPlateId(@Param("plateId") String plateId);
+    @Cacheable(value = "stock:plate", key = "#plateId + '-' + #startIndex + '-' + #endIndex")
+    public List<StockPlateInfoMapping> queryPlateInfoMappingByPlateId(@Param("plateId") String plateId,@Param("startIndex") Integer startIndex, @Param("endIndex") Integer endIndex);
+
+    @Select(" select count(*) from " + TABLE_NAME + " where plate_id = #{plateId}")
+    public Integer queryPlateInfoMappingCountByPlate(@Param("plateId") String plateId);
 
 }

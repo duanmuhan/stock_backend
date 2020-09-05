@@ -6,6 +6,7 @@ import com.cgs.dao.StockPlateInfoMappingDAO;
 import com.cgs.entity.KItem;
 import com.cgs.entity.StockItem;
 import com.cgs.entity.StockPlateInfoMapping;
+import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.StockOverViewVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,10 @@ public class PlateInfoService {
     @Autowired
     private KItemDAO kItemDAO;
 
-    public List<StockOverViewVO> queryStockOverviewByPlateId(String plateId){
-        List<StockPlateInfoMapping> list = stockPlateInfoMappingDAO.queryPlateInfoMappingByPlateId(plateId);
+    public PageHelperVO queryStockOverviewByPlateId(String plateId,Integer pageNo,Integer pageSize){
+        Integer startIndex = pageNo * pageSize;
+        List<StockPlateInfoMapping> list = stockPlateInfoMappingDAO.queryPlateInfoMappingByPlateId(plateId,startIndex,pageSize);
+        Integer count = stockPlateInfoMappingDAO.queryPlateInfoMappingCountByPlate(plateId);
         if (CollectionUtils.isEmpty(list)){
             return null;
         }
@@ -50,11 +53,13 @@ public class PlateInfoService {
                 viewVO.setStockId(e.getStockId());
                 viewVO.setStockName(e.getName());
                 viewVO.setDealCash(kItem.getDealCash());
-//                viewVO.setPriceRate(String.valueOf((kItem.getClosePrice()-kItem.getOpenPrice())/kItem.getOpenPrice() * 100) + "%");
-//                viewVO.setAmountRate(String.valueOf((kItem.getDealAmount() - kItem.getDealAmount())/kItem.getDealAmount() * 100 + "%"));
+                viewVO.setDate(kItem.getDate());
                 overViewVOList.add(viewVO);
             }
         });
-        return overViewVOList;
+        PageHelperVO vo = new PageHelperVO();
+        vo.setRows(overViewVOList);
+        vo.setTotal(count);
+        return vo;
     }
 }

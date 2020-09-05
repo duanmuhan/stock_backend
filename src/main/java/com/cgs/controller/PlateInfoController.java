@@ -5,6 +5,7 @@ import com.cgs.constant.ErrorCode;
 import com.cgs.constant.Response;
 import com.cgs.constant.UrlConstant;
 import com.cgs.service.PlateInfoService;
+import com.cgs.vo.PageHelperVO;
 import com.cgs.vo.StockOverViewVO;
 import com.cgs.vo.news.StockNewsVO;
 import io.swagger.annotations.Api;
@@ -30,11 +31,13 @@ public class PlateInfoController {
 
     @RequestMapping(value = UrlConstant.PLATE_STOCK_LIST,method = RequestMethod.GET)
     @ResponseBody
-    public Response queryStockInfoByPlate(@ApiParam(value = "板块名称") @RequestParam(name = "plateId") String plateId){
+    public Response queryStockInfoByPlate(@ApiParam(value = "板块名称") @RequestParam(name = "plateId") String plateId,
+                                          @ApiParam(value = "页号") @RequestParam(name = "pageNo") Integer pageNo,
+                                          @ApiParam(value = "页码") @RequestParam(name = "pageSize") Integer pageSize){
         Response response = new Response();
         try {
-            List<StockOverViewVO> voList = plateInfoService.queryStockOverviewByPlateId(plateId);
-            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,voList);
+            PageHelperVO vo = plateInfoService.queryStockOverviewByPlateId(plateId,pageNo,pageSize);
+            response = ResponseUtils.buildResponseByCode(ErrorCode.OK,vo);
         }catch (Exception e){
             log.error("queryStockKItemByStockId exception :{}",e);
             response = ResponseUtils.buildResponseByCode(ErrorCode.EXCEPTION,null);
