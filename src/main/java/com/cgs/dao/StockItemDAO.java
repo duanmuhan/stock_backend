@@ -15,18 +15,6 @@ public interface StockItemDAO {
     String TABLE_NAME = " stock_item ";
     String COLUMNS = "stock_id, exchange_id, name, listing_date ";
 
-    @Insert({"<script>"+
-            "insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values " +
-            "<foreach collection='list' index='index' item='item' separator=','>" +
-            "(#{item.stockId}, #{item.exchangeId}, #{item.name} ,  #{item.listingDate} )" +
-            "</foreach>"+
-            "</script>"}
-    )
-    public void batchInsertStockItem(List<StockItem> list);
-
-    @Insert("insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values (#{item.stockId}, #{item.exchangeId}, #{item.name}, #{item.listingDate} )")
-    public void insertStockItem(@Param("item") StockItem item);
-
     @Select("select stock_id as stockId, listing_date as listingDate, exchange_id as exchangeId, name as name  from " + TABLE_NAME)
     @Cacheable(value = "kitem:stockitem")
     public List<StockItem> queryAllStockList();
