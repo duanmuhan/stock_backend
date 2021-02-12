@@ -23,13 +23,13 @@ public class ElasticSearchConfig {
     @Value("${elasticsearch.ip}")
     private String hostName;
 
-    @Value("#{elasticsearch.port}")
+    @Value("${elasticsearch.port}")
     private String port;
 
-    @Value("#{elasticsearch.cluster.name}")
+    @Value("${elasticsearch.cluster.name}")
     private String clusterName;
 
-    @Value("#{server.port}")
+    @Value("${server.port}")
     private String poolSize;
 
 
